@@ -1,0 +1,10 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+                 servicepoint="%NAME%-servicepoint"
+                 componenttype="ncs:self"
+                 state="%NAME%:vm-configured">
+  <vm-instance xmlns="http://com/example/basic-%NAME%/%NAME%">
+    <name>{name}</name>
+    <type>csr-small</type>
+    <address>127.0.0.1</address>
+  </vm-instance>
+</config-template>

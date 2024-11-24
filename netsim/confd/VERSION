@@ -1,0 +1,8 @@
+ConfD version 8.2.5 for linux on x86_64.
+Revision: fee9083bd0aceae5dd6bf05d9887dcc8de02204b (GIT)
+Date: Tue May 14 23:15:21 CEST 2024
+DOCUMENTATION_PACKAGE=confd-8.2.5.doc.tar.gz
+JAVA_PACKAGE=confd-8.2.5.java.tar.gz
+EXAMPLE_PACKAGE=confd-8.2.5.examples.tar.gz
+Erlang/OTP version: 25.3.2.10
+Java version: 17.0.7

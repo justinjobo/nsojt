@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      
+      <title>Development -  - Getting Started</title>
+      <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+      <link rel="home" href="index.html" title="Getting Started" />
+      <link rel="up" href="ncsnwe.deployment.html" title="Developing and Deploying a Nano Service" />
+      <link rel="prev" href="ncsnwe.deployment.html" title="Developing and Deploying a Nano Service" />
+      <link rel="next" href="ch05s02.html" title="Deployment" />
+      <meta xmlns="" name="Section-title" content="Development" /><script xmlns="" type="text/javascript">
+      //The id for tree cookie
+      var treeCookieId = "treeview-3783";
+      var language = "en";
+      var w = new Object();
+      //Localization
+      txt_filesfound = 'Results';
+      txt_enter_at_least_1_char = "You must enter at least one character.";
+      txt_browser_not_supported = "JavaScript is disabled on your browser. Please enable JavaScript to enjoy all the features of this site.";
+      txt_please_wait = "Please wait. Search in progress...";
+      txt_results_for = "Results for: ";
+    </script><link xmlns="" rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/css/positioning.css" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/jquery/treeview/jquery.treeview.css" /><style xmlns="" type="text/css">
+      
+      #noscript{
+      font-weight:bold;
+      background-color: #55AA55;
+      font-weight: bold;
+      height: 25spx;
+      z-index: 3000;
+      top:0px;
+      width:100%;
+      position: relative;
+      border-bottom: solid 5px black;
+      text-align:center;
+      color: white;
+      }
+      
+      input {
+      margin-bottom: 5px;
+      margin-top: 2px;
+      }
+      .folder {
+      display: block;
+      height: 22px;
+      padding-left: 20px;
+      background: transparent url(common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+      }
+      span.contentsTab {
+      padding-left: 20px;
+      background: url(common/images/toc-icon.png) no-repeat 0 center;
+      }
+      span.searchTab {
+      padding-left: 20px;
+      background: url(common/images/search-icon.png) no-repeat 0 center;
+      }
+      
+      /* Overide jquery treeview's defaults for ul. */
+      .treeview ul {
+      background-color: transparent;
+      margin-top: 4px;
+      }		
+      #webhelp-currentid {
+      /* background-color: #D8D8D8 !important; */
+      background-color: #D8D8D8;
+      }
+      .treeview .hover { color: black; }
+      .filetree li span a { text-decoration: none; font-size: 12px; color: #517291; }
+      
+      /* Override jquery-ui's default css customizations. These are supposed to take precedence over those.*/
+      .ui-widget-content {
+      border: 0px; 
+      background: none; 
+      color: none;     
+      }
+      .ui-widget-header {
+      color: #e9e8e9;
+      border-left: 1px solid #e5e5e5;
+      border-right: 1px solid #e5e5e5;
+      border-bottom: 1px solid #bbc4c5;
+      border-top: 4px solid #e5e5e5;
+      border: medium none;
+      background: #F4F4F4; /* old browsers */
+      background: -moz-linear-gradient(top, #F4F4F4 0%, #E6E4E5 100%); /* firefox */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F4F4F4), color-stop(100%,#E6E4E5)); /* webkit */    
+      font-weight: none;
+      }
+      .ui-widget-header a { color: none; }
+      .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { 
+      border: none; background: none; font-weight: none; color: none; }
+      .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: black; text-decoration: none; }
+      .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: none; background: none; font-weight: none; color: none; }
+      
+      .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: none; background: none; font-weight: none; color: none; }
+      .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { 
+      color: black; text-decoration: none; 	
+      background: #C6C6C6; /* old browsers */
+      background: -moz-linear-gradient(top, #C6C6C6 0%, #D8D8D8 100%); /* firefox */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#C6C6C6), color-stop(100%,#D8D8D8)); /* webkit */
+      -webkit-border-radius:15px; -moz-border-radius:10px;
+      border: 1px solid #f1f1f1;
+      }    
+      .ui-corner-all { border-radius: 0 0 0 0; }
+      
+      .ui-tabs { padding: .2em;}
+      .ui-tabs .ui-tabs-nav li { top: 0px; margin: -2px 0 1px; text-transform: uppercase; font-size: 10.5px;}
+      .ui-tabs .ui-tabs-nav li a { padding: .25em 2em .25em 1em; margin: .5em; text-shadow: 0 1px 0 rgba(255,255,255,.5); }
+      /**
+      *	Basic Layout Theme
+      * 
+      *	This theme uses the default layout class-names for all classes
+      *	Add any 'custom class-names', from options: paneClass, resizerClass, togglerClass
+      */
+      
+      .ui-layout-pane { /* all 'panes' */ 
+      background: #FFF; 
+      border: 1px solid #BBB; 
+      padding: 05x; 
+      overflow: auto;
+      } 
+      
+      .ui-layout-resizer { /* all 'resizer-bars' */ 
+      background: #DDD; 
+      top:100px
+      } 
+      
+      .ui-layout-toggler { /* all 'toggler-buttons' */ 
+      background: #AAA; 
+      } 
+      
+    </style>
+      <!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]--><script xmlns="" type="text/javascript" src="common/browserDetect.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery-1.7.2.min.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery.ui.all.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery.cookie.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/treeview/jquery.treeview.min.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/layout/jquery.layout.js">
+         <!----></script><style type="text/css">
+      
+      #header {
+      /* background: url("../images/header-bg.png") scroll top left repeat-x #4d8c83; */
+      background: transparent;
+      }
+      #leftnavigation {
+      /* background-color: #ededed!important; */
+      background-color: transparent;
+      }
+      #navheader {
+      visibility: hidden;
+      }
+      #webhelp-currentid {
+      /* background-color: #D8D8D8 !important; */
+      background-color: #FFFFFF; /*but must be changed in main.js as well*/
+      }
+      .filetree span.file {
+      /* background: url(images/file.gif) 0 0 no-repeat; */
+      background: initial;
+      }
+      .filetree span.folder, .filetree span.file {
+      padding: 1px 0 1px 7px;
+      display: block;
+      }
+
+      /* borrowed from cisco: clientlib.css */
+      .footer {
+      margin: 28px 30px 0 15px;
+      font-size: 80%;
+      line-height: 120%;
+      border-top: 1px solid #ccc;
+      padding-top: 7px;
+      color: #999;
+      }
+      .footer #footer-legal{display:inline;padding-bottom:18px}
+      #framework-footer{margin:0;padding:0 0 15px 0;min-width:900px;width:100%}
+      .footer a,.footer a:visited{color:#999}
+
+      /* from ccimr.css */
+      a:active  { color: #3366CC}
+      a:hover   { color: #3366CC}
+      a:link    { color: #3366CC}
+      a:visited { color: #3366CC}
+
+      #header img {
+      float: left;
+      margin-left: 20px;
+      margin-top: 0px;
+      }
+
+      #header h1 {
+      color: #336666;
+      margin-top: 4px;
+      }
+      #content h1, #content h2 {
+      color: #336666;
+      }
+      .title {
+      color: #336666;
+      }
+      p, pre {
+      margin-left: 0.1in;
+      }
+      p, ul, ol, li {
+        font-size: 95%;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 1px;
+      }
+      body {
+        font: 80.5% Arial, Helvetica, sans-serif;
+      }
+      ol {
+      display: block;
+      list-style-type: decimal;
+      -webkit-margin-before: 1em;
+      -webkit-margin-after: 1em;
+      -webkit-margin-start: 0px;
+      -webkit-margin-end: 0px;
+      -webkit-padding-start: 40px;
+      border: 1;
+      }
+    </style></head>
+   <body>
+      <noscript>
+         <div id="noscript">JavaScript is disabled on your browser. Please enable JavaScript to enjoy all the features of this site.</div>
+      </noscript>
+      <div id="header"><a href="index.html"><img style="margin-right: 2px; width: 110; height: 73; padding-right: 25px; padding-top: 8px" align="right" src="common/images/logo.gif" alt="Cisco Systems, Inc." /></a><h1>Getting Started<br />Developing and Deploying a Nano Service
+         </h1>
+         <div id="navheader">
+            <!---->
+            <table class="navLinks">
+               <tr>
+                  <td><a id="showHideButton" href="#" onclick="myLayout.toggle('west')" class="pointLeft" tabindex="5" title="Hide TOC tree">Sidebar
+                                                    </a></td>
+                  <td><a accesskey="p" class="navLinkPrevious" tabindex="5" href="ncsnwe.deployment.html">Prev</a>
+                                                             |
+                                                             <a accesskey="u" class="navLinkUp" tabindex="5" href="ncsnwe.deployment.html">Up</a>
+                                                         |
+                                                         <a accesskey="n" class="navLinkNext" tabindex="5" href="ch05s02.html">Next</a></td>
+               </tr>
+            </table>
+         </div>
+      </div>
+      <div id="content">
+         <div class="sect1">
+            <div xmlns="" class="titlepage">
+               <div>
+                  <div>
+                     <h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="d0e2677"></a>Development
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p>
+                     
+            </p>
+            <div class="figure"><a id="d0e2682"></a><p class="title"><strong>Figure 6. The Development Host Topology</strong></p>
+               <div class="figure-contents">
+                  <div class="mediaobject" align="center">
+                     <table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="496">
+                        <tr>
+                           <td align="center"><img src="pics/ex-development.png" align="middle" width="496" alt="The Development Host Topology" /></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            <p><br class="figure-break" />
+                     After installing NSO with the local-install option, development
+                     often begins with either retrieving an existing YANG model representing
+                     what the the managed network element (a virtual or physical device, such
+                     as a router) can do or constructing a new YANG model that at least covers
+                     the configuration of interest to an NSO service. To enable
+                     NSO service development, the network element's YANG model can be
+                     used with NSO's netsim tool that uses ConfD (Configuration Daemon)
+                     to simulate the network elements and their management interfaces like
+                     NETCONF. Read more about netsim in
+                     <a href="../nso_user_guide/ug.netsim.html" class="olink">
+                                    <em xmlns:xi="http://www.w3.org/2001/XInclude">Network Simulator</em>
+                                  </a> in <span class="olinkdocname">User Guide</span>.
+                   
+            </p>
+            <p>
+                     The simple network element YANG model used for this example is available
+                     under <code class="filename">packages/ne/src/yang/ssh-authkey.yang</code>. The
+                     <code class="filename">ssh-authkey.yang</code> model implements a list of SSH
+                     public keys for identifying a user. The list of keys augments a list of
+                     users in the ConfD built-in <code class="filename">tailf-aaa.yang</code> module
+                     that ConfD uses to authenticate users.
+                     
+            </p>
+            <div class="informalexample"><pre class="programlisting"><strong xmlns="" class="hl-keyword">module</strong> ssh-authkey {
+  yang-version <span xmlns="" class="hl-number">1.1</span>;
+  <strong xmlns="" class="hl-keyword">namespace</strong> <strong xmlns="" class="hl-string"><em style="color:red">"http://example.com/ssh-authkey"</em></strong>;
+  <strong xmlns="" class="hl-keyword">prefix</strong> sa;
+
+  <strong xmlns="" class="hl-keyword">import</strong> tailf-common {
+    <strong xmlns="" class="hl-keyword">prefix</strong> tailf;
+  }
+
+  <strong xmlns="" class="hl-keyword">import</strong> tailf-aaa {
+    <strong xmlns="" class="hl-keyword">prefix</strong> aaa;
+  }
+
+  <strong xmlns="" class="hl-keyword">description</strong>
+    <strong xmlns="" class="hl-string"><em style="color:red">"List of SSH authorized public keys"</em></strong>;
+
+  <strong xmlns="" class="hl-keyword">revision</strong> <span xmlns="" class="hl-number">2023</span>-<span xmlns="" class="hl-number">02</span>-<span xmlns="" class="hl-number">02</span> {
+    <strong xmlns="" class="hl-keyword">description</strong>
+      <strong xmlns="" class="hl-string"><em style="color:red">"Initial revision."</em></strong>;
+  }
+
+  <strong xmlns="" class="hl-keyword">augment</strong> <strong xmlns="" class="hl-string"><em style="color:red">"/aaa:aaa/aaa:authentication/aaa:users/aaa:user"</em></strong> {
+    <strong xmlns="" class="hl-keyword">list</strong> authkey {
+      <strong xmlns="" class="hl-keyword">key</strong> pubkey-data;
+      <strong xmlns="" class="hl-keyword">leaf</strong> pubkey-data {
+        <strong xmlns="" class="hl-keyword">type</strong> string;
+      }
+    }
+  }
+}</pre></div>
+            <p>
+                   
+            </p>
+            <p>
+                     On the network element, a Python application subscribes to ConfD to be
+                     notified of configuration changes to the user's public keys and updates
+                     the user's authorized_keys file accordingly. See
+                     <code class="filename">packages/ne/netsim/ssh-authkey.py</code> for details.
+                   
+            </p>
+            <p>
+                     The first step is to create an NSO package from the network element
+                     YANG model. Since NSO will use NETCONF over SSH to communicate with
+                     the device, the package will be a NETCONF NED. The package can be created
+                     using the <span class="command"><strong>ncs-make-package</strong></span> command or the NETCONF NED
+                     builder tool. The <span class="command"><strong>ncs-make-package</strong></span> command is
+                     typically used when the YANG models used by the network element are
+                     available. Hence, the packages/ne package for this example was generated
+                     using the <span class="command"><strong>ncs-make-package</strong></span> command.
+                   
+            </p>
+            <p>
+                     As the <code class="filename">ssh-authkey.yang</code> model augments the users
+                     list in the ConfD built-in <code class="filename">tailf-aaa.yang</code> model,
+                     NSO needs a representation of that YANG model too to build the NED.
+                     However, the service will only configure the user's public keys, so only
+                     a subset of the <code class="filename">tailf-aaa.yang</code> model that only
+                     includes the user list is sufficient. To compare, see the
+                     <code class="filename">packages/ne/src/yang/tailf-aaa.yang</code> in the example
+                     vs. the network element's version under
+                     <code class="filename">$NCS_DIR/netsim/confd/src/confd/aaa/tailf-aaa.yang</code>.
+                   
+            </p>
+            <p>
+                     Now that the network element package is defined, next up is the service
+                     package, beginning with finding out what steps are required for NSO
+                     to authenticate with the network element using SSH public key
+                     authentication:
+                     
+            </p>
+            <div class="procedure">
+               <ol class="procedure" type="1">
+                  <li class="step">
+                     <p>
+                                    First, generate private and public keys using, for example, the
+                                    <span class="command"><strong>ssh-keygen</strong></span> OpenSSH authentication key utility.
+                                  
+                     </p>
+                  </li>
+                  <li class="step">
+                     <p>
+                                    Distribute the public keys to the ConfD-enabled network element's
+                                    list of authorized keys.
+                                  
+                     </p>
+                  </li>
+                  <li class="step">
+                     <p>
+                                    Configure NSO to use public key authentication with the
+                                    network element.
+                                  
+                     </p>
+                  </li>
+                  <li class="step">
+                     <p>
+                                    Finally, test the public key authentication by connecting NSO
+                                    with the network element.
+                                  
+                     </p>
+                  </li>
+               </ol>
+            </div>
+            <p>
+                   
+            </p>
+            <p>
+                     The outline above indicates that the service will benefit from
+                     implementing several smaller (nano) steps:
+                     
+            </p>
+            <div class="itemizedlist">
+               <ul class="itemizedlist" style="list-style-type: disc; ">
+                  <li class="listitem">
+                     <p>
+                                    The first step only generates private and public key files with no
+                                    configuration. Thus the first step should be implemented by an
+                                    action before the second step runs, not as part of the second step
+                                    transaction <code class="code">create()</code> callback code configuring the network
+                                    elements. The <code class="code">create()</code> callback runs multiple times,
+                                    for example, for service configuration changes, re-deploy, or commit
+                                    dry-run. Therefore, generating keys should only happen when
+                                    creating the service instance.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    The third step cannot execute before the second step is complete,
+                                    as NSO cannot use the public key for authenticating with the
+                                    network element before the network element has it in its list of
+                                    authorized keys.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    The fourth step uses the NSO built-in <code class="code">connect()</code>
+                                    action and should run after the third step finishes.
+                                  
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p>
+                   
+            </p>
+            <p>
+                     What configuration input do the above steps need?
+                     
+            </p>
+            <div class="itemizedlist">
+               <ul class="itemizedlist" style="list-style-type: disc; ">
+                  <li class="listitem">
+                     <p>
+                                    The name of the network element that will authenticate a user with
+                                    an SSH public key.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    The name of the local NSO user that maps to the remote
+                                    network element user the public key authenticates.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    The name of the remote network element user.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    A passphrase used for encrypting the private key,
+                                    guarding its privacy. The passphrase should be encrypted when
+                                    storing it in the CDB, just like any other password.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    The name of the NSO authentication group to configure for
+                                    public-key authentication with the NSO-managed network
+                                    element.
+                                  
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p>
+                   
+            </p>
+            <p>
+                     A service YANG model that implements the above configuration:
+                     
+            </p>
+            <div class="informalexample"><pre class="programlisting">  <strong xmlns="" class="hl-keyword">container</strong> pubkey-dist {
+    <strong xmlns="" class="hl-keyword">list</strong> <strong xmlns="" class="hl-keyword">key</strong>-auth {
+      <strong xmlns="" class="hl-keyword">key</strong> <strong xmlns="" class="hl-string"><em style="color:red">"ne-name local-user"</em></strong>;
+
+      <strong xmlns="" class="hl-keyword">uses</strong> ncs:nano-plan-data;
+      <strong xmlns="" class="hl-keyword">uses</strong> ncs:service-data;
+      ncs:servicepoint <strong xmlns="" class="hl-string"><em style="color:red">"distkey-servicepoint"</em></strong>;
+
+      <strong xmlns="" class="hl-keyword">leaf</strong> ne-name {
+        <strong xmlns="" class="hl-keyword">type</strong> leafref {
+          <strong xmlns="" class="hl-keyword">path</strong> <strong xmlns="" class="hl-string"><em style="color:red">"/ncs:devices/ncs:device/ncs:name"</em></strong>;
+        }
+      }
+      <strong xmlns="" class="hl-keyword">leaf</strong> local-user {
+        <strong xmlns="" class="hl-keyword">type</strong> leafref {
+          <strong xmlns="" class="hl-keyword">path</strong> <strong xmlns="" class="hl-string"><em style="color:red">"/ncs:devices/ncs:authgroups/ncs:group/ncs:umap/ncs:local-user"</em></strong>;
+          require-instance false;
+        }
+      }
+      <strong xmlns="" class="hl-keyword">leaf</strong> remote-name {
+        <strong xmlns="" class="hl-keyword">type</strong> leafref {
+          <strong xmlns="" class="hl-keyword">path</strong> <strong xmlns="" class="hl-string"><em style="color:red">"/ncs:devices/ncs:authgroups/ncs:group/ncs:umap/ncs:remote-name"</em></strong>;
+          require-instance false;
+        }
+        <strong xmlns="" class="hl-keyword">mandatory</strong> true;
+      }
+      <strong xmlns="" class="hl-keyword">leaf</strong> authgroup-name {
+        <strong xmlns="" class="hl-keyword">type</strong> leafref {
+          <strong xmlns="" class="hl-keyword">path</strong> <strong xmlns="" class="hl-string"><em style="color:red">"/ncs:devices/ncs:authgroups/ncs:group/ncs:name"</em></strong>;
+          require-instance false;
+        }
+        <strong xmlns="" class="hl-keyword">mandatory</strong> true;
+      }
+      <strong xmlns="" class="hl-keyword">leaf</strong> passphrase {
+        <em xmlns="" class="hl-comment" style="color: silver">// Leave unset for no passphrase</em>
+        tailf:suppress-echo true;
+        <strong xmlns="" class="hl-keyword">type</strong> tailf:aes-<span xmlns="" class="hl-number">256</span>-cfb-<span xmlns="" class="hl-number">128</span>-encrypted-string {
+          <strong xmlns="" class="hl-keyword">length</strong> <strong xmlns="" class="hl-string"><em style="color:red">"10..max"</em></strong> {
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must be at least 10 characters long"</em></strong>;
+          }
+          <strong xmlns="" class="hl-keyword">pattern</strong> <strong xmlns="" class="hl-string"><em style="color:red">".*[a-z]+.*"</em></strong> {
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must have at least one lower case alpha"</em></strong>;
+          }
+          <strong xmlns="" class="hl-keyword">pattern</strong> <strong xmlns="" class="hl-string"><em style="color:red">".*[A-Z]+.*"</em></strong> {
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must have at least one upper case alpha"</em></strong>;
+          }
+          <strong xmlns="" class="hl-keyword">pattern</strong> <strong xmlns="" class="hl-string"><em style="color:red">".*[0-9]+.*"</em></strong> {
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must have at least one digit"</em></strong>;
+          }
+          <strong xmlns="" class="hl-keyword">pattern</strong> <strong xmlns="" class="hl-string"><em style="color:red">".*[&lt;&gt;~;:!@#/$%^&amp;*=-]+.*"</em></strong> {
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must have at least one of these"</em></strong> +
+                          <strong xmlns="" class="hl-string"><em style="color:red">" symbols: [&lt;&gt;~;:!@#/$%^&amp;*=-]+"</em></strong>;
+          }
+          <strong xmlns="" class="hl-keyword">pattern</strong> <strong xmlns="" class="hl-string"><em style="color:red">".* .*"</em></strong> {
+            modifier invert-match;
+            error-message <strong xmlns="" class="hl-string"><em style="color:red">"The passphrase must have no spaces"</em></strong>;
+          }
+        }
+      }
+      ...
+    }
+  }</pre></div>
+            <p>
+                     For details on the YANG statements used by the YANG model, such as
+                     <code class="code">leaf</code>, <code class="code">container</code>, <code class="code">list</code>,
+                     <code class="code">leafref</code>, <code class="code">mandatory</code>, <code class="code">length</code>,
+                     <code class="code">pattern</code>, etc., see the
+                     <a class="link" href="https://www.rfc-editor.org/rfc/rfc7950" target="_top">IETF RFC 7950</a>
+                     that documents the YANG 1.1 Data Modeling Language. The
+                     <code class="code">tailf:xyz</code> are YANG extension statements documented by
+                     <a href="../nso_man/man.5.tailf_yang_extensions.html" class="olink"><span xmlns:xi="http://www.w3.org/2001/XInclude" class="refentrytitle">tailf_yang_extensions</span>(5)</a> in <span class="olinkdocname">Manual Pages
+                      </span>.
+                   
+            </p>
+            <p>
+                     The service configuration is implemented in YANG by a <code class="code">key-auth</code>
+                     list where the network element and local user names are the list keys.
+                     In addition, the list has a <code class="code">distkey-servicepoint</code> service
+                     point YANG extension statement to enable the list parameters used by the
+                     Python service callbacks that this example implements. Finally, the used
+                     <code class="code">service-data</code> and <code class="code">nano-plan-data</code> groupings add
+                     the common definitions for a service and the plan data needed when the
+                     service is a nano service.
+                   
+            </p>
+            <p>
+                     For the nano service YANG part, an NSO YANG nano service behavior
+                     tree extension that references a plan outline extension implements the
+                     above steps for setting up SSH public key authentication with a network
+                     element:
+                     
+            </p>
+            <div class="informalexample"><pre class="programlisting">  ncs:plan-outline distkey-plan {
+    <strong xmlns="" class="hl-keyword">description</strong> <strong xmlns="" class="hl-string"><em style="color:red">"Plan for distributing a public key"</em></strong>;
+    ncs:component-<strong xmlns="" class="hl-keyword">type</strong> <strong xmlns="" class="hl-string"><em style="color:red">"dk:ne"</em></strong> {
+      ncs:state <strong xmlns="" class="hl-string"><em style="color:red">"ncs:init"</em></strong>;
+      ncs:state <strong xmlns="" class="hl-string"><em style="color:red">"dk:generated"</em></strong> {
+        ncs:create {
+          <em xmlns="" class="hl-comment" style="color: silver">// Request the generate-keys action</em>
+          ncs:post-action-node <strong xmlns="" class="hl-string"><em style="color:red">"$SERVICE"</em></strong> {
+            ncs:action-name <strong xmlns="" class="hl-string"><em style="color:red">"generate-keys"</em></strong>;
+            ncs:result-expr <strong xmlns="" class="hl-string"><em style="color:red">"result = 'true'"</em></strong>;
+            ncs:sync;
+          }
+        }
+        ncs:delete {
+          <em xmlns="" class="hl-comment" style="color: silver">// Request the delete-keys action</em>
+          ncs:post-action-node <strong xmlns="" class="hl-string"><em style="color:red">"$SERVICE"</em></strong> {
+            ncs:action-name <strong xmlns="" class="hl-string"><em style="color:red">"delete-keys"</em></strong>;
+            ncs:result-expr <strong xmlns="" class="hl-string"><em style="color:red">"result = 'true'"</em></strong>;
+          }
+        }
+      }
+      ncs:state <strong xmlns="" class="hl-string"><em style="color:red">"dk:distributed"</em></strong> {
+        ncs:create {
+          <em xmlns="" class="hl-comment" style="color: silver">// Invoke a Python program to distribute the authorized public key to</em>
+          <em xmlns="" class="hl-comment" style="color: silver">// the network element</em>
+          ncs:nano-callback;
+          ncs:force-commit;
+        }
+      }
+      ncs:state <strong xmlns="" class="hl-string"><em style="color:red">"dk:configured"</em></strong> {
+        ncs:create {
+          <em xmlns="" class="hl-comment" style="color: silver">// Invoke a Python program that in turn invokes a service template to</em>
+          <em xmlns="" class="hl-comment" style="color: silver">// configure NSO to use public key authentication with the network</em>
+          <em xmlns="" class="hl-comment" style="color: silver">// element</em>
+          ncs:nano-callback;
+          <em xmlns="" class="hl-comment" style="color: silver">// Request the connect action to test the public key authentication</em>
+          ncs:post-action-node <strong xmlns="" class="hl-string"><em style="color:red">"/ncs:devices/device[name=$NE-NAME]"</em></strong> {
+            ncs:action-name <strong xmlns="" class="hl-string"><em style="color:red">"connect"</em></strong>;
+            ncs:result-expr <strong xmlns="" class="hl-string"><em style="color:red">"result = 'true'"</em></strong>;
+          }
+        }
+      }
+      ncs:state <strong xmlns="" class="hl-string"><em style="color:red">"ncs:ready"</em></strong>;
+    }
+  }
+  ncs:service-behavior-tree distkey-servicepoint {
+    <strong xmlns="" class="hl-keyword">description</strong> <strong xmlns="" class="hl-string"><em style="color:red">"One component per distkey behavior tree"</em></strong>;
+    ncs:plan-outline-ref <strong xmlns="" class="hl-string"><em style="color:red">"dk:distkey-plan"</em></strong>;
+    ncs:selector {
+      <em xmlns="" class="hl-comment" style="color: silver">// The network element name used with this component</em>
+      ncs:variable <strong xmlns="" class="hl-string"><em style="color:red">"NE-NAME"</em></strong> {
+        ncs:<strong xmlns="" class="hl-keyword">value</strong>-expr <strong xmlns="" class="hl-string"><em style="color:red">"current()/ne-name"</em></strong>;
+      }
+      <em xmlns="" class="hl-comment" style="color: silver">// The unique component name</em>
+      ncs:variable <strong xmlns="" class="hl-string"><em style="color:red">"NAME"</em></strong> {
+        ncs:<strong xmlns="" class="hl-keyword">value</strong>-expr <strong xmlns="" class="hl-string"><em style="color:red">"concat(current()/ne-name, '-', current()/local-user)"</em></strong>;
+      }
+      <em xmlns="" class="hl-comment" style="color: silver">// Component for setting up public key authentication</em>
+      ncs:create-component <strong xmlns="" class="hl-string"><em style="color:red">"$NAME"</em></strong> {
+        ncs:component-<strong xmlns="" class="hl-keyword">type</strong>-ref <strong xmlns="" class="hl-string"><em style="color:red">"dk:ne"</em></strong>;
+      }
+    }
+  }</pre></div>
+            <p>
+                   
+            </p>
+            <p>
+                     The nano <code class="code">service-behavior-tree</code> for the service point creates
+                     a nano service component for each list entry in the <code class="code">key-auth</code>
+                     list.
+                     The last connection verification step of the nano service, the
+                     <code class="code">connected</code> state, uses the <code class="code">NE-NAME</code> variable.
+                     The <code class="code">NAME</code> variable concatenates the <code class="code">ne-name</code> and
+                     <code class="code">local-user</code> keys from the <code class="code">key-auth</code> list to
+                     create a unique nano service component name.
+                   
+            </p>
+            <p>
+                     The only step that requires both a create and delete part is the
+                     <code class="code">generated</code> state action that generates the SSH keys. If a
+                     user deletes a service instance and another network element does not
+                     currently use the generated keys, this deletes the keys too. NSO
+                     will revert the configuration automatically as part of the FASTMAP
+                     algorithm. Hence, the service list instances also need actions for
+                     generating and deleting keys.
+                     
+            </p>
+            <div class="informalexample"><pre class="programlisting">  <strong xmlns="" class="hl-keyword">container</strong> pubkey-dist {
+    <strong xmlns="" class="hl-keyword">list</strong> <strong xmlns="" class="hl-keyword">key</strong>-auth {
+      <strong xmlns="" class="hl-keyword">key</strong> <strong xmlns="" class="hl-string"><em style="color:red">"ne-name local-user"</em></strong>;
+      ...
+      action generate-keys {
+        tailf:actionpoint generate-keys;
+        <strong xmlns="" class="hl-keyword">output</strong> {
+          <strong xmlns="" class="hl-keyword">leaf</strong> result {
+            <strong xmlns="" class="hl-keyword">type</strong> boolean;
+          }
+        }
+      }
+      action delete-keys {
+        tailf:actionpoint delete-keys;
+        <strong xmlns="" class="hl-keyword">output</strong> {
+          <strong xmlns="" class="hl-keyword">leaf</strong> result {
+            <strong xmlns="" class="hl-keyword">type</strong> boolean;
+          }
+        }
+      }
+    }
+  }</pre></div>
+            <p>
+                     The actions have no input statements, as the input is the configuration
+                     in the service instance list entry.
+                   
+            </p>
+            <p>
+                     The <code class="code">generated</code> state uses the <code class="code">ncs:sync</code> statement
+                     to ensure that the keys exist before the <code class="code">distributed</code>
+                     state runs. Similarly, the <code class="code">distributed</code> state uses the
+                     <code class="code">force-commit</code> statement to commit the configuration to the
+                     NSO CDB and the network elements before the <code class="code">configured</code>
+                     state runs.
+                   
+            </p>
+            <p>
+                     See the <code class="filename">packages/distkey/src/yang/distkey.yang</code> YANG
+                     model for the nano service behavior tree, plan outline, and service
+                     configuration implementation.
+                   
+            </p>
+            <p>
+                     Next, handling the key generation, distributing keys to the network
+                     element, and configuring NSO to authenticate using the keys with the
+                     network element requires some code, here written in Python, implemented
+                     by the <code class="filename">packages/distkey/python/distkey/distkey-app.py</code>
+                     script application.
+                   
+            </p>
+            <p>
+                     The Python script application defines a Python <code class="code">DistKeyApp</code>
+                     class specified in the <code class="filename">packages/distkey/package-meta-data.xml</code>
+                     file that NSO starts in a Python thread. This Python class inherits
+                     the <code class="code">ncs.application.Application</code> and implement the
+                     <code class="code">setup()</code> and <code class="code">teardown()</code> methods. The
+                     <code class="code">setup()</code> method registers the nano service
+                     <code class="code">create()</code> callbacks and the action handlers for generating
+                     and deleting the key files. Using the nano service state to separate the
+                     two nano service <code class="code">create()</code> callbacks for the distribution and
+                     NSO configuration of keys, only one Python class, the
+                     <code class="code">DistKeyServiceCallbacks</code> class, is needed to implement them.
+                   
+            </p><pre class="programlisting"><strong xmlns="" class="hl-keyword">class</strong> DistKeyApp(ncs.application.Application):
+    <strong xmlns="" class="hl-keyword">def</strong> setup(self):
+        <em xmlns="" class="hl-comment" style="color: silver"># Nano service callbacks require a registration for a service point,</em>
+        <em xmlns="" class="hl-comment" style="color: silver"># component, and state, as specified in the corresponding data model</em>
+        <em xmlns="" class="hl-comment" style="color: silver"># and plan outline.</em>
+        self.register_nano_service(<strong xmlns="" class="hl-string"><em style="color:red">'distkey-servicepoint'</em></strong>,  <em xmlns="" class="hl-comment" style="color: silver"># Service point</em>
+                                    <strong xmlns="" class="hl-string"><em style="color:red">'dk:ne'</em></strong>,                 <em xmlns="" class="hl-comment" style="color: silver"># Component</em>
+                                    <strong xmlns="" class="hl-string"><em style="color:red">'dk:distributed'</em></strong>,        <em xmlns="" class="hl-comment" style="color: silver"># State</em>
+                                    DistKeyServiceCallbacks)
+        self.register_nano_service(<strong xmlns="" class="hl-string"><em style="color:red">'distkey-servicepoint'</em></strong>,  <em xmlns="" class="hl-comment" style="color: silver"># Service point</em>
+                                    <strong xmlns="" class="hl-string"><em style="color:red">'dk:ne'</em></strong>,                 <em xmlns="" class="hl-comment" style="color: silver"># Component</em>
+                                    <strong xmlns="" class="hl-string"><em style="color:red">'dk:configured'</em></strong>,         <em xmlns="" class="hl-comment" style="color: silver"># State</em>
+                                    DistKeyServiceCallbacks)
+
+        <em xmlns="" class="hl-comment" style="color: silver"># Side effect action that uses ssh-keygen to create the keyfiles</em>
+        self.register_action(<strong xmlns="" class="hl-string"><em style="color:red">'generate-keys'</em></strong>, GenerateActionHandler)
+        <em xmlns="" class="hl-comment" style="color: silver"># Action to delete the keys created by the generate keys action</em>
+        self.register_action(<strong xmlns="" class="hl-string"><em style="color:red">'delete-keys'</em></strong>, DeleteActionHandler)
+
+    <strong xmlns="" class="hl-keyword">def</strong> teardown(self):
+        self.log.info(<strong xmlns="" class="hl-string"><em style="color:red">'DistKeyApp FINISHED'</em></strong>)</pre><p>
+                     The action for generating keys calls the OpenSSH
+                     <span class="command"><strong>ssh-keygen</strong></span> command to generate the private and
+                     public key files. Calling <span class="command"><strong>ssh-keygen</strong></span> is kept out of
+                     the service <code class="code">create()</code> callback to avoid the key generation
+                     running multiple times, for example, for service changes, re-deploy or
+                     dry-run commits.
+                     Also, NSO encrypts the passphrase used when generating the keys for
+                     added security, see the YANG model, so the Python code decrypts it
+                     before using it with the <span class="command"><strong>ssh-keygen</strong></span> command.
+                   
+            </p><pre class="programlisting"><strong xmlns="" class="hl-keyword">class</strong> GenerateActionHandler(Action):
+    <em xmlns=""><span class="hl-annotation" style="color: gray">@Action.action</span></em>
+    <strong xmlns="" class="hl-keyword">def</strong> cb_action(self, uinfo, name, keypath, ainput, aoutput, trans):
+        <strong xmlns="" class="hl-string"><em style="color:red">'''Action callback'''</em></strong>
+        service = ncs.maagic.get_node(trans, keypath)
+        <em xmlns="" class="hl-comment" style="color: silver"># Install the crypto keys used to decrypt the service passphrase leaf</em>
+        <em xmlns="" class="hl-comment" style="color: silver"># as input to the key generation.</em>
+        <strong xmlns="" class="hl-keyword">with</strong> ncs.maapi.Maapi() <strong xmlns="" class="hl-keyword">as</strong> maapi:
+            _maapi.install_crypto_keys(maapi.msock)
+        <em xmlns="" class="hl-comment" style="color: silver"># Decrypt the passphrase leaf for use when generating the keys</em>
+        encrypted_passphrase = service.passphrase
+        decrypted_passphrase = _ncs.decrypt(str(encrypted_passphrase))
+        aoutput = True
+        <em xmlns="" class="hl-comment" style="color: silver"># If it does not exist already, generate a private and public key</em>
+        <strong xmlns="" class="hl-keyword">if</strong> os.path.isfile(f<strong xmlns="" class="hl-string"><em style="color:red">'./{service.local_user}_ed25519'</em></strong>) == False:
+            result = subprocess.run([<strong xmlns="" class="hl-string"><em style="color:red">'ssh-keygen'</em></strong>, <strong xmlns="" class="hl-string"><em style="color:red">'-N'</em></strong>,
+                                    f<strong xmlns="" class="hl-string"><em style="color:red">'{decrypted_passphrase}'</em></strong>, <strong xmlns="" class="hl-string"><em style="color:red">'-t'</em></strong>, <strong xmlns="" class="hl-string"><em style="color:red">'ed25519'</em></strong>,
+                                    <strong xmlns="" class="hl-string"><em style="color:red">'-f'</em></strong>, f<strong xmlns="" class="hl-string"><em style="color:red">'./{service.local_user}_ed25519'</em></strong>],
+                                    stdout=subprocess.PIPE, check=True,
+                                    encoding=<strong xmlns="" class="hl-string"><em style="color:red">'utf-8'</em></strong>)
+            <strong xmlns="" class="hl-keyword">if</strong> <strong xmlns="" class="hl-string"><em style="color:red">"has been saved"</em></strong> <strong xmlns="" class="hl-keyword">not</strong> <strong xmlns="" class="hl-keyword">in</strong> result.stdout:
+                aoutput = False</pre><p>
+                     The <code class="code">DeleteActionHandler</code> action deletes the key files if no
+                     more network elements use the user's keys:
+                   
+            </p><pre class="programlisting"><strong xmlns="" class="hl-keyword">class</strong> DeleteActionHandler(Action):
+    <em xmlns=""><span class="hl-annotation" style="color: gray">@Action.action</span></em>
+    <strong xmlns="" class="hl-keyword">def</strong> cb_action(self, uinfo, name, keypath, ainput, aoutput, trans):
+        <strong xmlns="" class="hl-string"><em style="color:red">'''Action callback'''</em></strong>
+        service = ncs.maagic.get_node(trans, keypath)
+        <em xmlns="" class="hl-comment" style="color: silver"># Only delete the key files if no more network elements use this</em>
+        <em xmlns="" class="hl-comment" style="color: silver"># user's keys</em>
+        cur = trans.cursor(<strong xmlns="" class="hl-string"><em style="color:red">'/pubkey-dist/key-auth'</em></strong>)
+        remove_key = True
+        <strong xmlns="" class="hl-keyword">while</strong> True:
+            <strong xmlns="" class="hl-keyword">try</strong>:
+                value = next(cur)
+                <strong xmlns="" class="hl-keyword">if</strong> value[<span xmlns="" class="hl-number">0</span>] != service.ne_name <strong xmlns="" class="hl-keyword">and</strong> value[<span xmlns="" class="hl-number">1</span>] == service.local_user:
+                    remove_key = False
+                    <strong xmlns="" class="hl-keyword">break</strong>
+            <strong xmlns="" class="hl-keyword">except</strong> StopIteration:
+                <strong xmlns="" class="hl-keyword">break</strong>
+        aoutput = True
+        <strong xmlns="" class="hl-keyword">if</strong> remove_key <strong xmlns="" class="hl-keyword">is</strong> True:
+            <strong xmlns="" class="hl-keyword">try</strong>:
+                os.remove(f<strong xmlns="" class="hl-string"><em style="color:red">'./{service.local_user}_ed25519.pub'</em></strong>)
+                os.remove(f<strong xmlns="" class="hl-string"><em style="color:red">'./{service.local_user}_ed25519'</em></strong>)
+            <strong xmlns="" class="hl-keyword">except</strong> OSError <strong xmlns="" class="hl-keyword">as</strong> e:
+                <strong xmlns="" class="hl-keyword">if</strong> e.errno != errno.ENOENT:
+                    aoutput = False</pre><p>
+                     The Python class for the nano service <code class="code">create()</code> callbacks
+                     handles both the distribution and NSO configuration of the keys.
+                     The <code class="code">dk:distributed</code> state <code class="code">create()</code> callback
+                     code adds the public key data to the network element's list of
+                     authorized keys. For the <code class="code">create()</code> call for the
+                     <code class="code">dk:configured</code> state, a template is used to configure
+                     NSO to use public key authentication with the network element.
+                     The template can be called directly from the nano service, but in this
+                     case, it needs to be called from the Python code to input the current
+                     working directory to the template:
+                   
+            </p><pre class="programlisting"><strong xmlns="" class="hl-keyword">class</strong> DistKeyServiceCallbacks(NanoService):
+    <em xmlns=""><span class="hl-annotation" style="color: gray">@NanoService.create</span></em>
+    <strong xmlns="" class="hl-keyword">def</strong> cb_nano_create(self, tctx, root, service, plan, component, state,
+                        proplist, component_proplist):
+        <strong xmlns="" class="hl-string"><em style="color:red">'''Nano service create callback'''</em></strong>
+        <strong xmlns="" class="hl-keyword">if</strong> state == <strong xmlns="" class="hl-string"><em style="color:red">'dk:distributed'</em></strong>:
+            <em xmlns="" class="hl-comment" style="color: silver"># Distribute the public key to the network element's authorized</em>
+            <em xmlns="" class="hl-comment" style="color: silver"># keys list</em>
+            <strong xmlns="" class="hl-keyword">with</strong> open(f<strong xmlns="" class="hl-string"><em style="color:red">'./{service.local_user}_ed25519.pub'</em></strong>, <strong xmlns="" class="hl-string"><em style="color:red">'r'</em></strong>) <strong xmlns="" class="hl-keyword">as</strong> f:
+                pubkey_data = f.read()
+                config = root.devices.device[service.ne_name].config
+                users = config.aaa.authentication.users
+                users.user[service.local_user].authkey.create(pubkey_data)
+        <strong xmlns="" class="hl-keyword">elif</strong> state == <strong xmlns="" class="hl-string"><em style="color:red">'dk:configured'</em></strong>:
+            <em xmlns="" class="hl-comment" style="color: silver"># Configure NSO to use a public key for authentication with</em>
+            <em xmlns="" class="hl-comment" style="color: silver"># the network element</em>
+            template_vars = ncs.template.Variables()
+            template_vars.add(<strong xmlns="" class="hl-string"><em style="color:red">'CWD'</em></strong>, os.getcwd())
+            template = ncs.template.Template(service)
+            template.apply(<strong xmlns="" class="hl-string"><em style="color:red">'distkey-configured'</em></strong>, template_vars)</pre><p>
+                     The template to configure NSO to use public key authentication with
+                     the network element is available under
+                     <code class="filename">packages/distkey/templates/distkey-configured.xml</code>:
+                   
+            </p><pre class="programlisting"><strong xmlns="" class="hl-tag" style="color: #000096">&lt;config-template</strong> <span xmlns="" class="hl-attribute" style="color: #F5844C">xmlns</span>=<span xmlns="" class="hl-value" style="color: #993300">"http://tail-f.com/ns/config/1.0"</span><strong xmlns="" class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong xmlns="" class="hl-tag" style="color: #000096">&lt;devices</strong> <span xmlns="" class="hl-attribute" style="color: #F5844C">xmlns</span>=<span xmlns="" class="hl-value" style="color: #993300">"http://tail-f.com/ns/ncs"</span> <span xmlns="" class="hl-attribute" style="color: #F5844C">tags</span>=<span xmlns="" class="hl-value" style="color: #993300">"merge"</span><strong xmlns="" class="hl-tag" style="color: #000096">&gt;</strong>
+    <strong xmlns="" class="hl-tag" style="color: #000096">&lt;authgroups&gt;</strong>
+      <strong xmlns="" class="hl-tag" style="color: #000096">&lt;group&gt;</strong>
+        <strong xmlns="" class="hl-tag" style="color: #000096">&lt;name&gt;</strong>{authgroup-name}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+        <strong xmlns="" class="hl-tag" style="color: #000096">&lt;umap&gt;</strong>
+          <strong xmlns="" class="hl-tag" style="color: #000096">&lt;local-user&gt;</strong>{local-user}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/local-user&gt;</strong>
+          <strong xmlns="" class="hl-tag" style="color: #000096">&lt;remote-name&gt;</strong>{remote-name}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/remote-name&gt;</strong>
+          <strong xmlns="" class="hl-tag" style="color: #000096">&lt;public-key&gt;</strong>
+            <strong xmlns="" class="hl-tag" style="color: #000096">&lt;private-key&gt;</strong>
+              <strong xmlns="" class="hl-tag" style="color: #000096">&lt;file&gt;</strong>
+                <strong xmlns="" class="hl-tag" style="color: #000096">&lt;name&gt;</strong>{$CWD}/{local-user}_ed25519<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+                <strong xmlns="" class="hl-tag" style="color: #000096">&lt;passphrase&gt;</strong>{passphrase}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/passphrase&gt;</strong>
+              <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/file&gt;</strong>
+            <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/private-key&gt;</strong>
+          <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/public-key&gt;</strong>
+        <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/umap&gt;</strong>
+      <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/group&gt;</strong>
+    <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/authgroups&gt;</strong>
+    <strong xmlns="" class="hl-tag" style="color: #000096">&lt;device&gt;</strong>
+      <strong xmlns="" class="hl-tag" style="color: #000096">&lt;name&gt;</strong>{ne-name}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+      <strong xmlns="" class="hl-tag" style="color: #000096">&lt;authgroup&gt;</strong>{authgroup-name}<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/authgroup&gt;</strong>
+    <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/device&gt;</strong>
+  <strong xmlns="" class="hl-tag" style="color: #000096">&lt;/devices&gt;</strong>
+<strong xmlns="" class="hl-tag" style="color: #000096">&lt;/config-template&gt;</strong>}</pre><p>
+                     The example uses three scripts to showcase the nano service:
+                     
+            </p>
+            <div class="itemizedlist">
+               <ul class="itemizedlist" style="list-style-type: disc; ">
+                  <li class="listitem">
+                     <p>
+                                    A shell script, <code class="filename">showcase.sh</code>, that uses the
+                                    <span class="command"><strong>ncs_cli</strong></span> program to run CLI commands via the
+                                    NSO IPC port.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    A Python script, <code class="filename">showcase-rc.sh</code>, that uses
+                                    the <code class="filename">requests</code> package for RESTCONF edit
+                                    operations and receiving event notifications.
+                                  
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p>
+                                    A Python script that uses NSO MAAPI,
+                                    <code class="filename">showcase-maapi.sh</code>, via the NSO IPC port.
+                                  
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p>
+                     The ncs_cli program identifies itself with NSO as the
+                     <span class="emphasis"><em>admin</em></span> user without authentication, and the
+                     RESTCONF client uses plain HTTP and basic user password
+                     authentication. All three scripts demonstrate the service by generating
+                     keys, distributing the public key, and configuring NSO for public
+                     key authentication with the network elements. To run the example, see
+                     the instructions in the <code class="filename">README</code> file of the example.
+                   
+            </p>
+         </div><script type="text/javascript" src="common/main.js">
+            <!----></script><script type="text/javascript" src="common/splitterInit.js">
+            <!----></script><div class="footer" id="footer-legal">
+            <div class="footer-legal framework-footer-cq">
+               <div id="framework-footer">
+                  <div id="footer-legal"><a href="http://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a></div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="sidebar">
+         <div id="leftnavigation" style="padding-top:3px;">
+            <div id="tabs">
+               <ul style="visibility: hidden;"></ul>
+               <div id="treeDiv"><img src="common/images/loading.gif" alt="loading table of contents..." id="tocLoading" style="display:block;" /><div id="ulTreeDiv" style="display:none">
+                     <ul id="tree" class="filetree">
+                        <li><span class="file"><a href="gs.about.html" tabindex="1">About</a></span><ul>
+                              <li><span class="file"><a href="ch01s01.html" tabindex="1">Purpose</a></span></li>
+                              <li><span class="file"><a href="ch01s02.html" tabindex="1">Target Audience</a></span></li>
+                              <li><span class="file"><a href="ch01s03.html" tabindex="1">About NSO</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncsnwe.intro.html" tabindex="1">Introduction to NSO</a></span><ul>
+                              <li><span class="file"><a href="ch02s01.html" tabindex="1">NSO Overview</a></span></li>
+                              <li><span class="file"><a href="ch02s02.html" tabindex="1">Architecture Overview</a></span></li>
+                              <li><span class="file"><a href="ch02s03.html" tabindex="1">
+                                           The Orchestration Challenge</a></span></li>
+                              <li><span class="file"><a href="ch02s04.html" tabindex="1">
+                                           How NSO Addresses the Orchestration Challenge</a></span></li>
+                              <li><span class="file"><a href="ch02s05.html" tabindex="1">High-Availability and Clustering</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ig.intro.html" tabindex="1">Installation</a></span><ul>
+                              <li><span class="file"><a href="ch03s01.html" tabindex="1">Install Types</a></span><ul>
+                                    <li><span class="file"><a href="ch03s01s01.html" tabindex="1">Local Install</a></span></li>
+                                    <li><span class="file"><a href="ch03s01s02.html" tabindex="1">System Install</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="sec.local_install.html" tabindex="1">Local Install Steps</a></span><ul>
+                                    <li><span class="file"><a href="li.fulfill.installation.reqs.html" tabindex="1">1. Fulfill Installation Requirements</a></span><ul>
+                                          <li><span class="file"><a href="li.fulfill.installation.reqs.html#d0e421" tabindex="1">Primary Requirements</a></span></li>
+                                          <li><span class="file"><a href="li.fulfill.installation.reqs.html#d0e488" tabindex="1">Additional Requirements</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="li.download.the.installer.html" tabindex="1">2. Download the Installer and NEDs</a></span><ul>
+                                          <li><span class="file"><a href="li.download.the.installer.html#d0e567" tabindex="1">Identifying the Installer</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="li.unpack.the.installer.html" tabindex="1">3. Unpack the Installer</a></span><ul>
+                                          <li><span class="file"><a href="li.unpack.the.installer.html#d0e649" tabindex="1">Description of Unpacked Files</a></span><ul>
+                                                <li><span class="file"><a href="li.unpack.the.installer.html#d0e684" tabindex="1">NED Packages</a></span></li>
+                                                <li><span class="file"><a href="li.unpack.the.installer.html#d0e694" tabindex="1">Installer Help</a></span></li>
+                                             </ul>
+                                          </li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="li.run.the.installer.html" tabindex="1">4. Run the Installer</a></span><ul>
+                                          <li><span class="file"><a href="li.run.the.installer.html#d0e751" tabindex="1">Manual Pages</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="li.set.env.variables.html" tabindex="1">5. Set Environment Variables </a></span></li>
+                                    <li><span class="file"><a href="li.create.runtime.directory.html" tabindex="1">6. Create Runtime Directory</a></span><ul>
+                                          <li><span class="file"><a href="li.create.runtime.directory.html#d0e905" tabindex="1">Runtime vs. Installation Directory</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="li.generate.license.token.html" tabindex="1">7. Generate License Registration Token</a></span><ul>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e968" tabindex="1">Evaluation Period</a></span></li>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e976" tabindex="1">Communication Send Error</a></span></li>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e981" tabindex="1">Unable to Access Cisco Smart Software Manager?</a></span></li>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e1005" tabindex="1">License Registration in High Availability (HA) Mode</a></span></li>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e1012" tabindex="1">Licensing Log</a></span></li>
+                                          <li><span class="file"><a href="li.generate.license.token.html#d0e1024" tabindex="1">Check Registration Status</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch03s03.html" tabindex="1">Explore the Installation</a></span><ul>
+                                    <li><span class="file"><a href="ch03s03s01.html" tabindex="1">Documentation</a></span></li>
+                                    <li><span class="file"><a href="ch03s03s02.html" tabindex="1">Examples</a></span></li>
+                                    <li><span class="file"><a href="ch03s03s03.html" tabindex="1">Network Element Drivers</a></span><ul>
+                                          <li><span class="file"><a href="ch03s03s03.html#d0e1106" tabindex="1">Install new NEDs</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch03s03s04.html" tabindex="1">Shell Scripts</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch03s04.html" tabindex="1">Start and Stop NSO</a></span></li>
+                              <li><span class="file"><a href="ch03s05.html" tabindex="1">Enable Development Mode</a></span></li>
+                              <li><span class="file"><a href="ch03s06.html" tabindex="1">Create NSO Instance</a></span></li>
+                              <li><span class="file"><a href="migrate.to.system.install.html" tabindex="1">Migrate to System Install</a></span></li>
+                              <li><span class="file"><a href="ch03s08.html" tabindex="1">Uninstall NSO Local Install</a></span></li>
+                              <li><span class="file"><a href="sec.system_install.html" tabindex="1">System Install Steps</a></span><ul>
+                                    <li><span class="file"><a href="si.fulfill.installation.reqs.html" tabindex="1">1. Fulfill Installation Requirements</a></span><ul>
+                                          <li><span class="file"><a href="si.fulfill.installation.reqs.html#d0e1568" tabindex="1">Primary Requirements</a></span></li>
+                                          <li><span class="file"><a href="si.fulfill.installation.reqs.html#d0e1635" tabindex="1">Additional Requirements</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="si.download.the.installer.html" tabindex="1">2. Download the Installer and NEDs</a></span><ul>
+                                          <li><span class="file"><a href="si.download.the.installer.html#d0e1735" tabindex="1">Identifying the Installer</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="si.unpack.the.installer.html" tabindex="1">3. Unpack the Installer</a></span><ul>
+                                          <li><span class="file"><a href="si.unpack.the.installer.html#d0e1817" tabindex="1">Description of Unpacked Files</a></span><ul>
+                                                <li><span class="file"><a href="si.unpack.the.installer.html#d0e1852" tabindex="1">NED Packages</a></span></li>
+                                                <li><span class="file"><a href="si.unpack.the.installer.html#d0e1862" tabindex="1">Installer Help</a></span></li>
+                                             </ul>
+                                          </li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="si.run.the.installer.html" tabindex="1">4. Run the Installer</a></span><ul>
+                                          <li><span class="file"><a href="si.run.the.installer.html#d0e1908" tabindex="1">Default Directories</a></span></li>
+                                          <li><span class="file"><a href="si.run.the.installer.html#d0e1986" tabindex="1">Manual Pages</a></span></li>
+                                          <li><span class="file"><a href="si.run.the.installer.html#si.run.the.installer.overcommit" tabindex="1">Disable Memory Overcommit</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="si.setup.user.access.html" tabindex="1">5. Set up User Access</a></span></li>
+                                    <li><span class="file"><a href="si.set.env.variables.html" tabindex="1">6. Set Environment Variables </a></span></li>
+                                    <li><span class="file"><a href="si.runtime.directory.creation.html" tabindex="1">7. Runtime Directory Creation</a></span></li>
+                                    <li><span class="file"><a href="si.generate.license.token.html" tabindex="1">8. Generate License Registration Token</a></span><ul>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2264" tabindex="1">Evaluation Period</a></span></li>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2273" tabindex="1">Communication Send Error</a></span></li>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2278" tabindex="1">Unable to access Cisco Smart Software Manager?</a></span></li>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2302" tabindex="1">License Registration in HA Mode</a></span></li>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2309" tabindex="1">Licensing Log</a></span></li>
+                                          <li><span class="file"><a href="si.generate.license.token.html#d0e2321" tabindex="1">Check Registration Status</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="modify.examples.html" tabindex="1">Modify Examples for System Install</a></span></li>
+                              <li><span class="file"><a href="ch03s11.html" tabindex="1">Uninstall NSO System Install</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncsnwe.examples.html" tabindex="1">Running NSO Examples</a></span><ul>
+                              <li><span class="file"><a href="ch04s01.html" tabindex="1">General Instructions</a></span></li>
+                              <li><span class="file"><a href="ch04s02.html" tabindex="1">Common Mistakes</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncsnwe.deployment.html" tabindex="1">Developing and Deploying a Nano Service</a></span><ul>
+                              <li id="webhelp-currentid"><span class="file"><a href="ch05s01.html" tabindex="1">Development</a></span></li>
+                              <li><span class="file"><a href="ch05s02.html" tabindex="1">Deployment</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ig.support.html" tabindex="1">Supporting Information</a></span><ul>
+                              <li><span class="file"><a href="ch06s01.html" tabindex="1">FAQs</a></span></li>
+                              <li><span class="file"><a href="ch06s02.html" tabindex="1">Support</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="man.pages.installer.html" tabindex="1">Manual pages</a></span><ul>
+                              <li><span class="file"><a href="man.1.ncs-installer.html" tabindex="1">ncs-installer</a></span></li>
+                              <li><span class="file"><a href="man.1.ncs-uninstall.html" tabindex="1">ncs-uninstall</a></span></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

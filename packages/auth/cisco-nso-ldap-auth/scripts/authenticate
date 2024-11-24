@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+
+# Cisco NSO package authentication with LDAP:
+#
+# Reads LDAP server configuration from CDB.
+
+# INPUT
+# [user;password;orig_request;request;headers;body;src-ip;src-port;ctx;proto;]
+#       - data to use for login
+# - user: base64 encoded
+# - password: base64 encoded
+# - orig_request: not used
+# - request: not used
+# - headers: not used
+# - body:  not used
+# - src-ip: not used
+# - src-port: not used
+# - ctx: not used
+# - proto: not used
+
+# OUTPUT
+# "accept $groups $uid $gid $supplementary_gids $HOME\n" - authenticated user
+# "unknown 'reason'\n" - can't use supplied data to login
+# "reject 'reason'\n"- denied authentication
+# "abort 'reason'\n" - abort the entire authentication process
+
+
+import base64
+import logging
+import os
+import sys
+
+import ldap
+import ldap.filter
+
+import ncs
+import _ncs
+
+# Constants
+NOBODY = 65534
+NO_HOME_DIR = "/nonexistent"
+# Give away as little information about the reason as possible
+reject_reply = 'reject username or password is wrong'
+
+# Setup logger
+# assume system install
+logdir = os.getenv("NCS_LOG_DIR")
+if logdir is None:
+    # fallback to local install
+    logdir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                          "../../../../../logs")
+
+logname = os.path.join(logdir, "ncs-python-ldap-auth.log")
+if not os.path.isdir(logdir):
+    os.mkdir(logdir)
+
+logfmt = ("%(asctime)s.%(msecs)02d %(filename)s:%(lineno)s"
+          " %(levelname)s: %(message)s")
+logging.basicConfig(filename=logname, filemode="a+", format=logfmt,
+                    datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+def base64_to_str(b):
+    return base64.decodebytes(b.encode("utf-8")).decode("utf-8")
+
+
+def str_to_base64(s):
+    return base64.encodebytes(s.encode("utf-8")).decode("utf-8")
+
+
+class LDAPConfig():
+    def __init__(self, host, port, secure, admin_dn, admin_password,
+                 search_base_dn, user_base_dn, user_id_attr, group_id_attr,
+                 member_of_attr, default_group):
+        self.host = host
+        self.port = port
+        self.secure = secure
+        self.admin_dn = admin_dn
+        self.admin_password = admin_password
+        self.search_base_dn = search_base_dn
+        self.user_base_dn = user_base_dn
+        self.user_id_attr = user_id_attr
+        self.group_id_attr = group_id_attr
+        self.member_of_attr = member_of_attr
+        self.default_group = default_group
+
+
+def get_ldap_config_details():
+    """Retrieve the ldap host and secret stored within NSO"""
+
+    # Create NCS connection to read ldap host details
+    logger.debug("Connecting to NSO to retrieve ldap configuration details")
+
+    # All config is either mandatory or has got a default value,
+    # i.e no need for explicit validation checks of the config
+    # (except the default_group).
+    ldap_servers = []
+    with ncs.maapi.Maapi() as m:
+        with ncs.maapi.Session(m, 'admin', 'system'):
+            with m.start_read_trans() as trans:
+                m.install_crypto_keys()
+                root = ncs.maagic.get_root(trans)
+                ldap = root.cisco_nso_ldap_auth__ldap_auth
+                default_group = ldap.default_group
+
+                for config in ldap.server:
+                    host = config.host
+                    port = config.port
+                    secure = config.secure_connection
+                    admin_dn = config.bind_admin_dn
+                    secret = config.bind_admin_password
+                    admin_password = _ncs.decrypt(secret)
+                    # Mandatory choice, either "_base_dn" have to be set!
+                    search_base_dn = user_base_dn = None
+                    if config.search_base_dn is not None:
+                        search_base_dn = config.search_base_dn
+                    else:
+                        user_base_dn = config.user_base_dn
+                    user_id_attribute = config.user_id_attribute
+                    group_id_attribute = config.group_id_attribute
+                    member_of_attribute = config.member_of_attribute
+
+                    msg = (f"ldap host: {host}\n"
+                           f"ldap port: {port}\n"
+                           f"ldap secure: {secure}\n"
+                           f"ldap admin_dn: {admin_dn}\n"
+                           f"ldap admin_password: {admin_password}\n"
+                           f"ldap search_base_dn: {search_base_dn}\n"
+                           f"ldap user_base_dn: {user_base_dn}\n"
+                           f"ldap user_id_attribute: {user_id_attribute}\n"
+                           f"ldap group_id_attribute: {group_id_attribute}\n"
+                           f"ldap member_of_attribute: {member_of_attribute}")
+                    logging.debug(msg)
+
+                    ldapc = LDAPConfig(host, port, secure, admin_dn,
+                                       admin_password, search_base_dn,
+                                       user_base_dn, user_id_attribute,
+                                       group_id_attribute, member_of_attribute,
+                                       default_group)
+                    ldap_servers.append(ldapc)
+
+    logger.debug(f"--- ldap_servers = {ldap_servers}")
+    return ldap_servers
+
+
+def get_user_credentials(client, conf, user, user_password, unbind):
+    """
+    Authenticate the user and retrieve the authorization credentials.
+    """
+    user_dn = conf.user_dn
+    # Authenticating the user
+    try:
+        logging.debug(f"--- user_dn: {user_dn} , passwd: {user_password}")
+        client.simple_bind_s(user_dn, user_password)
+    except ldap.INVALID_CREDENTIALS as err:
+        maybe_unbind(client, unbind)
+        logging.debug('Wrong LDAP user_dn or password\n' + str(err))
+        return reject_reply
+    except Exception as err:
+        maybe_unbind(client, unbind)
+        logging.error('Exception while binding to the LDAP server:\n' +
+                      str(err))
+        return reject_reply
+
+    logging.debug(f"Authenticating user: {user} succeeded!")
+
+    # Get the user attributes we are interested in
+    try:
+        # Protect against LDAP filter injection attacks, see:
+        # CT1940: SEC-VAL-INLDAP: Prevent LDAP Injection flows in applications.
+        esc_user = ldap.filter.escape_filter_chars(user)
+        ldap_filter = f'(&({conf.user_id_attr}={esc_user}))'
+        ldap_attrs = ['memberOf', 'gidNumber', 'uidNumber', 'homeDirectory']
+        results = client.search_s(user_dn, ldap.SCOPE_SUBTREE, ldap_filter,
+                                  ldap_attrs)
+        maybe_unbind(client, unbind)
+    except ldap.NO_SUCH_OBJECT as err:
+        maybe_unbind(client, unbind)
+        logging.debug(f'user {user} not found:\n' + str(err))
+        return reject_reply
+
+    if not results:
+        return reject_reply
+
+    group_list = []
+    uid_number = gid_number = NOBODY
+    home_dir = NO_HOME_DIR
+    user_attrs = results[0][1]
+    if 'memberOf' in user_attrs:
+        user_groups = user_attrs['memberOf']
+        for group in user_groups:
+            group_list.append(group.decode('utf8').split(",")[0].split("=")[1])
+    if 'uidNumber' in user_attrs:
+        uid_number = user_attrs['uidNumber'][0].decode('utf8')
+    if 'gidNumber' in user_attrs:
+        gid_number = user_attrs['gidNumber'][0].decode('utf8')
+    if 'homeDirectory' in user_attrs:
+        home_dir = user_attrs['homeDirectory'][0].decode('utf8')
+
+    # In case no group info was found, fallback to the default-group
+    if group_list == []:
+        if conf.default_group is None:
+            reply = reject_reply
+        else:
+            reply = (f"accept {conf.default_group} {uid_number} "
+                     f"{gid_number} {home_dir}")
+    else:
+        reply = (f"accept {' '.join(group_list)} {uid_number} "
+                 f"{gid_number} {home_dir}")
+
+    logging.debug(f"Authorization of user: {user} succeeded!")
+
+    return reply
+
+
+def find_user(client, conf, user, unbind):
+    """
+    Find the user to be authenticated.
+    Return the DN of the found user or an empty string when not found.
+    """
+    user_dn = None
+    try:
+        client.simple_bind_s(conf.admin_dn, conf.admin_password)
+    except ldap.INVALID_CREDENTIALS as err:
+        maybe_unbind(client, unbind)
+        logging.error('LDAP Exception INVALID_CREDENTIALS for admin_dn:\n' +
+                      str(err))
+        return user_dn
+    except Exception as err:
+        maybe_unbind(client, unbind)
+        logging.error('Exception while binding admin_dn to the LDAP server:\n' +
+                      str(err))
+        return user_dn
+
+    # Find the user
+    try:
+        # Protect against LDAP filter injection attacks, see:
+        # CT1940: SEC-VAL-INLDAP: Prevent LDAP Injection flows in applications.
+        esc_user = ldap.filter.escape_filter_chars(user)
+        ldap_filter = f'(&({conf.user_id_attr}={esc_user}))'
+        ldap_attrs = ['dn']
+        results = client.search_s(conf.search_base_dn, ldap.SCOPE_SUBTREE,
+                                  ldap_filter, ldap_attrs)
+        maybe_unbind(client, unbind)
+    except ldap.NO_SUCH_OBJECT as err:
+        logging.debug(f'user {user} not found:\n' + str(err))
+        maybe_unbind(client, unbind)
+        return user_dn
+
+    if not results:
+        logging.debug(f"Could not find user: {user}")
+        return user_dn
+
+    user_dn = results[0][0]
+    logging.debug(f"Finding user: {user} succeeded, dn={user_dn}")
+    return user_dn
+
+
+def maybe_unbind(client, unbind):
+    """
+    Maybe perform an unbind operation.
+    """
+    if unbind:
+        client.unbind()
+        return True
+    else:
+        return False
+
+
+def mk_server_url(host, port, secure):
+    """
+    Construct an LDAP URI.
+    """
+    if secure:
+        proto = "ldaps"
+    else:
+        proto = "ldap"
+    uri = f"{proto}://{host}:{port}"
+    return uri
+
+
+def parse_args(args):
+    """
+    Parse args and put them in a dict.
+
+    See paragraph at top of file and NSO Package Authentication documentation
+    for details.
+    """
+    logger.debug(f"--- args to be parsed: {args}")
+    a = dict(zip(["user", "password", "orig_request", "request", "headers",
+                  "body", "srcip", "srcport", "ctx", "proto"],
+                 args.strip("[]").split(";")))
+    a["user"] = base64_to_str(a["user"])
+    a["password"] = base64_to_str(a["password"])
+
+    logger.debug(f"--- parsed args: {a}")
+    return a
+
+
+def main(ldap_servers):
+
+    # Read user credentials passed from NSO
+    args = parse_args(sys.stdin.readline())
+    username = args["user"]
+    password = args["password"]
+
+    logger.debug(f"Requested authenticate user with: username={username}")
+
+    response = reject_reply
+    for conf in ldap_servers:
+        server_uri = mk_server_url(conf.host, conf.port, conf.secure)
+
+        # Note that internally the OpenLDAP function ldap_initialize(3)
+        # is called which just initializes the LDAP connection struct
+        # in the C API - nothing else.
+        # Therefore the first call to an operation method (bind,
+        # search etc.) then really opens the connection (lazy connect).
+        # Before that nothing is sent on the wire.
+        client = ldap.initialize(server_uri)
+        client.set_option(ldap.OPT_REFERRALS, 0)
+        client.set_option(ldap.OPT_TIMEOUT, 10)          # seconds
+        client.set_option(ldap.OPT_NETWORK_TIMEOUT, 10)  # seconds
+
+        if conf.search_base_dn is None:
+            # We know how to construct the User DN to perform authentication!
+            unbind = True
+            # Protect against LDAP injection attacks, see:
+            # CT1940: SEC-VAL-INLDAP: Prevent LDAP Injection flows
+            # in applications.
+            esc_username = ldap.dn.escape_dn_chars(username)
+            user_dn = f"{conf.user_id_attr}={esc_username},{conf.user_base_dn}"
+            conf.user_dn = user_dn
+            response = get_user_credentials(client, conf, username, password,
+                                            unbind)
+        else:
+            # We need to first find the User DN before authenticating!
+            unbind = False
+            user_dn = find_user(client, conf, username, unbind)
+            if user_dn is None:
+                continue
+            conf.user_dn = user_dn
+            unbind = True
+            response = get_user_credentials(client, conf, username, password,
+                                            unbind)
+
+        # Are we good or should we try the next Server?
+        if response.startswith("accept"):
+            break
+        else:
+            logger.debug(f"Server: {conf.host} ,response: {response}")
+            continue
+
+    logger.debug(f"Exiting with response: {response}")
+    print(response)
+
+
+if __name__ == "__main__":
+    # Retrieve LDAP configuration from NSO CDB
+    ldap_servers = get_ldap_config_details()
+    if ldap_servers == []:
+        print("unknown 'no LDAP config found'\n")
+    else:
+        main(ldap_servers)

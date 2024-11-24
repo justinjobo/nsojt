@@ -1,0 +1,1264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      
+      <title>Default Values -  - Development Guide</title>
+      <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+      <link rel="home" href="index.html" title="Development Guide" />
+      <link rel="up" href="ch13s09.html" title="An Example: Modeling a List of Interfaces" />
+      <link rel="prev" href="ch13s09s02.html" title="Ensuring Uniqueness" />
+      <link rel="next" href="ch13s09s04.html" title="The Final Interface YANG model" />
+      <meta xmlns="" name="Section-title" content="Default Values" /><script xmlns="" type="text/javascript">
+      //The id for tree cookie
+      var treeCookieId = "treeview-30849";
+      var language = "en";
+      var w = new Object();
+      //Localization
+      txt_filesfound = 'Results';
+      txt_enter_at_least_1_char = "You must enter at least one character.";
+      txt_browser_not_supported = "JavaScript is disabled on your browser. Please enable JavaScript to enjoy all the features of this site.";
+      txt_please_wait = "Please wait. Search in progress...";
+      txt_results_for = "Results for: ";
+    </script><link xmlns="" rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/css/positioning.css" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css" />
+      <link xmlns="" rel="stylesheet" type="text/css" href="common/jquery/treeview/jquery.treeview.css" /><style xmlns="" type="text/css">
+      
+      #noscript{
+      font-weight:bold;
+      background-color: #55AA55;
+      font-weight: bold;
+      height: 25spx;
+      z-index: 3000;
+      top:0px;
+      width:100%;
+      position: relative;
+      border-bottom: solid 5px black;
+      text-align:center;
+      color: white;
+      }
+      
+      input {
+      margin-bottom: 5px;
+      margin-top: 2px;
+      }
+      .folder {
+      display: block;
+      height: 22px;
+      padding-left: 20px;
+      background: transparent url(common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+      }
+      span.contentsTab {
+      padding-left: 20px;
+      background: url(common/images/toc-icon.png) no-repeat 0 center;
+      }
+      span.searchTab {
+      padding-left: 20px;
+      background: url(common/images/search-icon.png) no-repeat 0 center;
+      }
+      
+      /* Overide jquery treeview's defaults for ul. */
+      .treeview ul {
+      background-color: transparent;
+      margin-top: 4px;
+      }		
+      #webhelp-currentid {
+      /* background-color: #D8D8D8 !important; */
+      background-color: #D8D8D8;
+      }
+      .treeview .hover { color: black; }
+      .filetree li span a { text-decoration: none; font-size: 12px; color: #517291; }
+      
+      /* Override jquery-ui's default css customizations. These are supposed to take precedence over those.*/
+      .ui-widget-content {
+      border: 0px; 
+      background: none; 
+      color: none;     
+      }
+      .ui-widget-header {
+      color: #e9e8e9;
+      border-left: 1px solid #e5e5e5;
+      border-right: 1px solid #e5e5e5;
+      border-bottom: 1px solid #bbc4c5;
+      border-top: 4px solid #e5e5e5;
+      border: medium none;
+      background: #F4F4F4; /* old browsers */
+      background: -moz-linear-gradient(top, #F4F4F4 0%, #E6E4E5 100%); /* firefox */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F4F4F4), color-stop(100%,#E6E4E5)); /* webkit */    
+      font-weight: none;
+      }
+      .ui-widget-header a { color: none; }
+      .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { 
+      border: none; background: none; font-weight: none; color: none; }
+      .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: black; text-decoration: none; }
+      .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: none; background: none; font-weight: none; color: none; }
+      
+      .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: none; background: none; font-weight: none; color: none; }
+      .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { 
+      color: black; text-decoration: none; 	
+      background: #C6C6C6; /* old browsers */
+      background: -moz-linear-gradient(top, #C6C6C6 0%, #D8D8D8 100%); /* firefox */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#C6C6C6), color-stop(100%,#D8D8D8)); /* webkit */
+      -webkit-border-radius:15px; -moz-border-radius:10px;
+      border: 1px solid #f1f1f1;
+      }    
+      .ui-corner-all { border-radius: 0 0 0 0; }
+      
+      .ui-tabs { padding: .2em;}
+      .ui-tabs .ui-tabs-nav li { top: 0px; margin: -2px 0 1px; text-transform: uppercase; font-size: 10.5px;}
+      .ui-tabs .ui-tabs-nav li a { padding: .25em 2em .25em 1em; margin: .5em; text-shadow: 0 1px 0 rgba(255,255,255,.5); }
+      /**
+      *	Basic Layout Theme
+      * 
+      *	This theme uses the default layout class-names for all classes
+      *	Add any 'custom class-names', from options: paneClass, resizerClass, togglerClass
+      */
+      
+      .ui-layout-pane { /* all 'panes' */ 
+      background: #FFF; 
+      border: 1px solid #BBB; 
+      padding: 05x; 
+      overflow: auto;
+      } 
+      
+      .ui-layout-resizer { /* all 'resizer-bars' */ 
+      background: #DDD; 
+      top:100px
+      } 
+      
+      .ui-layout-toggler { /* all 'toggler-buttons' */ 
+      background: #AAA; 
+      } 
+      
+    </style>
+      <!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]--><script xmlns="" type="text/javascript" src="common/browserDetect.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery-1.7.2.min.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery.ui.all.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/jquery.cookie.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/treeview/jquery.treeview.min.js">
+         <!----></script><script xmlns="" type="text/javascript" src="common/jquery/layout/jquery.layout.js">
+         <!----></script><style type="text/css">
+      
+      #header {
+      /* background: url("../images/header-bg.png") scroll top left repeat-x #4d8c83; */
+      background: transparent;
+      }
+      #leftnavigation {
+      /* background-color: #ededed!important; */
+      background-color: transparent;
+      }
+      #navheader {
+      visibility: hidden;
+      }
+      #webhelp-currentid {
+      /* background-color: #D8D8D8 !important; */
+      background-color: #FFFFFF; /*but must be changed in main.js as well*/
+      }
+      .filetree span.file {
+      /* background: url(images/file.gif) 0 0 no-repeat; */
+      background: initial;
+      }
+      .filetree span.folder, .filetree span.file {
+      padding: 1px 0 1px 7px;
+      display: block;
+      }
+
+      /* borrowed from cisco: clientlib.css */
+      .footer {
+      margin: 28px 30px 0 15px;
+      font-size: 80%;
+      line-height: 120%;
+      border-top: 1px solid #ccc;
+      padding-top: 7px;
+      color: #999;
+      }
+      .footer #footer-legal{display:inline;padding-bottom:18px}
+      #framework-footer{margin:0;padding:0 0 15px 0;min-width:900px;width:100%}
+      .footer a,.footer a:visited{color:#999}
+
+      /* from ccimr.css */
+      a:active  { color: #3366CC}
+      a:hover   { color: #3366CC}
+      a:link    { color: #3366CC}
+      a:visited { color: #3366CC}
+
+      #header img {
+      float: left;
+      margin-left: 20px;
+      margin-top: 0px;
+      }
+
+      #header h1 {
+      color: #336666;
+      margin-top: 4px;
+      }
+      #content h1, #content h2 {
+      color: #336666;
+      }
+      .title {
+      color: #336666;
+      }
+      p, pre {
+      margin-left: 0.1in;
+      }
+      p, ul, ol, li {
+        font-size: 95%;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 1px;
+      }
+      body {
+        font: 80.5% Arial, Helvetica, sans-serif;
+      }
+      ol {
+      display: block;
+      list-style-type: decimal;
+      -webkit-margin-before: 1em;
+      -webkit-margin-after: 1em;
+      -webkit-margin-start: 0px;
+      -webkit-margin-end: 0px;
+      -webkit-padding-start: 40px;
+      border: 1;
+      }
+    </style></head>
+   <body>
+      <noscript>
+         <div id="noscript">JavaScript is disabled on your browser. Please enable JavaScript to enjoy all the features of this site.</div>
+      </noscript>
+      <div id="header"><a href="index.html"><img style="margin-right: 2px; width: 110; height: 73; padding-right: 25px; padding-top: 8px" align="right" src="common/images/logo.gif" alt="Cisco Systems, Inc." /></a><h1>Development Guide<br />An Example: Modeling a List of Interfaces
+         </h1>
+         <div id="navheader">
+            <!---->
+            <table class="navLinks">
+               <tr>
+                  <td><a id="showHideButton" href="#" onclick="myLayout.toggle('west')" class="pointLeft" tabindex="5" title="Hide TOC tree">Sidebar
+                                                    </a></td>
+                  <td><a accesskey="p" class="navLinkPrevious" tabindex="5" href="ch13s09s02.html">Prev</a>
+                                                             |
+                                                             <a accesskey="u" class="navLinkUp" tabindex="5" href="ch13s09.html">Up</a>
+                                                         |
+                                                         <a accesskey="n" class="navLinkNext" tabindex="5" href="ch13s09s04.html">Next</a></td>
+               </tr>
+            </table>
+         </div>
+      </div>
+      <div id="content">
+         <div class="sect2">
+            <div xmlns="" class="titlepage">
+               <div>
+                  <div>
+                     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="d0e10516"></a>Default Values
+                     </h3>
+                  </div>
+               </div>
+            </div>
+            <p>
+                          A leaf can have a static or dynamic default value.
+                          Static default values are defined with the <code class="code">default</code>
+                          statement in the data model.  For example:
+                        
+            </p>
+            <div class="informalexample"><pre class="programlisting">leaf mtu {
+    type int32;
+    default 1500;
+}</pre></div>
+            <p>and:</p>
+            <div class="informalexample"><pre class="programlisting">leaf UP {
+    type boolean;
+    default true;
+}</pre></div>
+            <p>
+                          A dynamic default value means that the default value for
+                          the leaf is the value of some other leaf in the data model.
+                          This can be used to make the default values configurable by
+                          the user.  Dynamic default values are defined using the
+                          <code class="code">tailf:default-ref</code> statement.  For example, suppose we
+                          want to make the MTU default value configurable:
+                        
+            </p>
+            <div class="informalexample"><pre class="programlisting">container links {
+    leaf mtu {
+        type uint32;
+    }
+    list link {
+        key name;
+        leaf name {
+            type string;
+        }
+        leaf mtu {
+            type uint32;
+            tailf:default-ref '../../mtu';
+        }
+    }
+}</pre></div>
+            <p>
+                          Now suppose we have the following data:
+                        
+            </p>
+            <div class="informalexample"><pre class="programlisting">&lt;links&gt;
+  &lt;mtu&gt;1000&lt;/mtu&gt;
+  &lt;link&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
+  &lt;/link&gt;
+  &lt;link&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/link&gt;
+&lt;/links&gt;</pre></div>
+            <p>
+                          In the example above, link <code class="code">eth0</code> has the mtu 1500,
+                          and link <code class="code">eth1</code> has mtu 1000.  Since <code class="code">eth1</code>
+                          does not have a mtu value set, it defaults to the value of
+                          <code class="code">../../mtu</code>, which is 1000 in this case.
+                        
+            </p>
+            <p>
+                          
+            </p>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+               <h3 class="title">Note</h3>
+               <p>
+                                 Whenever a leaf has a default
+                                 value it implies that the leaf can be left out from the
+                                 XML document, i.e. mandatory = false.
+                               
+               </p>
+            </div>
+            <p>
+                        
+            </p>
+            <p>
+                          With the default value mechanism an old configuration can
+                          be used even after having added new settings.
+                        
+            </p>
+            <p>
+                          Another example where default values are used is  when  a
+                          new  instance  is  created.  If  all  leafs within the
+                          instance have default values, these need not be specified
+                          in, for example, a NETCONF create operation.
+                        
+            </p>
+         </div><script type="text/javascript" src="common/main.js">
+            <!----></script><script type="text/javascript" src="common/splitterInit.js">
+            <!----></script><div class="footer" id="footer-legal">
+            <div class="footer-legal framework-footer-cq">
+               <div id="framework-footer">
+                  <div id="footer-legal"><a href="http://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a> |
+                                 <a href="http://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a></div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="sidebar">
+         <div id="leftnavigation" style="padding-top:3px;">
+            <div id="tabs">
+               <ul style="visibility: hidden;"></ul>
+               <div id="treeDiv"><img src="common/images/loading.gif" alt="loading table of contents..." id="tocLoading" style="display:block;" /><div id="ulTreeDiv" style="display:none">
+                     <ul id="tree" class="filetree">
+                        <li><span class="file"><a href="ncs.development.preface.html" tabindex="1">Preface</a></span></li>
+                        <li><span class="file"><a href="ch_devenv.html" tabindex="1">Development Environment and Resources</a></span><ul>
+                              <li><span class="file"><a href="ch_devenv.local.html" tabindex="1">Development NSO Instance</a></span></li>
+                              <li><span class="file"><a href="ch_devenv.examples.html" tabindex="1">Examples and Showcases</a></span></li>
+                              <li><span class="file"><a href="ch_devenv.ide.html" tabindex="1">IDE</a></span></li>
+                              <li><span class="file"><a href="ch_devenv.automate.html" tabindex="1">Automating Instance Setup</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.cdb_intro.html" tabindex="1">The Configuration Database and YANG</a></span><ul>
+                              <li><span class="file"><a href="ch03s01.html" tabindex="1">Key Features of the CDB</a></span></li>
+                              <li><span class="file"><a href="ch03s02.html" tabindex="1">Compilation and Loading of YANG Modules</a></span></li>
+                              <li><span class="file"><a href="ch03s03.html" tabindex="1">Showcase: Extending the CDB with Packages</a></span><ul>
+                                    <li><span class="file"><a href="ch03s03.html#d0e475" tabindex="1">Step 1: Create a package</a></span></li>
+                                    <li><span class="file"><a href="ch03s03.html#d0e495" tabindex="1">Step 2: Add package to NSO</a></span></li>
+                                    <li><span class="file"><a href="ch03s03.html#d0e524" tabindex="1">Step 3: Set data</a></span></li>
+                                    <li><span class="file"><a href="ch03s03.html#d0e552" tabindex="1">Step 4: Inspect the YANG module</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_cdb_intro.yang_basics.html" tabindex="1">Data Modeling Basics</a></span></li>
+                              <li><span class="file"><a href="ch03s05.html" tabindex="1">Showcase: Building and Testing a Model</a></span><ul>
+                                    <li><span class="file"><a href="ch03s05.html#d0e705" tabindex="1">Step 1: Create a model skeleton</a></span></li>
+                                    <li><span class="file"><a href="ch03s05.html#d0e736" tabindex="1">Step 2: Fill out the model</a></span></li>
+                                    <li><span class="file"><a href="ch03s05.html#d0e758" tabindex="1">Step 3: Compile and load the model</a></span></li>
+                                    <li><span class="file"><a href="ch03s05.html#d0e790" tabindex="1">Step 4: Test the model</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_cdbintro.initfiles.html" tabindex="1">Initialization Files</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.python_intro.html" tabindex="1">Basic Automation with Python</a></span><ul>
+                              <li><span class="file"><a href="ch04s01.html" tabindex="1">Setup</a></span></li>
+                              <li><span class="file"><a href="ch04s02.html" tabindex="1">Transactions</a></span></li>
+                              <li><span class="file"><a href="ch04s03.html" tabindex="1">Read and Write Values</a></span></li>
+                              <li><span class="file"><a href="ch04s04.html" tabindex="1">Lists</a></span></li>
+                              <li><span class="file"><a href="ch04s05.html" tabindex="1">Showcase: Configuring DNS with Python</a></span><ul>
+                                    <li><span class="file"><a href="ch04s05.html#d0e1152" tabindex="1">Step 1: Start the routers</a></span></li>
+                                    <li><span class="file"><a href="ch04s05.html#d0e1201" tabindex="1">Step 2: Inspect the device data model</a></span></li>
+                                    <li><span class="file"><a href="ch04s05.html#d0e1266" tabindex="1">Step 3: Create the script</a></span></li>
+                                    <li><span class="file"><a href="ch04s05.html#d0e1362" tabindex="1">Step 4: Run and verify the script</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch04s06.html" tabindex="1">A Note on Robustness</a></span></li>
+                              <li><span class="file"><a href="ch04s07.html" tabindex="1">The Magic Behind the API</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_service_intro.html" tabindex="1">Developing a Simple Service</a></span><ul>
+                              <li><span class="file"><a href="ch05s01.html" tabindex="1">Why services?</a></span></li>
+                              <li><span class="file"><a href="ch05s02.html" tabindex="1">The Service Package</a></span></li>
+                              <li><span class="file"><a href="ch05s03.html" tabindex="1">Service Parameters</a></span></li>
+                              <li><span class="file"><a href="ch05s04.html" tabindex="1">Showcase: A Simple DNS Configuration Service</a></span><ul>
+                                    <li><span class="file"><a href="ch05s04.html#d0e1653" tabindex="1">Step 1: Prepare simulated routers</a></span></li>
+                                    <li><span class="file"><a href="ch05s04.html#d0e1697" tabindex="1">Step 2: Create a service package</a></span></li>
+                                    <li><span class="file"><a href="ch05s04.html#d0e1763" tabindex="1">Step 3: Add the DNS server parameter</a></span></li>
+                                    <li><span class="file"><a href="ch05s04.html#d0e1797" tabindex="1">Step 4: Add Python code</a></span></li>
+                                    <li><span class="file"><a href="ch05s04.html#d0e1841" tabindex="1">Step 5: Deploy the service</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch05s05.html" tabindex="1">Service Templates</a></span></li>
+                              <li><span class="file"><a href="ch05s06.html" tabindex="1">Showcase: DNS Configuration Service with Templates</a></span><ul>
+                                    <li><span class="file"><a href="ch05s06.html#d0e2034" tabindex="1">Step 1: Prepare simulated routers</a></span></li>
+                                    <li><span class="file"><a href="ch05s06.html#d0e2078" tabindex="1">Step 2: Create a service</a></span></li>
+                                    <li><span class="file"><a href="ch05s06.html#d0e2156" tabindex="1">Step 3: Create a template</a></span></li>
+                                    <li><span class="file"><a href="ch05s06.html#d0e2248" tabindex="1">Step 4: Test the service</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_apps.html" tabindex="1">Applications in NSO</a></span><ul>
+                              <li><span class="file"><a href="ch06s01.html" tabindex="1">NSO Architecture</a></span></li>
+                              <li><span class="file"><a href="ch06s02.html" tabindex="1">Callbacks as Extension Mechanism</a></span></li>
+                              <li><span class="file"><a href="ch_apps.actions.html" tabindex="1">Actions</a></span></li>
+                              <li><span class="file"><a href="ch06s04.html" tabindex="1">Showcase: Implementing Device Count Action</a></span><ul>
+                                    <li><span class="file"><a href="ch06s04.html#d0e2532" tabindex="1">Step 1: Create a new Python package</a></span></li>
+                                    <li><span class="file"><a href="ch06s04.html#d0e2577" tabindex="1">Step 2: Define a new action in YANG</a></span></li>
+                                    <li><span class="file"><a href="ch06s04.html#d0e2619" tabindex="1">Step 3: Implement the action logic</a></span></li>
+                                    <li><span class="file"><a href="ch06s04.html#d0e2659" tabindex="1">Step 4: Register callback</a></span></li>
+                                    <li><span class="file"><a href="ch06s04.html#d0e2714" tabindex="1">Step 5: And... action!</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_apps.callbacks.html" tabindex="1">Overview of Extension Points</a></span></li>
+                              <li><span class="file"><a href="ch_apps.kickers.html" tabindex="1">Monitoring for Change</a></span></li>
+                              <li><span class="file"><a href="ch_apps.running.html" tabindex="1">Running Application Code</a></span></li>
+                              <li><span class="file"><a href="ch_apps.lifecycle.html" tabindex="1">Application Updates</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_services.html" tabindex="1">Implementing Services</a></span><ul>
+                              <li><span class="file"><a href="ch_services.intro.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch07s02.html" tabindex="1">Service Mapping</a></span></li>
+                              <li><span class="file"><a href="ch_services.just_template.html" tabindex="1">A Template is All You Need</a></span></li>
+                              <li><span class="file"><a href="ch_services.input.html" tabindex="1">Service Model Captures Inputs</a></span></li>
+                              <li><span class="file"><a href="ch_services.model.html" tabindex="1">Extracting the Service Parameters</a></span></li>
+                              <li><span class="file"><a href="ch_services.fastmap.html" tabindex="1">FASTMAP and Service Life Cycle</a></span></li>
+                              <li><span class="file"><a href="ch_services.code.html" tabindex="1">Templates and Code</a></span><ul>
+                                    <li><span class="file"><a href="ch07s07s01.html" tabindex="1">Templates and Python Code</a></span></li>
+                                    <li><span class="file"><a href="ch07s07s02.html" tabindex="1">Templates and Java Code</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_services.devs.html" tabindex="1">Configuring Multiple Devices</a></span><ul>
+                                    <li><span class="file"><a href="ch_services.devs_types.html" tabindex="1">Supporting Different Device Types</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_services.data.html" tabindex="1">Shared Service Settings and Auxiliary Data</a></span></li>
+                              <li><span class="file"><a href="ch_services.actions.html" tabindex="1">Service Actions</a></span><ul>
+                                    <li><span class="file"><a href="ch07s10s01.html" tabindex="1">Action Code in Python</a></span></li>
+                                    <li><span class="file"><a href="ch07s10s02.html" tabindex="1">Action Code in Java</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_services.oper.html" tabindex="1">Operational Data</a></span><ul>
+                                    <li><span class="file"><a href="ch07s11s01.html" tabindex="1">Writing Operational Data in Python</a></span></li>
+                                    <li><span class="file"><a href="ch07s11s02.html" tabindex="1">Writing Operational Data in Java</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.reactive_fastmap.html" tabindex="1">
+                                           Nano Services for Provisioning with Side Effects
+                                         </a></span></li>
+                              <li><span class="file"><a href="ncs.development.services.tshoot.html" tabindex="1">Service Troubleshooting</a></span><ul>
+                                    <li><span class="file"><a href="ch07s13s01.html" tabindex="1">Common troubleshooting steps</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_templates.html" tabindex="1">Templates</a></span><ul>
+                              <li><span class="file"><a href="ch_templates.structure.html" tabindex="1">Structure of a template</a></span></li>
+                              <li><span class="file"><a href="ch_templates.templatize.html" tabindex="1">Other ways to generate the XML template structure</a></span></li>
+                              <li><span class="file"><a href="ch_templates.values.html" tabindex="1">Values in a template</a></span></li>
+                              <li><span class="file"><a href="ch_templates.conditionals.html" tabindex="1">Conditional statements</a></span></li>
+                              <li><span class="file"><a href="ch_templates.loops.html" tabindex="1">Loop statements</a></span></li>
+                              <li><span class="file"><a href="ch_templates.operations.html" tabindex="1">Template operations</a></span></li>
+                              <li><span class="file"><a href="ch_templates.order_ops.html" tabindex="1">Operations on ordered lists and leaf-lists</a></span></li>
+                              <li><span class="file"><a href="ch_templates.macros.html" tabindex="1">Macros in templates</a></span></li>
+                              <li><span class="file"><a href="ch_templates.contexts.html" tabindex="1">XPath context in templates</a></span></li>
+                              <li><span class="file"><a href="ch_templates.multined.html" tabindex="1">Namespaces and multi-NED support</a></span></li>
+                              <li><span class="file"><a href="ch08s11.html" tabindex="1">Passing deep structures from API</a></span></li>
+                              <li><span class="file"><a href="ch_templates.servicepoint.html" tabindex="1">Service callpoints and templates</a></span></li>
+                              <li><span class="file"><a href="ch_templates.debug.html" tabindex="1">Debugging templates</a></span><ul>
+                                    <li><span class="file"><a href="ch08s13s01.html" tabindex="1">Example debug template output</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_templates.xml_instructions.html" tabindex="1">Processing instructions reference</a></span></li>
+                              <li><span class="file"><a href="ch08s15.html" tabindex="1">XPath functions</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_svcref.html" tabindex="1">Services Deep Dive</a></span><ul>
+                              <li><span class="file"><a href="ch_svcref.model.html" tabindex="1">Common Service Model</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.trans.html" tabindex="1">Services and Transactions</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.cbs.html" tabindex="1">Service Callbacks</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.opaque.html" tabindex="1">Persistent Opaque Data</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.conflicts.html" tabindex="1">Defining Static Service Conflicts</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.refcount.html" tabindex="1">Reference Counting Overlapping Configuration</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.stacking.html" tabindex="1">Stacked Services</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.caveats.html" tabindex="1">Caveats and Best Practices</a></span></li>
+                              <li><span class="file"><a href="ch_svcref.discovery.html" tabindex="1">Service Discovery and Import</a></span><ul>
+                                    <li><span class="file"><a href="ch09s09s01.html" tabindex="1">Matching configuration</a></span></li>
+                                    <li><span class="file"><a href="ch09s09s02.html" tabindex="1">Enumerating instances</a></span></li>
+                                    <li><span class="file"><a href="ch09s09s03.html" tabindex="1">Reconciliation</a></span></li>
+                                    <li><span class="file"><a href="ch09s09s04.html" tabindex="1">Iterative approach</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch_svcref.partialsync.html" tabindex="1">Partial Sync</a></span><ul>
+                                    <li><span class="file"><a href="ch09s10s01.html" tabindex="1">Partial sync-from</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.javavm.html" tabindex="1">The NSO Java VM</a></span><ul>
+                              <li><span class="file"><a href="ug.javavm.overview.html" tabindex="1">Overview</a></span></li>
+                              <li><span class="file"><a href="ch10s02.html" tabindex="1">YANG model</a></span></li>
+                              <li><span class="file"><a href="ch10s03.html" tabindex="1">Java Packages and the Class Loader</a></span></li>
+                              <li><span class="file"><a href="ch10s04.html" tabindex="1">The NED component type</a></span></li>
+                              <li><span class="file"><a href="ch10s05.html" tabindex="1">The callback component type</a></span></li>
+                              <li><span class="file"><a href="ug.javavm_appcomponent.html" tabindex="1">The application component type</a></span></li>
+                              <li><span class="file"><a href="ncs.ug.javavm.resman.html" tabindex="1">The Resource Manager</a></span></li>
+                              <li><span class="file"><a href="ch10s08.html" tabindex="1">The Alarm centrals</a></span></li>
+                              <li><span class="file"><a href="ch10s09.html" tabindex="1">Embedding the NSO Java VM</a></span></li>
+                              <li><span class="file"><a href="ug.javavm.logging.html" tabindex="1">Logging</a></span></li>
+                              <li><span class="file"><a href="ch10s11.html" tabindex="1">The NSO Java VM timeouts</a></span></li>
+                              <li><span class="file"><a href="ug.javavm.debug.html" tabindex="1">Debugging Startup</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.pythonvm.html" tabindex="1">The NSO Python VM</a></span><ul>
+                              <li><span class="file"><a href="ch11s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch11s02.html" tabindex="1">YANG model</a></span></li>
+                              <li><span class="file"><a href="ncs.development.pythonvm.ucode.html" tabindex="1">Structure of the User provided code</a></span><ul>
+                                    <li><span class="file"><a href="ncs.development.pythonvm.cthread.html" tabindex="1">The application component</a></span></li>
+                                    <li><span class="file"><a href="ncs.development.pythonvm.upgrade.html" tabindex="1">The upgrade component</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.pythonvm.debug.html" tabindex="1">Debugging of Python packages</a></span></li>
+                              <li><span class="file"><a href="ncs.development.pythonvm.nonstdpython.html" tabindex="1">Using non-standard Python</a></span><ul>
+                                    <li><span class="file"><a href="ch11s05s01.html" tabindex="1">Configure NSO to use a custom start command (recommended)</a></span></li>
+                                    <li><span class="file"><a href="ch11s05s02.html" tabindex="1">Changing the path to python3 or
+                                                   python</a></span></li>
+                                    <li><span class="file"><a href="ch11s05s03.html" tabindex="1">Updating the default start command (not recommended)</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.pythonvm.caveats.html" tabindex="1">Caveats</a></span><ul>
+                                    <li><span class="file"><a href="ncs.development.pythonvm.caveats.multiprocessing.html" tabindex="1">Using multiprocessing</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.embedded_erlang.html" tabindex="1">Embedded Erlang applications</a></span><ul>
+                              <li><span class="file"><a href="ch12s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch12s02.html" tabindex="1">Erlang API</a></span></li>
+                              <li><span class="file"><a href="ch12s03.html" tabindex="1">Application configuration</a></span></li>
+                              <li><span class="file"><a href="ch12s04.html" tabindex="1">Example</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.yang.html" tabindex="1">The YANG Data Modeling Language</a></span><ul>
+                              <li><span class="file"><a href="ch13s01.html" tabindex="1">The YANG Data Modeling Language</a></span></li>
+                              <li><span class="file"><a href="ch13s02.html" tabindex="1">YANG in NSO</a></span></li>
+                              <li><span class="file"><a href="ch13s03.html" tabindex="1">YANG Introduction</a></span><ul>
+                                    <li><span class="file"><a href="ch13s03s01.html" tabindex="1">Modules and Submodules</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s02.html" tabindex="1">Data Modeling Basics</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s03.html" tabindex="1">Leaf Nodes</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s04.html" tabindex="1">Leaf-list Nodes</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s05.html" tabindex="1">Container Nodes</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s06.html" tabindex="1">List Nodes</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s07.html" tabindex="1">Example Module</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s08.html" tabindex="1">State Data</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s09.html" tabindex="1">Built-in Types</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s10.html" tabindex="1">Derived Types (typedef)</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s11.html" tabindex="1">Reusable Node Groups (grouping)</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s12.html" tabindex="1">Choices</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s13.html" tabindex="1">Extending Data Models (augment)</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s14.html" tabindex="1">RPC Definitions</a></span></li>
+                                    <li><span class="file"><a href="ch13s03s15.html" tabindex="1">Notification Definitions</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch13s04.html" tabindex="1">Working With YANG Modules</a></span></li>
+                              <li><span class="file"><a href="ch13s05.html" tabindex="1">Integrity Constraints</a></span></li>
+                              <li><span class="file"><a href="ch13s06.html" tabindex="1">The when statement</a></span></li>
+                              <li><span class="file"><a href="ch13s07.html" tabindex="1">Using the Tail-f Extensions with YANG</a></span><ul>
+                                    <li><span class="file"><a href="ch13s07s01.html" tabindex="1">Using a YANG annotation file</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch13s08.html" tabindex="1">Custom Help Texts and Error Messages</a></span><ul>
+                                    <li><span class="file"><a href="ch13s08s01.html" tabindex="1">Custom Help Texts</a></span></li>
+                                    <li><span class="file"><a href="ch13s08s02.html" tabindex="1">Custom Help Text in a Typedef</a></span></li>
+                                    <li><span class="file"><a href="ch13s08s03.html" tabindex="1">Custom Error Messages</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch13s09.html" tabindex="1">An Example: Modeling a List of Interfaces</a></span><ul>
+                                    <li><span class="file"><a href="ug.yang.relationships.html" tabindex="1">Modeling Relationships</a></span></li>
+                                    <li><span class="file"><a href="ch13s09s02.html" tabindex="1">Ensuring Uniqueness</a></span></li>
+                                    <li id="webhelp-currentid"><span class="file"><a href="ch13s09s03.html" tabindex="1">Default Values</a></span></li>
+                                    <li><span class="file"><a href="ch13s09s04.html" tabindex="1">The Final Interface YANG model</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ug.yang.leafrefs.html" tabindex="1">More on leafrefs</a></span></li>
+                              <li><span class="file"><a href="ch13s11.html" tabindex="1">Using Multiple Namespaces</a></span></li>
+                              <li><span class="file"><a href="ug.yang.Names_Namespaces_And_Revisions.html" tabindex="1">Module Names, Namespaces and Revisions</a></span></li>
+                              <li><span class="file"><a href="ug.yang.id_value.html" tabindex="1">Hash Values and the id-value Statement</a></span></li>
+                              <li><span class="file"><a href="ug.yang.caveats.html" tabindex="1">NSO caveats</a></span><ul>
+                                    <li><span class="file"><a href="ch13s14s01.html" tabindex="1">The union type and value conversion</a></span></li>
+                                    <li><span class="file"><a href="ch13s14s02.html" tabindex="1">User defined types</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.cdb.html" tabindex="1">Using CDB</a></span><ul>
+                              <li><span class="file"><a href="ch14s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ncs.ug.architecture.im.html" tabindex="1">The NSO Data Model</a></span></li>
+                              <li><span class="file"><a href="ch14s03.html" tabindex="1">Addressing Data Using Keypaths</a></span></li>
+                              <li><span class="file"><a href="ug.cdb.subscriptions.html" tabindex="1">Subscriptions</a></span></li>
+                              <li><span class="file"><a href="ch14s05.html" tabindex="1">Sessions</a></span></li>
+                              <li><span class="file"><a href="ug.cdb.init.html" tabindex="1">Loading Initial Data Into CDB</a></span></li>
+                              <li><span class="file"><a href="ug.cdb.opdata.html" tabindex="1">Operational Data in CDB</a></span><ul>
+                                    <li><span class="file"><a href="ch14s07s01.html" tabindex="1">Subscriptions</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch14s08.html" tabindex="1">Example</a></span><ul>
+                                    <li><span class="file"><a href="ch14s08s01.html" tabindex="1">Operational Data</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ug.cdb.upgrade.html" tabindex="1">Automatic Schema Upgrades and Downgrades</a></span></li>
+                              <li><span class="file"><a href="ch14s10.html" tabindex="1">Using Initialization Files for Upgrade</a></span></li>
+                              <li><span class="file"><a href="cdb.upgrade-add-vp.html" tabindex="1">New Validation Points</a></span></li>
+                              <li><span class="file"><a href="ncs.cdb.upgrade.comp.html" tabindex="1">Writing an Upgrade Package Component</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.java_api_overview.html" tabindex="1">Java API Overview</a></span><ul>
+                              <li><span class="file"><a href="ch15s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ug.ncs.api.maapi.html" tabindex="1">MAAPI</a></span></li>
+                              <li><span class="file"><a href="ch15s03.html" tabindex="1">CDB API</a></span></li>
+                              <li><span class="file"><a href="ug.java_api_overview.dp.html" tabindex="1">DP API</a></span><ul>
+                                    <li><span class="file"><a href="ch15s04s01.html" tabindex="1">Transaction and Data Callbacks</a></span></li>
+                                    <li><span class="file"><a href="ch15s04s02.html" tabindex="1">Service and Action Callbacks</a></span></li>
+                                    <li><span class="file"><a href="ch_java_api.validationpoint.html" tabindex="1">Validation Callbacks</a></span></li>
+                                    <li><span class="file"><a href="ch15s04s04.html" tabindex="1">Transforms</a></span></li>
+                                    <li><span class="file"><a href="ch15s04s05.html" tabindex="1">Hooks</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch15s05.html" tabindex="1">NED API</a></span></li>
+                              <li><span class="file"><a href="ug.java_api_overview.navu.html" tabindex="1">NAVU API</a></span></li>
+                              <li><span class="file"><a href="ch15s07.html" tabindex="1">ALARM API</a></span></li>
+                              <li><span class="file"><a href="ug.java_api_overview.notif.html" tabindex="1">NOTIF API</a></span></li>
+                              <li><span class="file"><a href="ch15s09.html" tabindex="1">HA API</a></span></li>
+                              <li><span class="file"><a href="ch15s10.html" tabindex="1">Java API Conf Package</a></span></li>
+                              <li><span class="file"><a href="ch15s11.html" tabindex="1">Namespace classes and the loaded schema</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.python_api_overview.html" tabindex="1">Python API Overview</a></span><ul>
+                              <li><span class="file"><a href="ch16s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch16s02.html" tabindex="1">Python API overview</a></span></li>
+                              <li><span class="file"><a href="ch16s03.html" tabindex="1">Python scripting</a></span></li>
+                              <li><span class="file"><a href="ch16s04.html" tabindex="1">High-level MAAPI API</a></span></li>
+                              <li><span class="file"><a href="ch16s05.html" tabindex="1">Maagic API</a></span><ul>
+                                    <li><span class="file"><a href="ch16s05s01.html" tabindex="1">Namespaces</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s02.html" tabindex="1">Reading data</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s03.html" tabindex="1">Writing data</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s04.html" tabindex="1">Deleting data</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s05.html" tabindex="1">Containers</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s06.html" tabindex="1">Presence containers</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s07.html" tabindex="1">Choices</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s08.html" tabindex="1">Lists and List elements</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s09.html" tabindex="1">Unions</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s10.html" tabindex="1">Enumeration</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s11.html" tabindex="1">Leafref</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s12.html" tabindex="1">Identityref</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s13.html" tabindex="1">Instance-identifier</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s14.html" tabindex="1">Leaf-list</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s15.html" tabindex="1">Binary</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s16.html" tabindex="1">Bits</a></span></li>
+                                    <li><span class="file"><a href="ch16s05s17.html" tabindex="1">Empty leaf</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch16s06.html" tabindex="1">Maagic examples</a></span><ul>
+                                    <li><span class="file"><a href="ch16s06s01.html" tabindex="1">Action requests</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch16s07.html" tabindex="1">PlanComponent</a></span></li>
+                              <li><span class="file"><a href="ch16s08.html" tabindex="1">Python packages</a></span><ul>
+                                    <li><span class="file"><a href="ch16s08s01.html" tabindex="1">Action handler</a></span></li>
+                                    <li><span class="file"><a href="ch16s08s02.html" tabindex="1">Service handler</a></span></li>
+                                    <li><span class="file"><a href="ch_python_api.validationpoint.html" tabindex="1">ValidationPoint handler</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch16s09.html" tabindex="1">Low-level APIs</a></span><ul>
+                                    <li><span class="file"><a href="ch16s09s01.html" tabindex="1">Low-level MAAPI API</a></span></li>
+                                    <li><span class="file"><a href="ch16s09s02.html" tabindex="1">Low-level CDB API</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch16s10.html" tabindex="1">Advanced topics</a></span><ul>
+                                    <li><span class="file"><a href="ncs.development.python_api_overview.advanced.schema_loading.html" tabindex="1">Schema loading - internals</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.packages.html" tabindex="1">NSO Packages</a></span><ul>
+                              <li><span class="file"><a href="ug.packages.overview.html" tabindex="1">Package Overview</a></span></li>
+                              <li><span class="file"><a href="ch17s02.html" tabindex="1">An Example Package</a></span></li>
+                              <li><span class="file"><a href="ch17s03.html" tabindex="1">The package-meta-data.xml file</a></span></li>
+                              <li><span class="file"><a href="ch17s04.html" tabindex="1">Components</a></span></li>
+                              <li><span class="file"><a href="ug.packages.creating.html" tabindex="1">Creating Packages </a></span><ul>
+                                    <li><span class="file"><a href="ch17s05s01.html" tabindex="1">Creating a NETCONF NED Package</a></span></li>
+                                    <li><span class="file"><a href="ch17s05s02.html" tabindex="1">Creating an SNMP NED Package</a></span></li>
+                                    <li><span class="file"><a href="ch17s05s03.html" tabindex="1">Creating a CLI NED Package or a Generic NED Package</a></span></li>
+                                    <li><span class="file"><a href="ch17s05s04.html" tabindex="1">Creating a Service Package or a Data Provider Package</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.package_dev.html" tabindex="1">Package Development</a></span><ul>
+                              <li><span class="file"><a href="ch18s01.html" tabindex="1">Developing a Service Package</a></span></li>
+                              <li><span class="file"><a href="ch18s02.html" tabindex="1">ncs-setup</a></span></li>
+                              <li><span class="file"><a href="ch18s03.html" tabindex="1">The netsim Part of a NED Package</a></span></li>
+                              <li><span class="file"><a href="ug.scripting_devel.html" tabindex="1">Plug-and-play scripting</a></span></li>
+                              <li><span class="file"><a href="ch18s05.html" tabindex="1">Creating a Service Package</a></span></li>
+                              <li><span class="file"><a href="ch18s06.html" tabindex="1">Java Service Implementation</a></span></li>
+                              <li><span class="file"><a href="ch18s07.html" tabindex="1">Developing our First Service Application</a></span></li>
+                              <li><span class="file"><a href="ch18s08.html" tabindex="1">Tracing Within the NSO Service Manager</a></span></li>
+                              <li><span class="file"><a href="ch18s09.html" tabindex="1">Controlling error messages info level from Java</a></span></li>
+                              <li><span class="file"><a href="ug.package_dev.loading.html" tabindex="1">Loading Packages</a></span></li>
+                              <li><span class="file"><a href="ch18s11.html" tabindex="1">Debugging the Service and Using Eclipse IDE</a></span><ul>
+                                    <li><span class="file"><a href="ch18s11s01.html" tabindex="1">Running the NSO Java VM Standalone</a></span></li>
+                                    <li><span class="file"><a href="ug.package_dev.java_debugger.html" tabindex="1">Using Eclipse to Debug the Package Java Code</a></span></li>
+                                    <li><span class="file"><a href="ch18s11s03.html" tabindex="1">Remote Connecting with Eclipse to the NSO Java VM</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch18s12.html" tabindex="1">Working with ncs-project</a></span><ul>
+                                    <li><span class="file"><a href="ch18s12s01.html" tabindex="1">Create a new project</a></span></li>
+                                    <li><span class="file"><a href="ch18s12s02.html" tabindex="1">Project setup</a></span></li>
+                                    <li><span class="file"><a href="ch18s12s03.html" tabindex="1">Export</a></span></li>
+                                    <li><span class="file"><a href="ch18s12s04.html" tabindex="1">NSO Project man pages</a></span></li>
+                                    <li><span class="file"><a href="ch18s12s05.html" tabindex="1">The project-meta-data.xml file</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch_services_java.html" tabindex="1">Service Development Using Java</a></span><ul>
+                              <li><span class="file"><a href="ncs.development.services.mapping_template.html" tabindex="1">Simple VLAN service</a></span><ul>
+                                    <li><span class="file"><a href="ch19s01s01.html" tabindex="1">Overview</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s02.html" tabindex="1">Setting up the environment</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s03.html" tabindex="1">Creating a service package</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s04.html" tabindex="1">The Service Model</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s05.html" tabindex="1">Managing the NSO Java VM</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s06.html" tabindex="1">A first look at Java Development</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s07.html" tabindex="1">Using Eclipse</a></span></li>
+                                    <li><span class="file"><a href="ch19s01s08.html" tabindex="1">Writing the service code</a></span><ul>
+                                          <li><span class="file"><a href="ch19s01s08.html#d0e18310" tabindex="1">Fetching the service attributes</a></span></li>
+                                          <li><span class="file"><a href="ch19s01s08.html#d0e18398" tabindex="1">Mapping service attributes to device configuration</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch19s02.html" tabindex="1">Simple VLAN service with templates</a></span><ul>
+                                    <li><span class="file"><a href="ch19s02s01.html" tabindex="1">Overview</a></span></li>
+                                    <li><span class="file"><a href="ch19s02s02.html" tabindex="1">The VLAN Feature Template</a></span></li>
+                                    <li><span class="file"><a href="ch19s02s03.html" tabindex="1">The VLAN Java Logic</a></span></li>
+                                    <li><span class="file"><a href="ch19s02s04.html" tabindex="1">Steps to Build a Java and Template Solution</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch19s03.html" tabindex="1">Layer 3 MPLS VPN service</a></span><ul>
+                                    <li><span class="file"><a href="ch19s03s01.html" tabindex="1">Auxiliary Service Data</a></span></li>
+                                    <li><span class="file"><a href="ch19s03s02.html" tabindex="1">Topology</a></span></li>
+                                    <li><span class="file"><a href="ch19s03s03.html" tabindex="1">Creating a Multi-Vendor Service</a></span><ul>
+                                          <li><span class="file"><a href="ch19s03s03.html#d0e18818" tabindex="1">YANG Service Model Design</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch19s03s04.html" tabindex="1">Defining the Mapping</a></span><ul>
+                                          <li><span class="file"><a href="ch19s03s04.html#d0e19003" tabindex="1">The Java Code</a></span></li>
+                                          <li><span class="file"><a href="ch19s03s04.html#d0e19033" tabindex="1">Configuration Templates</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.ned.html" tabindex="1">NED Development</a></span><ul>
+                              <li><span class="file"><a href="ch20s01.html" tabindex="1">Creating a NED</a></span></li>
+                              <li><span class="file"><a href="ch20s02.html" tabindex="1">Types of NED Packages</a></span></li>
+                              <li><span class="file"><a href="ncs.development.ned.dvsc.html" tabindex="1">Dumb Versus Capable Devices</a></span></li>
+                              <li><span class="file"><a href="ncs.development.ned.ncdev.html" tabindex="1">NETCONF NED Development</a></span><ul>
+                                    <li><span class="file"><a href="ch20s04s01.html" tabindex="1">Tools for NETCONF NED Development</a></span><ul>
+                                          <li><span class="file"><a href="ch20s04s01.html#d0e19311" tabindex="1">The netconf-console and ncs-make-package Tools</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s01.html#d0e19358" tabindex="1">The NETCONF NED Builder Tool</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch20s04s02.html" tabindex="1">Using the netconf-console and ncs-make-package Combination</a></span><ul>
+                                          <li><span class="file"><a href="ch20s04s02.html#d0e19385" tabindex="1">Make the Device YANG Data Models Available to NSO</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s02.html#d0e19477" tabindex="1">Build the NED from the YANG Data Models</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s02.html#d0e19496" tabindex="1">Configure the Device Connection</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch20s04s03.html" tabindex="1">Using the NETCONF NED Builder Tool</a></span><ul>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e19578" tabindex="1">Configure the Device Connection</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e19637" tabindex="1">Make the Device YANG Data Models Available to NSO</a></span><ul>
+                                                <li><span class="file"><a href="ch20s04s03.html#d0e19684" tabindex="1">Copying Manually to the Cache Directory</a></span></li>
+                                                <li><span class="file"><a href="ch20s04s03.html#d0e19725" tabindex="1">Adding YANG Annotation Files</a></span></li>
+                                                <li><span class="file"><a href="ch20s04s03.html#d0e19748" tabindex="1">Using NETCONF get-schema with the NED Builder</a></span></li>
+                                                <li><span class="file"><a href="ch20s04s03.html#d0e19837" tabindex="1">Principles of Selecting the YANG Modules</a></span></li>
+                                             </ul>
+                                          </li>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e19856" tabindex="1">Build the NED from the YANG Data Models</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e19996" tabindex="1">Export the NED package and Load</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e20056" tabindex="1">Update the ned-id for the hw0 Device</a></span></li>
+                                          <li><span class="file"><a href="ch20s04s03.html#d0e20108" tabindex="1">Remove a NED from NSO</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.ned.cli.html" tabindex="1">CLI NED Development</a></span><ul>
+                                    <li><span class="file"><a href="ch20s05s01.html" tabindex="1">Writing a data model for a CLI NED</a></span></li>
+                                    <li><span class="file"><a href="ch20s05s02.html" tabindex="1">Tweaking the basic rendering scheme</a></span><ul>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20354" tabindex="1">Suppressing submodes</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20369" tabindex="1">Adding  a submode</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20390" tabindex="1">Commands with multiple parameters</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20437" tabindex="1">Leaf values not really part of the key</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20456" tabindex="1">Change controlling annotations</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20473" tabindex="1">Ordered-by user lists</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20496" tabindex="1">Default values</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s02.html#d0e20541" tabindex="1">Understanding how the diffs are generated</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch20s05s03.html" tabindex="1">Modifying the Java part of the CLI NED</a></span><ul>
+                                          <li><span class="file"><a href="ch20s05s03.html#d0e20593" tabindex="1">Connecting to a device</a></span></li>
+                                          <li><span class="file"><a href="ch20s05s03.html#d0e20619" tabindex="1">Displaying the configuration of a device</a></span><ul>
+                                                <li><span class="file"><a href="ch20s05s03.html#d0e20635" tabindex="1">Stripping sections, headers and footers</a></span></li>
+                                                <li><span class="file"><a href="ch20s05s03.html#d0e20658" tabindex="1">Removing keywords</a></span></li>
+                                                <li><span class="file"><a href="ch20s05s03.html#d0e20675" tabindex="1">Replacing keywords</a></span></li>
+                                                <li><span class="file"><a href="ch20s05s03.html#d0e20718" tabindex="1">Different quoting practices</a></span></li>
+                                             </ul>
+                                          </li>
+                                          <li><span class="file"><a href="ch20s05s03.html#d0e20732" tabindex="1">Applying a config</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ncs.development.ned.cliannotintro.html" tabindex="1">Tail-f CLI NED Annotations</a></span></li>
+                                    <li><span class="file"><a href="ncs.development.ned.cliannot.html" tabindex="1">Annotations</a></span><ul>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20810" tabindex="1">tailf:cli-add-mode</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20844" tabindex="1">tailf:cli-allow-join-with-key</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20869" tabindex="1">tailf:cli-allow-join-with-value</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20885" tabindex="1">tailf:cli-prefix-key and tailf:cli-before-key</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20913" tabindex="1">tailf:cli-boolean-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e20962" tabindex="1">tailf:cli-sequence-commands and tailf:cli-break-sequence-commands</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21022" tabindex="1">tailf:cli-case-insensitive</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21030" tabindex="1">tailf:cli-compact-syntax</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21043" tabindex="1">tailf:cli-delete-container-on-delete</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21068" tabindex="1">tailf:cli-delete-when-empty</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21081" tabindex="1">tailf:cli-diff-dependency</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21160" tabindex="1">tailf:cli-disallow-value</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21188" tabindex="1">tailf:cli-display-joined</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21199" tabindex="1">tailf:cli-display-separated</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21228" tabindex="1">tailf:cli-drop-node-name</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21255" tabindex="1">tailf:cli-exit-command</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21263" tabindex="1">tailf:cli-explicit-exit</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21285" tabindex="1">tailf:cli-expose-key-name</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21293" tabindex="1">tailf:cli-flat-list-syntax</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21307" tabindex="1">tailf:cli-flatten-container</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21370" tabindex="1">tailf:cli-full-command</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21395" tabindex="1">tailf:cli-full-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21408" tabindex="1">tailf:cli-hide-in-submode</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21429" tabindex="1">tailf:cli-incomplete-command</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21468" tabindex="1">tailf:cli-incomplete-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21498" tabindex="1">tailf:cli-list-syntax</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21540" tabindex="1">tailf:cli-mode-name</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21548" tabindex="1">tailf:cli-multi-value</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21564" tabindex="1">tailf:cli-multi-word-key and tailf:cli-max-words</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21583" tabindex="1">tailf:cli-no-name-on-delete and tailf:cli-no-value-on-delete</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21608" tabindex="1">tailf:cli-optional-in-sequence</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21635" tabindex="1">tailf:cli-prefix-key</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21674" tabindex="1">tailf:cli-range-list-syntax</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21698" tabindex="1">tailf:cli-remove-before-change</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21711" tabindex="1">tailf:cli-replace-all</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21724" tabindex="1">tailf:cli-reset-siblings and tailf:cli-reset-all-siblings</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21772" tabindex="1">tailf:cli-reset-container</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21782" tabindex="1">tailf:cli-show-long-obu-diffs</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21816" tabindex="1">tailf:cli-show-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21881" tabindex="1">tailf:cli-show-with-default</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21889" tabindex="1">tailf:cli-suppress-list-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21903" tabindex="1">tailf:cli-suppress-mode</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21937" tabindex="1">tailf:cli-key-format</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21950" tabindex="1">tailf:cli-recursive-delete</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21963" tabindex="1">tailf:cli-suppress-no</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e21990" tabindex="1">tailf:cli-trim-default</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22003" tabindex="1">tailf:cli-embed-no-on-delete</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22016" tabindex="1">tailf:cli-allow-range</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22029" tabindex="1">tailf:cli-case-sensitive</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22042" tabindex="1">tailf:cli-expose-ns-prefix</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22055" tabindex="1">tailf:cli-show-obu-comments</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22068" tabindex="1">tailf:cli-multi-line-prompt</a></span></li>
+                                          <li><span class="file"><a href="ncs.development.ned.cliannot.html#d0e22086" tabindex="1">tailf:link target</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.ned.gendev.html" tabindex="1">Generic NED Development</a></span><ul>
+                                    <li><span class="file"><a href="ncs.development.ned.gengs.html" tabindex="1">Getting started with a generic NED</a></span><ul>
+                                          <li><span class="file"><a href="ncs.development.ned.gengs.html#ncs.development.ned.gendev.diff" tabindex="1">Tweaking the order of NedEditOp objects</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ncs.development.ned.commands.html" tabindex="1">NED commands</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.ned.snmpned.html" tabindex="1">The SNMP NED</a></span><ul>
+                                    <li><span class="file"><a href="ch20s07s01.html" tabindex="1">Introduction</a></span></li>
+                                    <li><span class="file"><a href="ch20s07s02.html" tabindex="1">Overview</a></span></li>
+                                    <li><span class="file"><a href="ch20s07s03.html" tabindex="1">Compiling and loading MIBs</a></span></li>
+                                    <li><span class="file"><a href="ch20s07s04.html" tabindex="1">Configuring NSO to speak SNMP southbound</a></span><ul>
+                                          <li><span class="file"><a href="ch20s07s04.html#d0e22502" tabindex="1">Configure MIB groups</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch20s07s05.html" tabindex="1">Annotations for MIB objects</a></span></li>
+                                    <li><span class="file"><a href="ch20s07s06.html" tabindex="1"> Using the SNMP NED</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.ned.stats.html" tabindex="1">Statistics</a></span></li>
+                              <li><span class="file"><a href="ncs.development.ned.defaultvalues.html" tabindex="1">Making the NED handle default values properly</a></span></li>
+                              <li><span class="file"><a href="ch20s10.html" tabindex="1">Dry-run considerations</a></span></li>
+                              <li><span class="file"><a href="ncs.development.ned.identification.html" tabindex="1">NED identification</a></span></li>
+                              <li><span class="file"><a href="ch20s12.html" tabindex="1">
+                                             Migrating to the juniper-junos_nc-gen NED
+                                           </a></span><ul>
+                                    <li><span class="file"><a href="ch20s12s01.html" tabindex="1">Prepare the Example</a></span><ul>
+                                          <li><span class="file"><a href="ch20s12s01.html#d0e23245" tabindex="1">Add the juniper-junos and
+                                                             juniper-junos_nc-gen NED Packages</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s01.html#d0e23301" tabindex="1">Configure the Connection to the Junos Device</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s01.html#d0e23411" tabindex="1">Add the MPLS VPN Service Configuration to the Simulated Network</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch20s12s02.html" tabindex="1">
+                                                     Adapting the Service to the juniper-junos_nc-gen
+                                                     NED
+                                                   </a></span><ul>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23489" tabindex="1">Un-deploy MPLS VPN Services Instances with no-networking</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23507" tabindex="1">Delete Junos Device Config with no-networking</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23537" tabindex="1">Set the Junos Device to NETCONF/YANG Compliant Mode</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23571" tabindex="1">
+                                                             Switch the NED ID for the Junos Device to the
+                                                             juniper-junos_nc-gen NED Package
+                                                           </a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23598" tabindex="1">
+                                                             Download the Compliant YANG models, Build, and Load the
+                                                             juniper-junos_nc-gen NED Package
+                                                           </a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23656" tabindex="1">
+                                                             Sync From the Junos Device to get the Device Configuration in
+                                                             NETCONF/YANG Compliant Format
+                                                           </a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23668" tabindex="1">Update the MPLS VPN Service</a></span></li>
+                                          <li><span class="file"><a href="ch20s12s02.html#d0e23780" tabindex="1">Re-deploy the MPLS VPN Service Instances</a></span></li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.ned.migration.html" tabindex="1">NED Upgrades and Migration</a></span><ul>
+                              <li><span class="file"><a href="ug.ned.migration.introduction.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ug.ned.migration.migration.html" tabindex="1">The Migrate Action</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.cdm.service.html" tabindex="1">Service Handling of Ambiguous Device Models</a></span><ul>
+                              <li><span class="file"><a href="ch22s01.html" tabindex="1">Template Services</a></span></li>
+                              <li><span class="file"><a href="ch22s02.html" tabindex="1">Java Services</a></span></li>
+                              <li><span class="file"><a href="ch22s03.html" tabindex="1">Python Services</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.scaling.html" tabindex="1">Scaling and Performance Optimization</a></span><ul>
+                              <li><span class="file"><a href="ncs.development.scaling.tracing.html" tabindex="1">Understanding Your Use Case</a></span></li>
+                              <li><span class="file"><a href="ch23s02.html" tabindex="1">Where to Start?</a></span></li>
+                              <li><span class="file"><a href="ch23s03.html" tabindex="1">Divide the Work Correctly</a></span></li>
+                              <li><span class="file"><a href="ncs.development.scaling.devcom.html" tabindex="1">Optimizing Device Communication</a></span></li>
+                              <li><span class="file"><a href="ncs.development.scaling.kicker.html" tabindex="1">Improving Subscribers</a></span></li>
+                              <li><span class="file"><a href="ncs.development.scaling.conflicts.html" tabindex="1">Minimizing Concurrency Conflicts</a></span></li>
+                              <li><span class="file"><a href="ch23s07.html" tabindex="1">Fine-tuning the Concurrency Parameters</a></span></li>
+                              <li><span class="file"><a href="ch23s08.html" tabindex="1">Enabling Even More Parallelism</a></span></li>
+                              <li><span class="file"><a href="ch23s09.html" tabindex="1">Limit sync-from</a></span></li>
+                              <li><span class="file"><a href="ncs.development.scaling.throughput.html" tabindex="1">Designing for Maximal Transaction Throughput</a></span><ul>
+                                    <li><span class="file"><a href="ncs.development.scaling.throughput.measure.html" tabindex="1">Measuring Transaction Throughput</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s02.html" tabindex="1">
+                                                     Running the perf-trans Example Using a Single
+                                                     Transaction
+                                                   </a></span></li>
+                                    <li><span class="file"><a href="ch23s10s03.html" tabindex="1">Concurrent Transactions</a></span></li>
+                                    <li><span class="file"><a href="ncs.development.scaling.throughput.conflicts.html" tabindex="1">Design to Minimize Conflicts</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s05.html" tabindex="1">Design to Minimize Service and Validation Processing Time</a></span><ul>
+                                          <li><span class="file"><a href="ch23s10s05.html#d0e24350" tabindex="1">
+                                                             Running the perf-setvals Example Using a Single
+                                                             Call to MAAPI shared_set_values()
+                                                           </a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch23s10s06.html" tabindex="1">Use a Data-Kicker Instead of a CDB Subscriber</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s07.html" tabindex="1">Shorten the Time Used for Writing Configuration to Devices</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s08.html" tabindex="1">
+                                                     Running the perf-trans Example Using One
+                                                     Transaction per Device
+                                                   </a></span></li>
+                                    <li><span class="file"><a href="ch23s10s09.html" tabindex="1">Using Commit Queues</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s10.html" tabindex="1">Enabling Commit Queues for the perf-trans Example</a></span></li>
+                                    <li><span class="file"><a href="ncs.development.scaling.throughput.nano.html" tabindex="1">
+                                                     Simplify the Per-Device Concurrent Transaction Creation Using a Nano
+                                                     Service
+                                                   </a></span></li>
+                                    <li><span class="file"><a href="ch23s10s12.html" tabindex="1">Simplify Using a CFS</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s13.html" tabindex="1">
+                                                     Running the CFS and Nano Service Enabled
+                                                     perf-stack Example
+                                                   </a></span></li>
+                                    <li><span class="file"><a href="ch23s10s14.html" tabindex="1">Migrating to and Scale Up Using an LSA Setup</a></span></li>
+                                    <li><span class="file"><a href="ch23s10s15.html" tabindex="1">
+                                                     Running the LSA-enabled perf-lsa Example
+                                                   </a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ncs.development.scaling.memory.html" tabindex="1">Scaling RAM and Disk</a></span><ul>
+                                    <li><span class="file"><a href="ch23s11s01.html" tabindex="1">CDB</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s02.html" tabindex="1">Services and Devices in CDB</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s03.html" tabindex="1">CDB Stores the YANG Model Schema</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s04.html" tabindex="1">The Size of CDB</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s05.html" tabindex="1">Devices, Small and Large</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s06.html" tabindex="1">Planning Resource Consumption</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s07.html" tabindex="1">The Size of a Service</a></span></li>
+                                    <li><span class="file"><a href="ch23s11s08.html" tabindex="1">Implications of a Large CDB</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch23s12.html" tabindex="1">Checklists</a></span></li>
+                              <li><span class="file"><a href="ch23s13.html" tabindex="1">Hardware Sizing</a></span><ul>
+                                    <li><span class="file"><a href="ch23s13s01.html" tabindex="1">Lab Testing and Development</a></span></li>
+                                    <li><span class="file"><a href="ch23s13s02.html" tabindex="1">Production</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.concurrency.html" tabindex="1">NSO Concurrency Model</a></span><ul>
+                              <li><span class="file"><a href="ch24s01.html" tabindex="1">Optimistic Concurrency</a></span></li>
+                              <li><span class="file"><a href="ch24s02.html" tabindex="1">Identifying Conflicts</a></span></li>
+                              <li><span class="file"><a href="ch24s03.html" tabindex="1">Automatic Retries</a></span></li>
+                              <li><span class="file"><a href="ncs.development.concurrency.handling.html" tabindex="1">Handling Conflicts</a></span></li>
+                              <li><span class="file"><a href="ch24s05.html" tabindex="1">Example Retrying Code in Python</a></span></li>
+                              <li><span class="file"><a href="ch24s06.html" tabindex="1">Example Retrying Code in Java</a></span></li>
+                              <li><span class="file"><a href="ncs.development.concurrency.designing.html" tabindex="1">Designing for Concurrency</a></span><ul>
+                                    <li><span class="file"><a href="ch24s07s01.html" tabindex="1">Avoiding Needless Reads</a></span></li>
+                                    <li><span class="file"><a href="ch24s07s02.html" tabindex="1">Handling Dependent Services</a></span></li>
+                                    <li><span class="file"><a href="ch24s07s03.html" tabindex="1">Searching and Enumerating Lists</a></span></li>
+                                    <li><span class="file"><a href="ch24s07s04.html" tabindex="1">Python Assigning to Self</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.ncs.alarmmgr_dev.html" tabindex="1">Developing Alarm Applications</a></span><ul>
+                              <li><span class="file"><a href="ch25s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch25s02.html" tabindex="1">Using the Alarms Sink</a></span></li>
+                              <li><span class="file"><a href="ch25s03.html" tabindex="1">Using the Alarms Source</a></span></li>
+                              <li><span class="file"><a href="ch25s04.html" tabindex="1">Extending the alarm manager,
+                                                  adding user defined alarm types and fields</a></span></li>
+                              <li><span class="file"><a href="ch25s05.html" tabindex="1">Mapping alarms to objects</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.snmp_notif_recv.html" tabindex="1">SNMP Notification Receiver</a></span><ul>
+                              <li><span class="file"><a href="ncs.development.snmp_notf_recv.introduction.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch26s02.html" tabindex="1">Configuring NSO to Receive SNMP Notifications</a></span></li>
+                              <li><span class="file"><a href="ch26s03.html" tabindex="1">Built-in Filters</a></span></li>
+                              <li><span class="file"><a href="ch26s04.html" tabindex="1">Notification Handlers</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ch27.html" tabindex="1">The web server</a></span><ul>
+                              <li><span class="file"><a href="ch27s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch27s02.html" tabindex="1">Web server capabilities</a></span></li>
+                              <li><span class="file"><a href="ch27s03.html" tabindex="1">CGI support</a></span></li>
+                              <li><span class="file"><a href="ug.webserver.tls_data_in_db.html" tabindex="1">Storing TLS data in database</a></span></li>
+                              <li><span class="file"><a href="ug.webserver.package-upload.html" tabindex="1">Package upload</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.kicker.html" tabindex="1">Kicker </a></span><ul>
+                              <li><span class="file"><a href="ch28s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ug.kicker.actions.html" tabindex="1">Kicker action invocation</a></span></li>
+                              <li><span class="file"><a href="ug.kicker.data-concepts.html" tabindex="1">Data Kicker Concepts</a></span><ul>
+                                    <li><span class="file"><a href="ch28s03s01.html" tabindex="1">Generalized Monitors</a></span></li>
+                                    <li><span class="file"><a href="ch28s03s02.html" tabindex="1">Kicker Constraints/Filters</a></span></li>
+                                    <li><span class="file"><a href="ug.data.kicker.named_xpath.html" tabindex="1">Variable Bindings</a></span></li>
+                                    <li><span class="file"><a href="ug.kicker.simple_data_example.html" tabindex="1">A Simple Data Kicker Example</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ug.kicker.notif-concepts.html" tabindex="1">Notification Kicker Concepts</a></span><ul>
+                                    <li><span class="file"><a href="ch28s04s01.html" tabindex="1">Notification selector expression</a></span></li>
+                                    <li><span class="file"><a href="ug.notif.kicker.named_xpath.html" tabindex="1">Variable Bindings</a></span></li>
+                                    <li><span class="file"><a href="ch28s04s03.html" tabindex="1">Serializer and priority values</a></span></li>
+                                    <li><span class="file"><a href="ug.kicker.simple_notif_example.html" tabindex="1">A Simple Notification Kicker Example</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ug.kicker.rfm.html" tabindex="1">Nano Services Reactive FastMap with Kicker</a></span></li>
+                              <li><span class="file"><a href="ug.kicker.debugging.html" tabindex="1">Debugging kickers</a></span><ul>
+                                    <li><span class="file"><a href="ug.kicker.debugging.pipe.html" tabindex="1">Kicker CLI Debug target</a></span></li>
+                                    <li><span class="file"><a href="ug.kicker.debugging.unhide.html" tabindex="1">Unhide Kickers</a></span></li>
+                                    <li><span class="file"><a href="ch28s06s03.html" tabindex="1">XPath log</a></span></li>
+                                    <li><span class="file"><a href="ch28s06s04.html" tabindex="1">Devel Log</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ncs.development.scheduler.html" tabindex="1">Scheduler</a></span><ul>
+                              <li><span class="file"><a href="ch29s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch29s02.html" tabindex="1">Scheduling Periodic Work</a></span><ul>
+                                    <li><span class="file"><a href="ch29s02s01.html" tabindex="1">Schedule Expression</a></span></li>
+                                    <li><span class="file"><a href="ug.sc.compaction.html" tabindex="1">Periodic compaction</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch29s03.html" tabindex="1">Scheduling Non-recurring Work</a></span></li>
+                              <li><span class="file"><a href="ch29s04.html" tabindex="1">Scheduling in a HA Cluster</a></span></li>
+                              <li><span class="file"><a href="ch29s05.html" tabindex="1">Troubleshooting</a></span><ul>
+                                    <li><span class="file"><a href="ch29s05s01.html" tabindex="1">History log</a></span></li>
+                                    <li><span class="file"><a href="ch29s05s02.html" tabindex="1">XPath log</a></span></li>
+                                    <li><span class="file"><a href="ch29s05s03.html" tabindex="1">Devel Log</a></span></li>
+                                    <li><span class="file"><a href="ch29s05s04.html" tabindex="1">Suspending the Scheduler</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.progress_trace.html" tabindex="1">Progress Trace</a></span><ul>
+                              <li><span class="file"><a href="ch30s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch30s02.html" tabindex="1">Configuring Progress Trace</a></span><ul>
+                                    <li><span class="file"><a href="ch30s02s01.html" tabindex="1">Unhide Progress Trace</a></span></li>
+                                    <li><span class="file"><a href="ch30s02s02.html" tabindex="1">Log to File</a></span></li>
+                                    <li><span class="file"><a href="ch30s02s03.html" tabindex="1">Log as Operational Data</a></span></li>
+                                    <li><span class="file"><a href="ch30s02s04.html" tabindex="1">Log as Notification Events</a></span></li>
+                                    <li><span class="file"><a href="ch30s02s05.html" tabindex="1">Verbosity</a></span></li>
+                                    <li><span class="file"><a href="ch30s02s06.html" tabindex="1">Using Filters</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch30s03.html" tabindex="1">Report Progress Events from User Code</a></span><ul>
+                                    <li><span class="file"><a href="ch30s03s01.html" tabindex="1">Python ncs.maapi Example</a></span></li>
+                                    <li><span class="file"><a href="ch30s03s02.html" tabindex="1">Java com.tailf.progress.ProgressTrace Example</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.nano_services.html" tabindex="1">Nano Services for Staged Provisioning</a></span><ul>
+                              <li><span class="file"><a href="ch31s01.html" tabindex="1">Basic Concepts</a></span><ul>
+                                    <li><span class="file"><a href="ch31s01s01.html" tabindex="1">Plan Outline</a></span></li>
+                                    <li><span class="file"><a href="ch31s01s02.html" tabindex="1">Per-State Configuration</a></span></li>
+                                    <li><span class="file"><a href="ch31s01s03.html" tabindex="1">Link Plan Outline to Service</a></span></li>
+                                    <li><span class="file"><a href="ch31s01s04.html" tabindex="1">Service Instantiation</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch31s02.html" tabindex="1">Benefits and Use Cases</a></span></li>
+                              <li><span class="file"><a href="ch31s03.html" tabindex="1">Backtracking and Staged Delete</a></span></li>
+                              <li><span class="file"><a href="ch31s04.html" tabindex="1">Managing Side Effects</a></span></li>
+                              <li><span class="file"><a href="ch31s05.html" tabindex="1">Multiple and Dynamic Plan Components</a></span></li>
+                              <li><span class="file"><a href="ch31s06.html" tabindex="1">Netsim Router Provisioning Example</a></span></li>
+                              <li><span class="file"><a href="ch31s07.html" tabindex="1">Zombie Services</a></span></li>
+                              <li><span class="file"><a href="ch31s08.html" tabindex="1">Using Notifications to Track the Plan and its Status</a></span><ul>
+                                    <li><span class="file"><a href="ch31s08s01.html" tabindex="1">The plan-state-change Notification</a></span></li>
+                                    <li><span class="file"><a href="ch31s08s02.html" tabindex="1">The service-commit-queue-event Notification</a></span></li>
+                                    <li><span class="file"><a href="ch31s08s03.html" tabindex="1">
+                                                     Examples of service-state-changes Stream Subscriptions
+                                                   </a></span></li>
+                                    <li><span class="file"><a href="ch31s08s04.html" tabindex="1">The trace-id in the Notification</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch31s09.html" tabindex="1">Developing and Updating a Nano Service</a></span><ul>
+                                    <li><span class="file"><a href="ch31s09s01.html" tabindex="1">Adding Components</a></span></li>
+                                    <li><span class="file"><a href="ch31s09s02.html" tabindex="1">Removing Components</a></span></li>
+                                    <li><span class="file"><a href="ch31s09s03.html" tabindex="1">Replacing Components</a></span></li>
+                                    <li><span class="file"><a href="ch31s09s04.html" tabindex="1">Adding and Removing States</a></span></li>
+                                    <li><span class="file"><a href="ch31s09s05.html" tabindex="1">Modifying States</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ug.nano_services.impl.html" tabindex="1">Implementation Reference</a></span><ul>
+                                    <li><span class="file"><a href="ch31s10s01.html" tabindex="1">Back-Tracking</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s02.html" tabindex="1">Behavior Tree</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s03.html" tabindex="1">Nano Service Pre-Condition</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s04.html" tabindex="1">Nano Service Opaque and Component Properties</a></span></li>
+                                    <li><span class="file"><a href="ug.nano_services.callbacks.html" tabindex="1">Nano Service Callbacks</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s06.html" tabindex="1">Generic Service Callbacks</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s07.html" tabindex="1">Nano Service Pre/Post Modifications</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s08.html" tabindex="1">Forced Commits</a></span></li>
+                                    <li><span class="file"><a href="ug.nano_services.plan_location.html" tabindex="1">Plan Location</a></span></li>
+                                    <li><span class="file"><a href="ch31s10s10.html" tabindex="1">Nano Services and Commit Queue</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch31s11.html" tabindex="1">Graceful Link Migration Example</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.encryption_keys.html" tabindex="1">Encryption Keys</a></span><ul>
+                              <li><span class="file"><a href="ch32s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch32s02.html" tabindex="1">Reading encryption keys using an external command</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="ug.external_logging.html" tabindex="1">External Logging</a></span><ul>
+                              <li><span class="file"><a href="ch33s01.html" tabindex="1">Introduction</a></span></li>
+                              <li><span class="file"><a href="ch33s02.html" tabindex="1">Enabling external log processing</a></span></li>
+                              <li><span class="file"><a href="ch33s03.html" tabindex="1">Processing logs using an external command</a></span></li>
+                           </ul>
+                        </li>
+                        <li><span class="file"><a href="vsc.ext.html" tabindex="1">NSO Developer Studio</a></span><ul>
+                              <li><span class="file"><a href="ch34s01.html" tabindex="1">Introduction</a></span><ul>
+                                    <li><span class="file"><a href="ch34s01s01.html" tabindex="1">Contribute</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch34s02.html" tabindex="1">NSO Developer Studio - Developer extension</a></span><ul>
+                                    <li><span class="file"><a href="ch34s02s01.html" tabindex="1">System requirements</a></span></li>
+                                    <li><span class="file"><a href="ch34s02s02.html" tabindex="1">Install the extension</a></span></li>
+                                    <li><span class="file"><a href="ch34s02s03.html" tabindex="1">Make a new service package (Python only)</a></span><ul>
+                                          <li><span class="file"><a href="ch34s02s03.html#d0e30074" tabindex="1">Open an existing package</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch34s02s04.html" tabindex="1">Edit YANG files</a></span><ul>
+                                          <li><span class="file"><a href="ch34s02s04.html#d0e30111" tabindex="1">Add YANG models for Yangster</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s04.html#d0e30156" tabindex="1">View YANG diagram</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s04.html#d0e30182" tabindex="1">Add a new YANG module</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s04.html#d0e30248" tabindex="1">Add a service point</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s04.html#d0e30321" tabindex="1">Register an action point</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch34s02s05.html" tabindex="1">Edit Python files</a></span><ul>
+                                          <li><span class="file"><a href="ch34s02s05.html#d0e30441" tabindex="1">Add a new Python module</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s05.html#d0e30505" tabindex="1">Use Python code completion snippets</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch34s02s06.html" tabindex="1">Edit XML template files</a></span><ul>
+                                          <li><span class="file"><a href="ch34s02s06.html#d0e30549" tabindex="1">Add a new XML template</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s06.html#d0e30594" tabindex="1">Use XML code completion snippets</a></span></li>
+                                          <li><span class="file"><a href="ch34s02s06.html#d0e30645" tabindex="1">XML code validation</a></span></li>
+                                       </ul>
+                                    </li>
+                                    <li><span class="file"><a href="ch34s02s07.html" tabindex="1">Limitations</a></span></li>
+                                 </ul>
+                              </li>
+                              <li><span class="file"><a href="ch34s03.html" tabindex="1">NSO Developer Studio - Explorer extension</a></span><ul>
+                                    <li><span class="file"><a href="ch34s03s01.html" tabindex="1">System requirements</a></span></li>
+                                    <li><span class="file"><a href="ch34s03s02.html" tabindex="1">Install the extension</a></span></li>
+                                    <li><span class="file"><a href="ch34s03s03.html" tabindex="1">Connect to NSO instance</a></span></li>
+                                    <li><span class="file"><a href="ch34s03s04.html" tabindex="1">Inspect the CDB tree</a></span></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

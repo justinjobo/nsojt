@@ -1,0 +1,12 @@
+NSO 6.2.5 for linux on x86_64.
+Revision: fee9083bd0aceae5dd6bf05d9887dcc8de02204b (GIT)
+Date: Tue May 14 23:23:59 CEST 2024
+DOCUMENTATION_PACKAGE=nso-6.2.5.doc.tar.gz
+JAVA_PACKAGE=ncs-6.2.5.java.tar.gz
+EXAMPLE_PACKAGE=ncs-6.2.5.examples.tar.gz
+GLIBC version: 2.24
+Erlang/OTP version: 25.3.2.10
+SSL version: ciscossl-1.1.1t.7.2.482
+Python3 version: 3.7.8
+BUILD_ID: 240514.225306091.fee9083bd0ac
+Java version: 17.0.7

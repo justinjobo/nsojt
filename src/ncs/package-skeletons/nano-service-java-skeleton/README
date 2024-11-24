@@ -1,0 +1,7 @@
+This is a generated Python package, made by:
+
+  ncs-make-package --nano-service-skeleton %SERVICE_TYPE%
+
+It contains a dummy YANG model which implements a minimal Service
+that doesn't really do anything useful. They are there just to get
+you going.

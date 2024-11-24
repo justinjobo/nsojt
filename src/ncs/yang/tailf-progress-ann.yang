@@ -1,0 +1,36 @@
+module tailf-progress-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import tailf-progress {
+    prefix progress;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "Annotation module for tailf-progress.
+
+     Adds a internal-dp annotation to denote the module
+     as an internal data provider.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Released as part of ConfD-8.1 / NCS-6.1.
+
+       Annotate module as an internal data provider with tailf:internal-dp.";
+  }
+
+  tailf:annotate-module "tailf-progress" {
+    tailf:internal-dp;
+  }
+}

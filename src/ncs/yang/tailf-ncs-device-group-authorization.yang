@@ -1,0 +1,47 @@
+module tailf-ncs-device-group-authorization {
+  yang-version 1.1;
+  namespace "http://tail-f.com/yang/ncs-acm/device-group-authorization";
+  prefix tfdga;
+
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This submodule contains a collection of YANG definitions for
+     configuring NACM Device Group Authorization in NCS.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-08-22 {
+    description
+      "Released as part of NSO 6.1.X
+
+       Introduces Device Group Authorization, where authorization
+       for a group of devices is set through a device group.
+
+       The Device Group Authorization is set for a user group, as
+       for normal rule-lists.";
+  }
+
+  augment "/nacm:nacm/nacm:rule-list/nacm:rule/nacm:rule-type" {
+    case device-group-rule {
+      leaf device-group {
+        type leafref {
+          path "/ncs:devices/ncs:device-group/ncs:name";
+        }
+        description
+          "Which device group this rule applies to.";
+      }
+    }
+  }
+}

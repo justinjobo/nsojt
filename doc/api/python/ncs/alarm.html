@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>ncs.alarm API documentation</title>
+<meta name="description" content="NCS Alarm Manager module." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<style>
+#pubhub-container .pubhub-doc-container article#content,
+#pubhub-container .pubhub-doc-container nav#sidebar {
+width: inherit;
+height: inherit;
+}
+</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ncs.alarm</code></h1>
+</header>
+<section id="section-intro">
+<p>NCS Alarm Manager module.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="ncs.alarm.clear_alarm"><code class="name flex">
+<span>def <span class="ident">clear_alarm</span></span>(<span>alarm)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Clear an alarm.</p>
+<h2 id="arguments">Arguments</h2>
+<p>alarm &ndash; An instance of Alarm.</p></div>
+</dd>
+<dt id="ncs.alarm.managed_object_instance"><code class="name flex">
+<span>def <span class="ident">managed_object_instance</span></span>(<span>instanceval)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a managed object of type instance-identifier.</p>
+<h2 id="arguments">Arguments</h2>
+<p>instanceval &ndash; The instance-identifier (string or HKeypathRef)</p></div>
+</dd>
+<dt id="ncs.alarm.managed_object_oid"><code class="name flex">
+<span>def <span class="ident">managed_object_oid</span></span>(<span>oidval)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a managed object of type yang:object-identifier.</p>
+<h2 id="arguments">Arguments</h2>
+<p>oidval &ndash; The OID (string)</p></div>
+</dd>
+<dt id="ncs.alarm.managed_object_string"><code class="name flex">
+<span>def <span class="ident">managed_object_string</span></span>(<span>strval)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a managed object of type string.</p>
+<h2 id="arguments">Arguments</h2>
+<p>strval &mdash; The string value</p></div>
+</dd>
+<dt id="ncs.alarm.raise_alarm"><code class="name flex">
+<span>def <span class="ident">raise_alarm</span></span>(<span>alarm)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raise an alarm.</p>
+<h2 id="arguments">Arguments</h2>
+<p>alarm &ndash; An instance of Alarm.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ncs.alarm.Alarm"><code class="flex name class">
+<span>class <span class="ident">Alarm</span></span>
+<span>(</span><span>managed_device, managed_object, alarm_type, specific_problem, severity, alarm_text, impacted_objects=None, related_alarms=None, root_cause_objects=None, time_stamp=None, custom_attributes=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class representing an alarm.</p>
+<p>Create an Alarm object.</p>
+<p>Arguments:
+managed_device
+The managed device this alarm is associated with. Plain string
+which identifies the device.
+managed_object
+The managed object this alarm is associated with. Also referred
+to as the "Alarming Object". This object may not be referred to
+in the root_cause_objects parameter. If an NCS Service
+generates an alarm based on an error state in a device used by
+that service, managed_object should be the service Id and the
+device should be included in the root_cause_objects list. This
+parameter must be a ncs.Value object. Use one of the methods
+managed_object_string(), managed_object_oid() or
+managed_object_instance() to create the value.
+alarm_type
+Type of alarm. This is a YANG identity. Alarm types are defined
+by the YANG developer and should be designed to be as specific
+as possible.
+specific_problem
+If the alarm_type isn't enough to describe the alarm, this
+field can be used in combination. Keep in mind that when
+dynamically adding a specific problem, there is no way for the
+operator to know in advance which alarms can be raised.
+severity
+State of the alarm; cleared, indeterminate, critical, major,
+minor, warning (enum).
+alarm_text
+A human readable description of this problem.
+impacted_objects
+A list of Managed Objects that may no longer function due to
+this alarm. Typically these point to NCS Services that are
+dependent on the objects on the device that reported the
+problem. In NCS 2.3 and later there is a backpointer attribute
+available on objects in the device tree that has been created by
+a Service. These backpointers are instance reference pointers
+that should be set in this list. Use one of the methods
+managed_object_string(), managed_object_oid() or
+managed_object_instance() to create the instances to populate
+this list.
+related_alarms
+References to other alarms that have been generated as a
+consequence of this alarm, or that has some other relationship
+to this alarm. Should be a list of AlarmId instances.
+root_cause_objects
+A list of Managed Objects that are likely to be the root cause
+of this alarm. This is different from the "Alarming Object". See
+managed_object above for details. Use one of the methods
+managed_object_string(), managed_object_oid() or
+managed_object_instance() to create the instances to populate
+this list.
+time_stamp
+A date-and-time when this alarm was generated.
+custom_attributes
+A list of custom leafs augmented into the alarm list.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ncs.alarm.Alarm.key"><code class="name">var <span class="ident">key</span></code></dt>
+<dd>
+<div class="desc"><p>Get alarm list key.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ncs.alarm.Alarm.add_attribute"><code class="name flex">
+<span>def <span class="ident">add_attribute</span></span>(<span>self, prefix, tag, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add or update custom attribute</p></div>
+</dd>
+<dt id="ncs.alarm.Alarm.add_status_attribute"><code class="name flex">
+<span>def <span class="ident">add_status_attribute</span></span>(<span>self, prefix, tag, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add or update custom status change attribute</p></div>
+</dd>
+<dt id="ncs.alarm.Alarm.alarm_id"><code class="name flex">
+<span>def <span class="ident">alarm_id</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the unique Id of this alarm as an AlarmId instance.</p></div>
+</dd>
+<dt id="ncs.alarm.Alarm.get_key"><code class="name flex">
+<span>def <span class="ident">get_key</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get alarm list key.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="ncs.alarm.AlarmId"><code class="flex name class">
+<span>class <span class="ident">AlarmId</span></span>
+<span>(</span><span>alarm_type, managed_device, managed_object, specific_problem=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the unique Id of an Alarm.</p>
+<p>Create an AlarmId.</p></div>
+</dd>
+<dt id="ncs.alarm.CustomAttribute"><code class="flex name class">
+<span>class <span class="ident">CustomAttribute</span></span>
+<span>(</span><span>prefix, tag, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class representing a custom attribute set on an alarm.</p></div>
+</dd>
+<dt id="ncs.alarm.CustomStatusAttribute"><code class="flex name class">
+<span>class <span class="ident">CustomStatusAttribute</span></span>
+<span>(</span><span>prefix, tag, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class representing a custom attribute set on an alarm.</p></div>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ncs" href="index.html">ncs</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="ncs.alarm.clear_alarm" href="#ncs.alarm.clear_alarm">clear_alarm</a></code></li>
+<li><code><a title="ncs.alarm.managed_object_instance" href="#ncs.alarm.managed_object_instance">managed_object_instance</a></code></li>
+<li><code><a title="ncs.alarm.managed_object_oid" href="#ncs.alarm.managed_object_oid">managed_object_oid</a></code></li>
+<li><code><a title="ncs.alarm.managed_object_string" href="#ncs.alarm.managed_object_string">managed_object_string</a></code></li>
+<li><code><a title="ncs.alarm.raise_alarm" href="#ncs.alarm.raise_alarm">raise_alarm</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ncs.alarm.Alarm" href="#ncs.alarm.Alarm">Alarm</a></code></h4>
+<ul class="">
+<li><code><a title="ncs.alarm.Alarm.add_attribute" href="#ncs.alarm.Alarm.add_attribute">add_attribute</a></code></li>
+<li><code><a title="ncs.alarm.Alarm.add_status_attribute" href="#ncs.alarm.Alarm.add_status_attribute">add_status_attribute</a></code></li>
+<li><code><a title="ncs.alarm.Alarm.alarm_id" href="#ncs.alarm.Alarm.alarm_id">alarm_id</a></code></li>
+<li><code><a title="ncs.alarm.Alarm.get_key" href="#ncs.alarm.Alarm.get_key">get_key</a></code></li>
+<li><code><a title="ncs.alarm.Alarm.key" href="#ncs.alarm.Alarm.key">key</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ncs.alarm.AlarmId" href="#ncs.alarm.AlarmId">AlarmId</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ncs.alarm.CustomAttribute" href="#ncs.alarm.CustomAttribute">CustomAttribute</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ncs.alarm.CustomStatusAttribute" href="#ncs.alarm.CustomStatusAttribute">CustomStatusAttribute</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

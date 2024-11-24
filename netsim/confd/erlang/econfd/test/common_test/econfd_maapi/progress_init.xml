@@ -1,0 +1,17 @@
+<progress xmlns="http://tail-f.com/ns/progress">
+  <trace>
+    <name>test-csv</name>
+    <destination>
+      <file>event.csv</file>
+    </destination>
+    <verbosity>debug</verbosity>
+    <enabled>true</enabled>
+  </trace>
+  <trace>
+  <name>test-oper</name>
+  <destination>
+    <oper-data/>
+  </destination>
+  <verbosity>debug</verbosity>
+</trace>
+</progress>

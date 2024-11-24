@@ -1,0 +1,37 @@
+module smp {
+  namespace "http://tail-f.com/ns/example/smp";
+  prefix smp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  /* A set of server structures */
+  container servers {
+    tailf:callpoint simplecp;
+    list server {
+      key "name number";
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf number {
+        type int64;
+      }
+      leaf obj {
+        type instance-identifier {
+          require-instance false;
+        }
+        mandatory true;
+      }
+      leaf-list refs {
+        type instance-identifier {
+          require-instance false;
+        }
+      }
+    }
+  }
+}

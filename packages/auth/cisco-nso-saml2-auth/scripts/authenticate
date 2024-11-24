@@ -1,0 +1,393 @@
+#!/usr/bin/env python3
+
+# INPUT
+# [user;password;orig_request;request;headers;body;src-ip;src-port;ctx;proto;]
+#       - data to use for login
+# - user: not used for authentication in SAMLv2
+# - password: not used for authentication in SAMLv2
+# - orig_request: base64 encoded original request e.g. "GET /jsonrpc HTTP/1.1".
+# - request: base64 encoded rewritten SSO request, i.e. without SSO
+#            base-url, e.g. "GET /saml/login HTTP/1.1".
+# - headers: base64 encoded headers from the NCS authenticate function
+# - body: base64 encoded body from the NCS authenticate function
+# - src-ip: client's source ip
+# - src-port: client's source port
+# - ctx: interface agent used, e.g. webui, restconf, cli
+# - proto: protocol used
+
+# OUTPUT
+# "redirect 'url'\n" - unauthenticated, send redirect to users
+# "content 'content_type' 'content'\n" - send content to users
+# "accept_username $user $groups $uid $gid $supplementary_gids $HOME\n"
+#     - authenticated user
+# "accept_username_redirect url $user $groups $uid $gid $supplementary_gids
+#                           $HOME\n" - authenticated, send redirect to users
+# "unknown 'reason'\n" - can't use supplied data to login
+# "reject 'reason'\n"- denied authentication
+# "abort 'reason'\n" - an error occured
+
+import base64
+import datetime
+import iso8601
+import logging
+import os
+from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
+import sys
+import traceback
+from urllib.parse import parse_qs, urlencode
+from urllib.request import urlopen
+import urllib
+import uuid
+import xml.etree.ElementTree as ET
+import json
+
+import ncs
+import _ncs
+
+from saml2_auth_utils import (AuthnRequest, deflate_and_base64_encode,
+                              ResponseParser, RsaSha256Signer,
+                              sign_query_parameters)
+
+
+# Handled paths relative to /saml2-auth/base-url
+LOGIN_PATH = "/saml/login/"
+LOGOUT_PATH = "/saml/logout/"
+ACS_PATH = "/saml/acs/"
+METADATA_PATH = "/saml/metadata/"
+HANDLED_PATHS = [LOGIN_PATH, LOGOUT_PATH, ACS_PATH, METADATA_PATH]
+
+ERROR_BAD_SAML_CONFIG = "SAML config is wrong or incomplete"
+ERROR_BAD_SAML_RESPONSE = "Bad SAMLResponse"
+ERROR_BAD_RELAY_STATE = "Bad RelayState"
+ERROR_BAD_METADATA_URL = "Bad metadata-url"
+ERROR_UNHANDLED_URL = "Unhandled URL"
+
+NEXT_PREFIX = "==nso_package_authentication_next=="
+
+# Setup logger
+# assume system install
+logdir = os.getenv("NCS_LOG_DIR")
+if logdir is None:
+    # fallback local install
+    logdir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                          "../../../../../logs")
+
+logname = os.path.join(logdir, "ncs-python-saml2-auth.log")
+if not os.path.isdir(logdir):
+    os.mkdir(logdir)
+
+logfmt = ("%(asctime)s.%(msecs)02d %(filename)s:%(lineno)s"
+          " %(levelname)s: %(message)s")
+logging.basicConfig(filename=logname, filemode="a+", format=logfmt,
+                    datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+def base64_to_str(b):
+    return base64.decodebytes(b.encode("utf-8")).decode("utf-8")
+
+
+def str_to_base64(s):
+    return base64.encodebytes(s.encode("utf-8")).decode("utf-8")
+
+
+def lookup_config():
+    """Retrieve the config stored within NCS"""
+
+    logger.debug("SAMLv2: Connecting to NCS to retrieve metadata")
+    with ncs.maapi.single_read_trans("admin", "system") as trans:
+        m = ncs.maapi.Maapi()
+        m.install_crypto_keys()
+        root = ncs.maagic.get_root(trans)
+
+        # SAMLv2 config
+        config = root.cisco_nso_saml2_auth__saml2_auth
+
+        md = config.identity_provider.metadata
+        # Try fetching metadata with metadata-url
+        if config.identity_provider.metadata_url is not None:
+            try:
+                md = urlopen(config.identity_provider.metadata_url).read()
+            except urllib.error.URLError:
+                raise ValueError(ERROR_BAD_METADATA_URL)
+            except urllib.error.HTTPError:
+                raise ValueError(ERROR_BAD_METADATA_URL)
+
+        idp_metadata = parse_idp_metadata(md)
+
+        cfg = {"idp": {}, "sp": {}}
+        cfg["idp"]["entity-id"] = config.identity_provider.entity_id
+        cfg["idp"]["sso-service"] = idp_metadata["sso-service"]
+        cfg["idp"]["signing-certificate"] = \
+            "-----BEGIN CERTIFICATE-----\n" + \
+            idp_metadata["signing-certificate"] + \
+            "\n-----END CERTIFICATE-----"
+        cfg["sp"]["base-url"] = config.service_provider.base_url
+        cfg["sp"]["entity-id"] = config.service_provider.entity_id
+        cfg["sp"]["metadata"] = config.service_provider.metadata
+        cfg["sp"]["signature-algorithm"] = \
+            config.service_provider.signature_algorithm
+        cfg["sp"]["private-key-encryption"] = \
+            _ncs.decrypt(config.service_provider.private_key_encryption)
+        cfg["sp"]["private-key-signing"] = \
+            _ncs.decrypt(config.service_provider.private_key_signing)
+
+        # assert all necessary config exists for "idp" and "sp"
+        for p in cfg:
+            for c in cfg[p]:
+                if cfg[p][c] is None:
+                    raise ValueError(ERROR_BAD_SAML_CONFIG)
+
+        return cfg
+
+
+def parse_args(args):
+    """
+    Parse args and put them in a dict.
+
+    See paragraph at top of file and NSO Package Authentication documentation
+    for details.
+    """
+    a = dict(zip(["user", "password", "orig_request", "request", "headers",
+                  "body", "srcip", "srcport", "ctx", "proto"],
+                 args.strip("[]").split(";")))
+
+    a["user"] = base64_to_str(a["user"])
+    a["password"] = base64_to_str(a["password"])
+
+    if a["orig_request"].startswith(NEXT_PREFIX):
+        a["next"] = base64_to_str((a["orig_request"])[len(NEXT_PREFIX):])
+        a["orig_request"] = ""
+    else:
+        a["orig_request"] = base64_to_str(a["orig_request"])
+        a["next"] = ""
+
+    a["request"] = base64_to_str(a["request"])
+    a["headers"] = base64_to_str(a["headers"])
+    a["body"] = base64_to_str(a["body"].replace("\n", ""))
+
+    return a
+
+
+def parse_idp_metadata(metadata):
+    """Parse IdP metadata and extract SingleSignOnService and
+    signing certificate"""
+    root = ET.fromstring(metadata)
+
+    sso_service_xpath = \
+        ("{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor/"
+         "{urn:oasis:names:tc:SAML:2.0:metadata}SingleSignOnService"
+         "[@Binding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect']")
+    sso_service = root.find(sso_service_xpath).attrib["Location"]
+
+    cert_sign_xpath = \
+        ("{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor/"
+         "{urn:oasis:names:tc:SAML:2.0:metadata}KeyDescriptor"
+         "[@use='signing']/"
+         "{http://www.w3.org/2000/09/xmldsig#}KeyInfo/"
+         "{http://www.w3.org/2000/09/xmldsig#}X509Data/"
+         "{http://www.w3.org/2000/09/xmldsig#}X509Certificate")
+    cert_sign = root.find(cert_sign_xpath).text
+
+    md = {"sso-service": sso_service, "signing-certificate": cert_sign}
+    return md
+
+
+def utcnow():
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
+# Code copied from flask-saml2 and adapted
+def validate_response(response, idp_entity_id, sp_entity_id):
+    # Check it came from the right place
+    if idp_entity_id != response.issuer:
+        return False
+
+    if response.conditions is not None:
+        # Validate the NotBefore/NotOnOrAfter tags
+        now = utcnow()
+        not_before = response.conditions.get("NotBefore")
+        not_on_or_after = response.conditions.get("NotOnOrAfter")
+        try:
+            if not_before is not None and now < iso8601.parse_date(not_before):
+                return False
+            if (not_on_or_after is not None
+                    and now >= iso8601.parse_date(not_on_or_after)):
+                return False
+        except ValueError:
+            return False
+
+        # Validate the AudienceRestriction elements, if they exist
+        audiences = response._xpath(response.conditions,
+                                    "./saml:AudienceRestriction/saml:Audience")
+        if (len(audiences)
+                and not any(el.text == sp_entity_id for el in audiences)):
+            return False
+
+    return True
+
+
+def get_path(path):
+    """Strip /sso and query from path."""
+    request_path = path.split(" ")[1].split("?")[0]
+    # remove the four leading chars, i.e. "/sso"
+    return request_path[4:]
+
+
+def assert_handled_path(request_path):
+    """Assert that we can handle relative SSO request path"""
+    if request_path not in HANDLED_PATHS:
+        print(f"unknown '{ERROR_UNHANDLED_URL}'")
+        sys.exit(1)
+
+
+def login(saml_cfg, args):
+    """Login a user"""
+    issue_instant = utcnow().isoformat()
+    sso_service = saml_cfg["idp"]["sso-service"]
+    issuer = saml_cfg["sp"]["entity-id"]
+    acs_url = saml_cfg["sp"]["base-url"] + ACS_PATH
+
+    # NB! RequestId can't start with a digit.
+    authn_request = AuthnRequest({"REQUEST_ID": "_" + uuid.uuid4().hex,
+                                  "ISSUE_INSTANT": issue_instant,
+                                  "DESTINATION": sso_service,
+                                  "ISSUER": issuer,
+                                  "ACS_URL": acs_url})
+    saml_request = deflate_and_base64_encode(authn_request.get_xml_string())
+    parameters = [("SAMLRequest", saml_request)]
+
+    # TODO make a better RelayState: ?agent=...&next=...
+    # Use orig_request as a final redirect after successful login
+    relay_state = {}
+    relay_state["orig_request"] = args.get("orig_request", "")
+    relay_state["next"] = urllib.parse.quote(args.get("next", ""))
+    rs = str_to_base64(json.dumps(relay_state)).replace("\n", "")
+    parameters.append(("RelayState", rs))
+
+    # maybe sign the query, only supported signing algo is rsa-sha256
+    sign_algo = saml_cfg["sp"]["signature-algorithm"]
+    if sign_algo != "cisco-nso-saml2-auth:none":
+        privkey_data = saml_cfg["sp"]["private-key-signing"]
+        privkey = load_privatekey(FILETYPE_PEM, privkey_data)
+        query = sign_query_parameters(RsaSha256Signer(privkey),
+                                      parameters)
+    else:
+        query = urlencode(parameters)
+
+    url = f"{sso_service}?{query}"
+    url_base64 = str_to_base64(url).replace("\n", "")
+    print(f"redirect '{url_base64}'")
+
+
+def logout():
+    # FIXME pass reference to session
+    # TODO send logout request to IdP
+    print("logout")
+
+
+def metadata(saml_cfg):
+    metadata = str_to_base64(saml_cfg["sp"]["metadata"]).replace("\n", "")
+    print(f"content 'application/xml' '{metadata}'")
+
+
+def acs(saml_cfg, args):
+    """Validate SAMLResponse"""
+    query = parse_qs(args["body"])
+
+    # assert unique SAMLResponse
+    if len(query["SAMLResponse"]) == 1:
+        saml_response = base64_to_str(query["SAMLResponse"][0])
+    else:
+        raise ValueError(ERROR_BAD_SAML_RESPONSE)
+
+    # assert unique or empty RelayState
+    relay_state = query.get("RelayState", None)
+    if relay_state is None:
+        relay_state = {}
+    else:
+        try:
+            relay_state = json.loads(base64_to_str(relay_state[0]))
+        except Exception:
+            raise ValueError(ERROR_BAD_RELAY_STATE)
+
+    cert = saml_cfg["idp"].get("signing-certificate", None)
+    if cert is not None:
+        cert = load_certificate(FILETYPE_PEM, cert)
+
+    response = ResponseParser(saml_response, cert)
+
+    # validate authentication
+    if validate_response(response,
+                         saml_cfg["idp"]["entity-id"],
+                         saml_cfg["sp"]["entity-id"]):
+        user = response.nameid
+        user = str_to_base64(user).replace("\n", "")
+
+        # Build package auth response string
+        try:
+            attrs = response.attributes
+
+            # groups and gids are optional
+            try:
+                maybe_groups = f"{attrs['groups']} "
+                maybe_gids = f"{attrs['gids']} "
+            except KeyError:
+                maybe_groups = ""
+                maybe_gids = ""
+
+            if (relay_state.get("next", "") != ""):
+                redirect_next = str_to_base64(
+                    relay_state["next"]).replace("\n", "")
+                packageauth = (f"accept_username_redirect "
+                               f"{redirect_next} "
+                               f"{user} "
+                               f"{maybe_groups}"
+                               f"{attrs['uid']} "
+                               f"{attrs['gid']} "
+                               f"{maybe_gids}"
+                               f"{attrs['homedir']}")
+            elif (relay_state.get("orig_request", "") != ""):
+                packageauth = "unknown 'Orig Req response is not implemented'"
+            else:
+                packageauth = (f"accept_username {user} "
+                               f"{maybe_groups} "
+                               f"{attrs['uid']} "
+                               f"{attrs['gid']} "
+                               f"{maybe_gids}"
+                               f"{attrs['homedir']}")
+
+            print(f"{packageauth}")
+        except TypeError:
+            print("reject 'permission denied'")
+    else:
+        print("reject 'permission denied'")
+
+
+def main():
+    logger.debug("SAMLv2: scripts/authenticate")
+
+    try:
+        args = parse_args(sys.stdin.readline())
+
+        request_path = get_path(args["request"])
+        assert_handled_path(request_path)
+
+        saml_cfg = lookup_config()
+
+        if request_path == LOGIN_PATH:
+            login(saml_cfg, args)
+        elif request_path == LOGOUT_PATH:
+            logout()
+        elif request_path == METADATA_PATH:
+            metadata(saml_cfg)
+        elif request_path == ACS_PATH:
+            acs(saml_cfg, args)
+
+    except Exception as e:
+        print(f"error '{e}'")
+        logger.debug(traceback.format_exc())
+
+
+if __name__ == "__main__":
+    main()

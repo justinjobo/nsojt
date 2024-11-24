@@ -1,0 +1,172 @@
+module cisco-nso-ldap-auth {
+  yang-version 1.1;
+  namespace "http://tail-f.com/ns/cisco-nso-ldap-auth";
+  prefix cisco-nso-ldap-auth;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This model contains the configuration for the LDAP authentication
+     NCS package.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All righs reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-11-16 {
+    description
+      "Initial revision, released as part of NCS-6.2.
+
+       Based on code from: https://github.com/ygorelik/ldap-auth
+      ";
+  }
+
+
+  container ldap-auth {
+    description
+        "Container holding the LDAP configuration";
+
+    leaf default-group {
+        description
+            "The ldap-auth package must return at least one
+             group or else the authorization will fail.
+             If no group can be obtained from the LDAP server,
+             this 'default-group' name (if configured) will be used.
+            ";
+        tailf:info "Default group";
+        type string;
+    }
+
+    list server {
+      description
+        "The server information configured here are used as:
+
+         1. Each LDAP server in the list will be tried until a connection
+            is successfully established.
+
+         2. Using the 'bind-user-dn' and the 'bind-user-password' we will
+            search for the specified 'uid-attribute' where its value match
+            the UserID to be authenticated.
+
+         3. We will then try to authenticate against the User DN entry
+            (found in 2) using the UserPassword and, at success, retrieve
+            the necessary authorization attributes: 'memberOf', 'uidNumber',
+            'gidNumber' and 'homeDirectotry'.
+
+         NOTE: When doing simple authentication, the client’s password
+         is sent in clear text along with the DN of the client (user).
+         This makes it easy for an attacker to acquire the password from
+         the network. It’s therefore a security problem.
+         Thus, best practices dictate that you always should using
+         simple authentication over SSL/TLS.
+        ";
+      key "host port";
+      leaf host {
+          description
+            "The Hostname or IP address of an LDAP server.";
+          tailf:info "The Host or IP address of an LDAP server";
+          type inet:host;
+      }
+      leaf port {
+          description
+              "To use unencrypted connections enter the LDAP port number,
+               typically 389. To use connections secured with LDAPS,
+               enter the port number for secure connections, typically 689.
+              ";
+          tailf:info "The port number to access an LDAP server";
+          type inet:port-number;
+      }
+      leaf secure-connection {
+          description
+              "The Boolean value (true or false) that specifies whether
+               to enable NSO to connect to an LDAP server over TLS/SSL.
+              ";
+          tailf:info "Connect to an LDAP server over TLS/SSL.";
+          type boolean;
+          default true;
+      }
+      leaf bind-admin-dn {
+          description
+            "The Admin Bind DN is an LDAP user that can be authenticated
+             to gain access to the LDAP server for further operations.
+            ";
+          mandatory true;
+          tailf:info "Bind Admin DN";
+          type string;
+      }
+      leaf bind-admin-password {
+          description
+            "The Admin Bind password is used to authenticate (bind) against
+             the Admin DN.
+            ";
+          mandatory true;
+          tailf:info "Bind Admin DN password";
+          type tailf:aes-256-cfb-128-encrypted-string;
+      }
+      choice base-dn {
+          description
+            "The Base DN tells where the LDAP server should start to look
+             for the requested information.
+            ";
+          mandatory true;
+          leaf search-base-dn {
+              description
+                  "When set, this is the search base DN, i.e the LDAP node
+                   from where we will search for the given user entry.
+                  ";
+              tailf:info "Search base DN";
+              type string;
+          }
+          leaf user-base-dn {
+              description
+                  "When set, this is the user base DN to which a users
+                   RDN will be prepended to form the final DN used for
+                   the authentication.
+                  ";
+              tailf:info "User base DN";
+              type string;
+          }
+      }
+      leaf user-id-attribute {
+          description
+              "The LDAP attribute to be used for holding the UserId value.
+               For example: 'uid' or 'cn'";
+          tailf:info "User id attribute";
+          type string;
+          default "uid";
+      }
+      leaf group-id-attribute {
+          description
+              "The name of the unique identifier attribute of the LDAP groups
+               NSO should use. This is the name that NSO matches a group name
+               against.
+
+               For example, if set to 'cn', and the user signs in to NSO is a
+               member of the group 'cn=oper,ou=Groups,dc=example,dc=com', the
+               LDAP attribute value 'oper' will be used to identify the group
+               that the user is a member of.
+              ";
+          tailf:info "Group id attribute";
+          type string;
+          default "cn";
+      }
+      leaf member-of-attribute {
+          description
+              "The name of the LDAP attribute containing the group membership
+               of a user.
+              ";
+          tailf:info "Attribute holding group membership";
+          type string;
+          default "memberOf";
+      }
+    }
+  }
+}

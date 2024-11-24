@@ -1,0 +1,1661 @@
+submodule tailf-ncs-metric {
+  yang-version 1.1;
+  belongs-to tailf-ncs {
+    prefix ncs;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+  import tailf-ncs-ned {
+    prefix ned;
+  }
+
+  organization "Tail-f Systems";
+  description
+    "This module defines a data model for accessing Cisco NCS metric.
+
+     Copyright 2022-2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Released as part of NCS-6.1.
+
+       Non-backwards-compatible changes have been introduced.
+
+       Transaction and worker socket counters added.
+
+       Backwards incompatible changes
+           Moved /metric/sysadmin/counter/transaction/commit
+                 to /metric/sysadmin/counter/transaction/datastore/commit
+
+       Added /metric/sysadmin/counter/transaction/datastore/aborts
+             /metric/sysadmin/counter/transaction/datastore/conflicts
+             /metric/sysadmin/counter/transaction/datastore/retries
+             /metric/sysadmin/counter/transaction/datastore/total-time
+             /metric/sysadmin/counter/transaction/datastore/service-time
+             /metric/sysadmin/counter/transaction/datastore/validation-time
+             /metric/sysadmin/counter/transaction/datastore/global-lock-time
+             /metric/sysadmin/counter/transaction/datastore/
+               global-lock-wait-time
+
+             /metric/sysadmin/counter/service-conflicts/service-type/conflicts
+
+             /metric/debug/counter/xpath-eval
+             /metric/debug/counter/total-xpath-eval-time
+
+             /metric/developer/gauge/libconfd/worker-sockets
+             /metric/developer/gauge/libconfd/pending-worker-sockets
+
+             /metric/sydadmin/counter/cdb/compaction/A-cdb
+             /metric/sydadmin/counter/cdb/compaction/O-cdb
+             /metric/sydadmin/counter/cdb/compaction/S-cdb
+             /metric/sydadmin/counter/cdb/compaction/total
+             /metric/sydadmin/gauge/cdb/disk-size/A-cdb
+             /metric/sydadmin/gauge/cdb/disk-size/O-cdb
+             /metric/sydadmin/gauge/cdb/disk-size/S-cdb
+             /metric/sydadmin/gauge/cdb/disk-size/total
+             /metric/sydadmin/gauge/cdb/mem-size/A-cdb
+             /metric/sydadmin/gauge/cdb/mem-size/O-cdb
+             /metric/sydadmin/gauge/cdb/mem-size/S-cdb
+             /metric/sydadmin/gauge/cdb/mem-size/total
+
+       Deprecated
+             /metric/debug/counter/when-eval
+             /metric/debug/counter/total-when-eval-time
+             /metric/sysadmin/counter/cdb/compactions
+
+             These are currently mapped to the xpath-eval and
+             total-xpath-eval-time counters";
+  }
+
+  revision 2022-09-29 {
+    description
+      "Released as part of NCS-6.0.";
+  }
+
+  typedef counter-rate-name {
+    type enumeration {
+      enum 1m { tailf:code-name counter-rate-enum-1m; }
+      enum 5m { tailf:code-name counter-rate-enum-5m; }
+      enum 15m { tailf:code-name counter-rate-enum-15m; }
+    }
+  }
+
+  typedef counter-rate-rate {
+    type decimal64 {
+      fraction-digits 3;
+    }
+  }
+
+  container metric {
+    description
+      "Collection of counters, gauges and statistics";
+    tailf:info
+      "Display counters, gauges and statistics";
+
+    leaf sysadmin-enabled {
+      description
+        "Whether the metric sysadmin context is enabled or not.";
+      type boolean;
+      default true;
+    }
+    leaf developer-enabled {
+      tailf:hidden debug;
+      description
+        "Whether the metric developer context is enabled or not.";
+      type boolean;
+      default false;
+    }
+    leaf debug-enabled {
+      tailf:hidden debug;
+      description
+        "Whether the metric debug context is enabled or not.";
+      type boolean;
+      default false;
+    }
+    container log {
+      description
+        "Configures a log that logs counters as they are incremented.
+         This will slow down NCS, so be careful when enabling this log.
+         This log is not rotated, i.e. use logrotate(8).
+
+         Please note that this means that every counter, including
+         potentially sensitive data, is logged.  No filtering is done.";
+      leaf enabled {
+        type boolean;
+        default false;
+        description
+          "If set to 'true', all counters are logged.";
+      }
+      leaf filename {
+        type string;
+        default "./ncs-metric.log";
+        description
+          "The name of the file where the metric log is written.";
+      }
+    }
+    container sysadmin {
+      description
+        "Collection of sysadmin oriented counters and gauges.";
+      tailf:info
+        "Display sysadmin counters and gauges";
+      config false;
+      tailf:callpoint counter {
+        tailf:internal;
+      }
+      container counter {
+        description
+          "Collection of sysadmin oriented counters.";
+        tailf:info
+          "Display sysadmin counters";
+
+        container transaction {
+          list datastore {
+            key name;
+            leaf name {
+              description
+                "Datastore name: 'operational' or 'running'";
+              type enumeration {
+                enum operational;
+                enum running {
+                  tailf:code-name 'transaction-ds-running';
+                }
+              }
+            }
+            description
+              "Collection of transaction oriented counters.";
+            tailf:info
+              "Display sysadmin transaction counters";
+            leaf commit {
+              type yang:counter64;
+              description
+                "Total number of committed transactions.";
+            }
+            leaf total-time {
+              type xs:duration;
+              description
+                "Total amount of milliseconds spent in successful
+                 transactions.";
+            }
+            leaf service-time {
+              type xs:duration;
+              description
+                "Total amount of milliseconds spent in service execution.";
+            }
+            leaf validation-time {
+              type xs:duration;
+              description
+                "Total amount of milliseconds spent in transaction validation.";
+            }
+            leaf global-lock-time {
+              type xs:duration;
+              description
+                "Total amount of milliseconds spent in global lock.";
+            }
+            leaf global-lock-wait-time {
+              type xs:duration;
+              description
+                "Total amount of milliseconds spent waiting for the global
+                 lock.";
+            }
+            leaf aborts {
+              type yang:counter64;
+              description
+                "Total number of aborted transactions.";
+            }
+            leaf conflicts {
+              when "../name = 'running'";
+              type yang:counter64;
+              description
+                "Total number of transaction conflicts for running.";
+            }
+            leaf retries {
+              when "../name = 'running'";
+              type yang:counter64;
+              description
+                "Total number of transaction retries for running.";
+            }
+          }
+        }
+
+        container service-conflicts {
+          list service-type {
+            key name;
+            leaf name {
+              type string;
+              description
+                "Type of the service.";
+            }
+            leaf conflicts {
+              type yang:counter64;
+              description
+                "Number of transaction conflicts with this
+                service type.";
+            }
+          }
+        }
+        container cdb {
+          description
+            "Collection of CDB oriented counters.";
+          tailf:info
+            "Display sysadmin CDB counters";
+          leaf compactions {
+            status deprecated;
+            type yang:counter64;
+            description
+              "Total number of CDB compactions.";
+          }
+          container compaction {
+            leaf A-cdb {
+              type yang:counter64;
+              description
+                "Number of CDB configuration datastore compactions.";
+            }
+            leaf O-cdb {
+              type yang:counter64;
+              description
+                "Number of CDB operational datastore compactions.";
+            }
+            leaf S-cdb {
+              type yang:counter64;
+              description
+                "Number of CDB snapshot datastore compactions.";
+            }
+            leaf total {
+              type yang:counter64;
+              description
+                "Total number of CDB compactions.";
+            }
+          }
+          leaf boot-time {
+            type xs:duration;
+            description
+              "Total amount of time spent in boot.";
+          }
+          leaf phase0-time {
+            type xs:duration;
+            description
+              "Total amount of time spent in startup phase0.";
+          }
+          leaf phase1-time {
+            type xs:duration;
+            description
+              "Total amount of time spent in startup phase1.";
+          }
+          leaf phase2-time {
+            type xs:duration;
+            description
+              "Total amount of time spent in startup phase2.";
+          }
+        }
+
+        container device {
+          description
+            "Collection of device oriented counters.";
+          tailf:info
+            "Display sysadmin device counters";
+
+          leaf connect {
+            type yang:counter64;
+            description
+              "Total number of device connects.";
+          }
+          leaf connect-failed {
+            type yang:counter64;
+            description
+              "Total number of failed device connects.";
+          }
+          leaf sync-from {
+            type yang:counter64;
+            description
+              "Total number of sync-from invocations.";
+          }
+          leaf sync-to {
+            type yang:counter64;
+            description
+              "Total number of sync-to invocations.";
+          }
+          leaf out-of-sync {
+            tailf:code-name 'device-out-of-sync';
+            type yang:counter64;
+            description
+              "Total number of out of sync detections.";
+          }
+        }
+
+        container session {
+          tailf:code-name 'session-info';
+          description
+            "Collection of session oriented counters.";
+          tailf:info
+            "Display sysadmin session counters";
+
+          leaf total {
+            type yang:counter64;
+            description
+              "Total number of northbound sessions completed.";
+          }
+          leaf netconf-total {
+            type yang:counter64;
+            description
+              "Total number of NETCONF sessions completed.";
+          }
+          leaf restconf-total {
+            type yang:counter64;
+            description
+              "Total number of RESTCONF sessions completed.";
+          }
+          leaf jsonrpc-total {
+            type yang:counter64;
+            description
+              "Total number of JSONRPC sessions completed.";
+          }
+          leaf snmp-total {
+            type yang:counter64;
+            description
+              "Total number of SNMP sessions completed.";
+          }
+          leaf cli-total {
+            type yang:counter64;
+            description
+              "Total number of CLI sessions completed.";
+          }
+        }
+      }
+      container counter-rate {
+        description
+          "Collection of sysadmin oriented gauges based on counters.";
+        tailf:info
+          "Display sysadmin gauges based on counters";
+
+        container transaction {
+          description
+            "Collection of transaction oriented counter rates.";
+          tailf:info
+            "Display sysadmin transaction counter rates";
+
+          list commit {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container cdb {
+          description
+            "Collection of CDB oriented counter rates.";
+          tailf:info
+            "Display sysadmin CDB counter rates";
+
+          list compactions {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list phase0-time {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list phase1-time {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list phase2-time {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+        container device {
+          description
+            "Collection of device oriented counter rates.";
+          tailf:info
+            "Display sysadmin device counter rates";
+
+          list connect {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list connect-failed {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list sync-from {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list sync-to {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list out-of-sync {
+            tailf:code-name 'device-out-of-sync';
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container session {
+          tailf:code-name 'session-info';
+          description
+            "Collection of session oriented counter rates.";
+          tailf:info
+            "Display sysadmin session counter rates";
+
+          list total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list netconf-total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list restconf-total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list jsonrpc-total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list snmp-total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list cli-total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the counter,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+      }
+
+      container gauge {
+        description
+          "Collection of sysadmin oriented gauges.";
+        tailf:info
+          "Display sysadmin gauges";
+
+        container transaction {
+          description
+            "Collection of transaction oriented gauges.";
+          tailf:info
+            "Display sysadmin transaction gauges";
+
+          leaf running {
+            tailf:code-name 'transaction-running';
+            type yang:gauge32;
+            description
+              "Number of current running transactions.";
+          }
+        }
+
+        container cdb {
+          description
+            "Collection of cdb oriented gauges.";
+            container disk-size {
+              leaf A-cdb {
+                type yang:gauge64;
+                description
+                  "File size of CDB configuration datastore.";
+              }
+              leaf O-cdb {
+                type yang:gauge64;
+                description
+                  "File size of CDB operational datastore.";
+              }
+              leaf S-cdb {
+                type yang:gauge64;
+                description
+                  "File size of CDB snapshot datastore.";
+              }
+              leaf total {
+                type yang:gauge64;
+                description
+                  "Total of CDB file sizes.";
+              }
+            }
+            container mem-size {
+              leaf A-cdb {
+                type yang:gauge64;
+                description
+                  "Memory usage of CDB configuration datastore.";
+              }
+              leaf O-cdb {
+                type yang:gauge64;
+                description
+                  "Memory usage of CDB operational datastore.";
+              }
+              leaf S-cdb {
+                type yang:gauge64;
+                description
+                  "Memory usage of CDB snapshot datastore.";
+              }
+              leaf total {
+                type yang:gauge64;
+                description
+                  "Total memory usage of CDB datastores.";
+              }
+            }
+        }
+        container service {
+          description
+            "Collection of service oriented gauges.";
+          tailf:info
+            "Display sysadmin service gauges";
+
+          leaf service-type {
+            type yang:gauge32;
+            description
+              "Number of current services types.";
+          }
+        }
+
+        container device {
+          description
+            "Collection of device oriented gauges.";
+          tailf:info
+            "Display sysadmin device gauges";
+          leaf total {
+            type yang:gauge32;
+            description
+              "Total number of devices currently configured.";
+          }
+        }
+
+        container commit-queue {
+          description
+            "Collection of commit-queue oriented gauges.";
+          tailf:info
+            "Display sysadmin commit-queue gauges";
+
+          leaf item {
+            type yang:gauge32;
+            description
+              "Current number of items - i.e. size of the commit queue.";
+          }
+          leaf item-locked {
+            type yang:gauge32;
+            description
+              "Current number of items locked in the commit queue.";
+          }
+          leaf item-waiting {
+            type yang:gauge32;
+            description
+              "Current number of items waiting in the commit queue.";
+          }
+          leaf item-executing {
+            type yang:gauge32;
+            description
+              "Current number of items executing in the commit queue.";
+          }
+          leaf transient-devices {
+            type yang:gauge32;
+            description
+              "Current number of transient devices in the commit queue.";
+          }
+        }
+
+        container session {
+          tailf:code-name 'session-info';
+          description
+            "Collection of session oriented gauges.";
+          tailf:info
+            "Display sysadmin session gauges";
+
+          leaf open {
+            type yang:gauge32;
+            description
+              "Number of northbound sessions currently open.";
+          }
+          leaf netconf-open {
+            type yang:gauge32;
+            description
+              "Number of NETCONF sessions currently open.";
+          }
+          leaf restconf-open {
+            type yang:gauge32;
+            description
+              "Number of RESTCONF sessions currently open.";
+          }
+          leaf jsonrpc-open {
+            type yang:gauge32;
+            description
+              "Number of JSONRPC sessions currently open.";
+          }
+          leaf snmp-open {
+            type yang:gauge32;
+            description
+              "Number of SNMP sessions currently open.";
+          }
+          leaf cli-open {
+            type yang:gauge32;
+            description
+              "Number of CLI sessions currently open.";
+          }
+        }
+      }
+      container gauge-rate {
+        description
+          "Collection of sysadmin oriented gauges based on gauges.";
+        tailf:info
+          "Display sysadmin gauges based on counters";
+
+        container transaction {
+          description
+            "Collection of transaction oriented gauge rates.";
+          tailf:info
+            "Display sysadmin transaction gauge rates";
+
+          list running {
+            tailf:code-name 'transaction-running';
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container service {
+          description
+            "Collection of service oriented gauge rates.";
+          tailf:info
+            "Display sysadmin service gauge rates";
+
+          list type {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container device {
+          description
+            "Collection of device oriented gauge rates.";
+          tailf:info
+            "Display sysadmin device gauge rates";
+
+          list total {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container commit-queue {
+          description
+            "Collection of commit-queue oriented gauge rates.";
+          tailf:info
+            "Display sysadmin commit-queue gauge rates";
+
+          list item {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list item-locked {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list item-waiting {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list item-executing {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list transient-devices {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+
+        container session {
+          tailf:code-name 'session-info';
+          description
+            "Collection of session oriented gauge rates.";
+          tailf:info
+            "Display sysadmin session gauge rates";
+
+          list open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list netconf-open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list restconf-open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list jsonrpc-open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list snmp-open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+          list cli-open {
+            description
+              "List of gauges 1m, 5m and 15m.";
+            key name;
+            leaf name {
+              type counter-rate-name;
+            }
+            leaf rate {
+              type counter-rate-rate;
+              description
+                "The average rate per minute of the gauge,
+                 available for the latest 1m, 5m and 15m.";
+            }
+          }
+        }
+      }
+    }
+    container developer {
+      tailf:hidden debug;
+      description
+        "Collection of developer oriented counters and gauges";
+      tailf:info
+        "Display developer counters and gauges";
+      config false;
+      tailf:callpoint counter {
+        tailf:internal;
+      }
+      container counter {
+        description
+          "Collection of developer oriented counters.";
+        tailf:info
+          "Display developer counters";
+      }
+      container counter-rate {
+        description
+          "Collection of sysadmin oriented gauges based on counters.";
+        tailf:info
+          "Display sysadmin gauges based on counters";
+
+      }
+      container gauge {
+        description
+          "Collection of developer oriented gauges.";
+        tailf:info
+          "Display developer gauges";
+
+        container libconfd {
+          description
+            "Collection of libconfd related gauges";
+          leaf worker-sockets {
+            type yang:gauge32;
+            description
+              "Number of claimed worker sockets.";
+          }
+          leaf pending-worker-sockets {
+            type yang:gauge32;
+            description
+              "Number of unclaimed worker sockets.";
+          }
+        }
+      }
+      container gauge-rate {
+        description
+          "Collection of sysadmin oriented gauges based on counters.";
+        tailf:info
+          "Display sysadmin gauges based on counters";
+
+      }
+    }
+    container debug {
+      tailf:hidden debug;
+      description
+        "Collection of low level debug oriented counters.";
+      tailf:info
+        "Display low level debug counters";
+      config false;
+      tailf:callpoint counter {
+        tailf:internal;
+      }
+      container counter {
+        description
+          "Collection of low level debug oriented counters.";
+        tailf:info
+          "Display low level debug counters";
+        leaf trans-start {
+          type yang:counter64;
+          description
+            "Total number of transactions started.";
+        }
+        leaf trans-stop {
+          type yang:counter64;
+          description
+            "Total number of transactions finished.";
+        }
+        leaf nso-ws-active-memory-bytes {
+          type yang:counter64;
+          description
+            "Total number of bytes used by tracked writesets";
+        }
+        leaf nso-ws-incremental-lost {
+          type yang:counter64;
+          description
+            "Number of transactions that conflicted due to resource exhaustion";
+        }
+        leaf when-eval {
+          status deprecated;
+          type yang:counter64;
+          description
+            "Total number of when evaluations.";
+        }
+        leaf total-when-eval-time {
+          status deprecated;
+          type xs:duration;
+          description
+            "Total amount of time spent evaluating when expressions.";
+        }
+        leaf xpath-eval {
+          type yang:counter64;
+          description
+            "Total number of XPath (when and must) evaluations.";
+        }
+        leaf total-xpath-eval-time {
+          type xs:duration;
+          description
+            "Total amount of time spent evaluating XPaths (when and must).";
+        }
+        leaf db-exists {
+          type yang:counter64;
+          description
+            "Total number of exists call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-get-elem {
+          type yang:counter64;
+          description
+            "Total number of get_elem call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-set-elem {
+          type yang:counter64;
+          description
+            "Total number of set_elem call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-create {
+          type yang:counter64;
+          description
+            "Total number of create call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-delete {
+          type yang:counter64;
+          description
+            "Total number of delete call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-list-move {
+          type yang:counter64;
+          description
+            "Total number of list_move call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-get-attrs {
+          type yang:counter64;
+          description
+            "Total number of get_attrs call against the underlying database
+            (including parent transaction).";
+        }
+        leaf db-set-attr {
+          type yang:counter64;
+          description
+            "Total number of set_attr call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-get-case {
+          type yang:counter64;
+          description
+            "Total number of get_case call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-set-case {
+          type yang:counter64;
+          description
+            "Total number of set_case call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-delete-case {
+          type yang:counter64;
+          description
+            "Total number of delete_case call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-find-next {
+          type yang:counter64;
+          description
+            "Total number of find_next call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-get-next {
+          type yang:counter64;
+          description
+            "Total number of get_next call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-num-instances {
+          type yang:counter64;
+          description
+            "Total number of num_instances call against the underlying database
+             (including parent transaction).";
+        }
+        leaf db-has-children {
+          type yang:counter64;
+          description
+            "Total number of has_children call against the underlying database
+             (including parent transaction).";
+        }
+        leaf transform {
+          type yang:counter64;
+          description
+            "Total number of database calls against transformed data.";
+        }
+        leaf total-transform-time {
+          type xs:duration;
+          description
+            "Total amount of time spent reading data that is transformed.";
+        }
+        leaf mk-filter-undef {
+          type yang:counter64;
+          description
+            "Total number of failed attempts to create dynv filter.";
+        }
+        leaf mk-filter-ok {
+          type yang:counter64;
+          description
+            "Total number of succesful attempts to create dynv filter.";
+        }
+        leaf mk-filter-skip {
+          type yang:counter64;
+          description
+            "Total amount of times it was impossible to create a dynv filter.";
+        }
+      }
+      container counter-rate {
+        description
+          "Collection of low level debug oriented gauges based on counters.";
+        tailf:info
+          "Display low level debug gauges based on counters";
+
+        list trans-start {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list trans-stop {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list nso-ws-active-memory-bytes {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list nso-ws-incremental-lost {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list when-eval {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list total-when-eval-time {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-exists {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-get-elem {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-set-elem {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-create {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-delete {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-list-move {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-get-attrs {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-set-attr {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-get-case {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-set-case {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-delete-case {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-find-next {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-get-next {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-num-instances {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list db-has-children {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list transform {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list total-transform-time {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list mk-filter-undef {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list mk-filter-ok {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+        list mk-filter-skip {
+          description
+            "List of gauges 1m, 5m and 15m.";
+          key name;
+          leaf name {
+            type counter-rate-name;
+          }
+          leaf rate {
+            type counter-rate-rate;
+            description
+              "The average rate per minute of the counter,
+               available for the latest 1m, 5m and 15m.";
+          }
+        }
+      }
+      container gauge {
+        description
+          "Collection of low level debug oriented gauges.";
+        tailf:info
+          "Display low level debug gauges";
+
+      }
+      container gauge-rate {
+        description
+          "Collection of sysadmin oriented gauges based on counters.";
+        tailf:info
+          "Display sysadmin gauges based on counters";
+
+      }
+    }
+  }
+}

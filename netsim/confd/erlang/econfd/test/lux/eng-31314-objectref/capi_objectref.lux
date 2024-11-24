@@ -1,0 +1,48 @@
+[doc]
+ENG-31314 - CAPI objectref
+
+Make sure CAPI is able to receive objectref when StringsOnly is false.
+[enddoc]
+
+[config skip=TAILFSKIP_RELEASE]
+[config require=CONFD_DIR]
+[include $TEST_DIR/luxinc/conditional.luxinc]
+
+[global fail_pattern=[Ee][Rr][Rr][Oo][Rr]]
+
+[shell confd]
+    [invoke start_system]
+
+[shell dp]
+    !erl -pa ${CONFD_DIR}/erlang/econfd/ebin/ -s simple
+    ???TRACE Connected to Confd/NCS
+
+[shell confd_load]
+    -$fail_pattern
+    !confd_load -l set-objref.xml
+    [invoke ok]
+
+    !confd_load -F p -p servers
+    """???
+    <config xmlns="http://tail-f.com/ns/config/1.0">
+      <servers xmlns="http://tail-f.com/ns/example/smp">
+        <server>
+          <name>www</name>
+          <number>2</number>
+          <obj xmlns:smp="http://tail-f.com/ns/example/smp">/smp:servers/smp:server[smp:name='frobozz'][smp:number='42']/smp:obj</obj>
+          <refs xmlns:smp="http://tail-f.com/ns/example/smp">/smp:servers/smp:server[smp:name='bar'][smp:number='17']/smp:obj</refs>
+          <refs xmlns:smp="http://tail-f.com/ns/example/smp">/smp:servers/smp:server[smp:name='foo'][smp:number='1']/smp:obj</refs>
+        </server>
+      </servers>
+    </config>
+    """
+    [invoke ok]
+
+    !exit
+    [endshell 0]
+
+[shell confd]
+    [invoke end_test]
+
+[cleanup]
+    [invoke stop_system]

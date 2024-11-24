@@ -1,0 +1,47 @@
+#
+# The 'lux' test tool can be obtained from:
+#
+#   https://github.com/hawk/lux.git
+#
+[global target_dir=../../../../../..]
+
+[shell top]
+    !make stop build
+    !echo ==$$?==
+    ?==0==
+    ?SH-PROMPT:
+
+    !rm ${target_dir}/ncs-cdb/*
+    ?SH-PROMPT:
+    !cp pyvm.xml ${target_dir}/ncs-cdb/.
+    ?SH-PROMPT:
+
+    !make start
+    !echo ==$$?==
+    ?==0==
+    ?SH-PROMPT:
+
+[shell cli]
+    [progress \nVerify that the validation code works...\n]
+    !make cli
+    ?.*#
+    !config
+    ?.*\(config\)#
+    !validation validate-value valid
+    ?.*\(config\)#
+    !validate
+    ?Validation complete
+    ?.*\(config\)#
+    !validation validate-value invalid
+    ?.*\(config\)#
+    !validate
+    ?Failed: 'validation validate-value': invalid value
+    ?.*\(config\)#
+    [progress \nVerify that the validation code works...ok\n]
+
+
+[cleanup]
+    !make stop
+    !echo ==$$?==
+    ?==0==
+    ?SH-PROMPT:

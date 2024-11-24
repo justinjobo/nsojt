@@ -1,0 +1,1 @@
+tailf-netconf-ncs.fxs : /lab/home/jenkins/build/ncs_dir/src/ncs/yang/ietf-netconf.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/ietf-netconf-nmda.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/tailf-netconf-transactions.yang ./tailf-ncs.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/tailf-common.yang

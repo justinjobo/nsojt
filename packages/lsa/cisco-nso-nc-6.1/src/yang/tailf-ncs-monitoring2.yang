@@ -1,0 +1,63 @@
+module tailf-ncs-monitoring2 {
+  namespace "http://tail-f.com/yang/ncs-monitoring2";
+  prefix tfnm2;
+
+  import tailf-ncs-monitoring {
+    prefix tfnm;
+  }
+
+  import tailf-common-monitoring2 {
+    prefix tfcg2;
+    revision-date 2022-09-29;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This module defines status objects for monitoring of NCS.
+
+     Copyright 2022 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Released as part of NCS-6.1.
+
+       Added /ncs-state/internal/callpoints/servicepoint/template.";
+  }
+
+  revision 2022-09-29 {
+    description
+      "Released as part of NCS-6.0.";
+  }
+
+  augment /tfnm:ncs-state {
+      uses tfcg2:common-monitoring-objects {
+          augment internal/callpoints {
+              list servicepoint {
+                  key id;
+                  uses tfcg2:callpoint-entry;
+              }
+          }
+          augment internal/callpoints/servicepoint/registration-type {
+              case template {
+                  list template {
+                      description
+                          "Templates registered for a servicepoint.";
+                      leaf name {
+                          type string;
+                      }
+                      leaf callback {
+                          type string;
+                          description
+                              "The callback that have registered for
+                               this template.";
+                      }
+                  }
+              }
+          }
+      }
+  }
+}

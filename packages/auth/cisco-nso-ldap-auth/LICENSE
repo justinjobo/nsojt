@@ -1,0 +1,103 @@
+cisco-nso-ldap-auth is proprietary code, owned by Cisco Systems, Inc.
+
+The following open source components are used. All applicable license
+texts per component can be found below in this file.
+
+Component           License           Webpage/Ref
+---------           -------           -----------
+python-ldap         python-ldap AND   https://github.com/python-ldap/python-ldap
+                    BSD-3-Clause
+
+
+License texts:
+
+---- python-ldap License ----
+
+The python-ldap project comes with a LICENCE file.
+
+We are aware that its text is unclear, but it cannot be changed: all
+authors of python-ldap would need to approve the licence change, but a
+complete list of all the authors is not available. (Note that the Git
+repository of the project is incomplete. Furthermore, commits imported
+from CVS lack authorship information; users "stroeder" or "leonard" are
+commiters (reviewers), but sometimes not authors of the committed code.)
+
+The current maintainers assume that the license is the sentence that
+refers to "Python-style license" and assume this means a highly
+permissive open source license that only requires preservation of the
+text of the LICENCE file (including the disclaimer paragraph).
+
+All contributions committed since July 1st, 2021, as well as some past
+contributions, are licensed under the MIT license. The MIT licence and
+more details are listed in the file LICENCE.MIT.
+
+---
+
+The python-ldap package is distributed under Python-style license.
+
+Standard disclaimer:
+   This software is made available by the author(s) to the public for free
+   and "as is".  All users of this free software are solely and entirely
+   responsible for their own choice and use of this software for their
+   own purposes.  By using this software, each user agrees that the
+   author(s) shall not be liable for damages of any kind in relation to
+   its use or performance. The author(s) do not warrant that this software
+   is fit for any purpose.
+
+---
+
+The MIT License applies to contributions committed after July 1st, 2021, and
+to all contributions by the following authors:
+
+* A. Karl Kornel
+* Alex Willmer
+* Aymeric Augustin
+* Bernhard M. Wiedemann
+* Bradley Baetz
+* Christian Heimes
+* Éloi Rivard
+* Eyal Cherevatzki
+* Florian Best
+* Fred Thomsen
+* Ivan A. Melnikov
+* johnthagen
+* Jonathon Reinhart
+* Jon Dufresne
+* Martin Basti
+* Marti Raudsepp
+* Miro Hrončok
+* Paul Aurich
+* Petr Viktorin
+* Pieterjan De Potter
+* Raphaël Barrois
+* Robert Kuska
+* Stanislav Láznička
+* Tobias Bräutigam
+* Tom van Dijk
+* Wentao Han
+* William Brown
+
+
+-------------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2021 python-ldap contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

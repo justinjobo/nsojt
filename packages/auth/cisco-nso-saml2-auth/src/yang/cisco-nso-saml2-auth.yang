@@ -1,0 +1,180 @@
+module cisco-nso-saml2-auth {
+  yang-version 1.1;
+  namespace "http://tail-f.com/ns/cisco-nso-saml2-auth";
+  prefix cisco-nso-saml2-auth;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This model contains the configuration for the SAMLv2 authentication
+     NCS package.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All righs reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Initial revision.";
+  }
+
+
+  // These are copied from ietf-crypto-types.yang, when it is published
+  // import and use it instead.
+  identity signature-algorithm {
+    description
+      "A base identity for asymmetric key encryption algorithm.";
+  }
+
+  identity rsa-pkcs1-sha256 {
+    base "signature-algorithm";
+    description
+      "The signature algorithm using RSASSA-PKCS1-v1_5 with the SHA256
+       hash algorithm.";
+  }
+
+  // SAMLv2 signature algorithms
+  identity none {
+    base "signature-algorithm";
+    description
+      "Identity for using no signature algorithm, i.e. not signing messages.";
+  }
+
+  identity rsa-sha256 {
+    base "rsa-pkcs1-sha256";
+    description
+      "The signature algorithm for
+       http://www.w3.org/2001/04/xmldsig-more#rsa-sha256 .";
+  }
+
+
+  container saml2-auth {
+    container identity-provider {
+      description
+        "The Identity Provider configuration for SAMLv2 Single Sign-On.";
+
+      leaf entity-id {
+        tailf:info "EntityID of IdP";
+        type string;
+        description
+          "The EntityID identifying SAMLv2 Identity Provider";
+      }
+
+      choice metadata-choice {
+        leaf metadata {
+          tailf:info "SAMLv2 IdP metadata";
+          tailf:cli-multi-line-prompt;
+          type string;
+          description
+            "SAMLv2 Identity Provider metadata";
+        }
+        leaf metadata-url {
+          tailf:info "SAMLv2 IdP metadata URL";
+          type inet:uri;
+          description
+            "URL to retrieve SAMLv2 Identity Provider metadata";
+        }
+      }
+
+      leaf certificate {
+        tailf:info "SAMLv2 IdP certificate";
+        tailf:cli-multi-line-prompt;
+        type string;
+        description
+          "SAMLv2 Identity Provider certificate containing e.g. public keys.";
+      }
+    }
+
+    container service-provider {
+      description
+        "The Service Provider configuration for SAMLv2 Single Sign-On.
+
+         This is the role that NCS has in the SAMLv2 authentication flow.
+
+         If the same private key should be used for both encryption and
+         signing, the same key needs to be stored in both
+         'private-key-encryption' and 'private-key-signing' leafs.";
+      leaf base-url {
+        tailf:info "SAMLv2 Service Provider base URL";
+        type string;
+        description
+          "The base URL for the SAMLv2 Service Provider.
+
+           Example: https://auth.example.com:8443/sso";
+      }
+
+      leaf entity-id {
+        tailf:info "EntityID of SP";
+        type string;
+        description
+          "The EntityID identifying the SAMLv2 Service Provider";
+      }
+
+      leaf metadata {
+        tailf:info "SAMLv2 SP metadata";
+        tailf:cli-multi-line-prompt;
+        type string;
+        description
+          "SAMLv2 Service Provider metadata";
+      }
+
+      leaf certificate {
+        tailf:info "SAMLv2 SP certificate";
+        tailf:cli-multi-line-prompt;
+        type string;
+        description
+          "SAMLv2 Service Provider certificate containing e.g. public keys.";
+      }
+
+      leaf signature-algorithm {
+        tailf:info "Signature algorithm";
+        type identityref {
+          base "signature-algorithm";
+        }
+        default "rsa-sha256";
+        description
+          "The signature algorithm used for signing messages.
+
+           If no signing is wanted use the 'none' identity.
+
+           Defaults to 'rsa-sha256'.";
+      }
+
+      leaf private-key-encryption {
+        tailf:info "SAMLv2 SP private key (encryption)";
+        tailf:cli-multi-line-prompt;
+        type tailf:aes-256-cfb-128-encrypted-string;
+        description
+          "The binary data for the private key used for encrypting SAMLv2
+           messages.
+
+           Currently only RSA keys are supported.
+
+           The data is in PEM format (text starting with
+           '-----BEGIN ...-----').";
+      }
+
+      leaf private-key-signing {
+        tailf:info "SAMLv2 SP private key (signing)";
+        tailf:cli-multi-line-prompt;
+        type tailf:aes-256-cfb-128-encrypted-string;
+        description
+          "The binary data for the private key used for signing SAMLv2
+           messages.
+
+           Currently only RSA keys are supported.
+
+           The data is in PEM format (text starting with
+           '-----BEGIN ...-----').";
+      }
+    }
+  }
+}

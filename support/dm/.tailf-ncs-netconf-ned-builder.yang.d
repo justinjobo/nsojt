@@ -1,0 +1,1 @@
+tailf-ncs-netconf-ned-builder.fxs : ./tailf-ncs.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/ietf-yang-types.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/ietf-inet-types.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/ietf-yang-library.yang /lab/home/jenkins/build/ncs_dir/src/ncs/yang/tailf-common.yang

@@ -1,0 +1,20 @@
+# bash/sh/zsh environment setup for NSO ncs-6.2.5
+NCS_DIR=/home/developer/nso-6.2.5
+PATH=$NCS_DIR/bin:$PATH
+if [ "x${LD_LIBRARY_PATH}" != "x" ]; then
+    LD_LIBRARY_PATH=$NCS_DIR/lib:$LD_LIBRARY_PATH
+else
+    LD_LIBRARY_PATH=$NCS_DIR/lib
+fi
+if [ "x$PYTHONPATH" != "x" ]; then
+    PYTHONPATH=$NCS_DIR/src/ncs/pyapi:$PYTHONPATH
+else
+    PYTHONPATH=$NCS_DIR/src/ncs/pyapi
+fi
+export NCS_DIR PATH LD_LIBRARY_PATH PYTHONPATH
+if [ "x${MANPATH}" != "x" ]; then
+    MANPATH=$NCS_DIR/man:$MANPATH
+else
+    MANPATH=$NCS_DIR/man:/usr/share/man
+fi
+export MANPATH

@@ -1,0 +1,527 @@
+The NSO Example Collection
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The NSO example collection contains everything from tiny to medium-sized and
+from trivial to expert-use examples. The example set has an NSO application
+developer focus, but many examples lend themselves well to administrators.
+
+Many examples have been added on request or when a new feature was added, not
+in a beginner-to-expert order. Therefore, to assist new and expert NSO
+application developers and administrators in navigating the example set, the
+list below is in the order a typical new NSO user would consume the examples.
+In addition, each example in the list below has a summary to assist users of
+all experiences find the example they are looking for. Finally, there are
+pointers to where in the NSO documentation the example is described, if
+applicable.
+
+All Makefiles in the example collection will check for the $NCS_DIR variable.
+Thus the 'ncsrc' file under the NSO local install root directory, where the
+$NCS_DIR variable points to, must be sourced before running the examples.
+
+$ source /path/to/ncs-<ncs-vsn>/ncsrc
+
+ConfD, from now on called netsim, is used by many examples to simulate managed
+devices with NETCONF, CLI, or SNMP northbound interfaces.
+
+See each example for a detailed description, additional requirements, and
+pointers for further reading.
+
+Intro Examples
+~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/using-ncs/0-hello-world
+A local installation guide to starting NSO, understanding the different
+directories and files NSO uses, and starting the NSO "J-style" CLI and the
+JSON-RPC-based Web UI.
+
+examples.ncs/development-guide/cdb-yang
+A scripted implementation of the "Extending the CDB with Packages" and
+"Building and Testing a Model" showcases, described in detail by the NSO
+Development Guide chapter "The Configuration Database and YANG" with a focus on
+the main features of the CDB and explain how NSO stores data in CDB. In
+addition to a shell script using the NSO CLI, a Python script variant using the
+NSO RESTCONF interface is also available.
+
+examples.ncs/development-guide/basic-automation
+A scripted implementation of the "Configuring DNS with Python" showcase,
+described in detail by the NSO Development Guide chapter "Basic Automation with
+Python", with a focus on how to manipulate data in CDB using the Python
+programming language to do basic network automation in just a few lines of
+code. In addition to a shell script using the NSO CLI, a Python script variant
+using the NSO RESTCONF interface is also available.
+
+examples.ncs/development-guide/creating-service
+A scripted implementation of the "A Simple DNS Configuration Service" and
+"DNS Configuration Service with Templates" showcases, described in detail by
+the NSO Development Guide chapter "Creating a Service" with a focus on the
+parts that make up a service and how to build one. In addition to a shell
+script using the NSO CLI, a Python script variant using the NSO RESTCONF
+interface is also available.
+
+examples.ncs/development-guide/applications-nso
+A scripted implementation of the "Implementing Device Count Action" showcase,
+described in detail by the NSO Development Guide chapter "Applications in NSO",
+with a focus on the parts that make up a service and how to build one. In
+addition to a shell script using the NSO CLI, a Python script variant using the
+NSO RESTCONF interface is also available.
+
+examples.ncs/development-guide/nano-services/netsim-sshkey
+A scripted implementation of the Getting Started Guide chapter "Developing and
+Deploying a Nano Service" example with a focus on how to
+develop a service as several smaller (nano) steps or stages by using a
+technique called reactive FASTMAP (RFM), and provide a framework to execute
+actions with side effects safely. In addition to a shell script using the NSO
+CLI, two Python script variants using the NSO RESTCONF and MAAPI interfaces are
+also available.
+
+examples.ncs/development-guide/nano-services/basic-vrouter
+A scripted implementation of the NSO Development Guide chapter "Nano Services
+for Staged Provisioning" "Basic Concepts" example with a focus on how to
+implement a service as several smaller (nano) steps or stages by using a
+technique called reactive FASTMAP (RFM), and provide a framework to execute
+actions with side effects safely. In addition to a shell script using the NSO
+CLI, a Python script variant using the NSO RESTCONF interface is also available.
+
+examples.ncs/development-guide/concurrency-model/retry
+The NSO-enabled system can take better advantage of available resources,
+especially the additional CPU cores, making it much more performant with NSO's
+concurrency model. This example showcases how to handle application transaction
+conflicts before the NSO transaction lock is taken, how NSO detects them, and
+how the transaction can be retried automatically by NSO or through a Python or
+Java application. Used by the NSO Development Guide chapter "NSO Concurrency
+Model" to describe the optimistic concurrency feature.
+
+examples.ncs/development-guide/concurrency-model/perf-trans
+The NSO-enabled system can take better advantage of available resources,
+especially the additional CPU cores, making it much more performant with NSO's
+concurrency model. This example showcases how performance can be optimized by
+dividing work into several transactions running in parallel with service and
+validation callback Python and Java applications adapted to handle concurrency.
+Used by the NSO Development Guide chapter "NSO Concurrency Model" to describe
+the optimistic concurrency feature.
+
+examples.ncs/development-guide/concurrency-model/perf-zbfw
+An example that implements a simplified zone-based firewall configuration and
+uses it to show a use-case for the principles introduced by the simulated
+perf-trans example. In addition to showcasing how performance can be optimized
+by dividing work into several transactions, the example implements Java and
+template service mapping code, YANG must statement XPath expression validation
+work, and show how parallel transactions can interact with NSO commit queues
+to improve performance. Used by the NSO Development Guide chapter "NSO
+Concurrency Model" to describe the optimistic concurrency feature.
+
+Device Management Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/0-router-network
+Used by the NSO User Guide chapter "The Network Simulator" to describe the
+ncs-netsim program. ncs-netsim is a helpful tool to simulate a network of
+devices to be managed by NSO, which makes it easy to test NSO packages towards
+simulated devices, here NETCONF enabled devices. Besides setting up a simulated
+network, the example README showcases controlling NSO and managing devices.
+
+examples.ncs/getting-started/using-ncs/1-simulated-cisco-ios
+A README showcasing how to set up a simulated network of Cisco IOS routers and
+how to manage these with NSO. Various NSO Getting Started Guide and User Guide
+chapters use the example to get going with the NSO basics,
+network element drivers (NED), services, compliance reports, and administrative
+tasks. In addition, the NSO Development Guide uses the example as a reference
+in the "Developing NSO Services" chapter.
+
+examples.ncs/getting-started/using-ncs/2-real-device-cisco-ios
+A README showcasing how to manage Cisco IOS routers using a CLI network element
+driver (NED). Used by the NSO User Guide "Network Element Drivers and
+Adding Devices" chapter to describe using a CLI NED.
+
+examples.ncs/getting-started/using-ncs/3-real-device-juniper A README
+showcasing how to manage NETCONF-enabled Juniper routers using the built-in
+NETCONF network element driver (NED). Used by the NSO Getting Started Guide
+"Network Element Drivers and Adding Devices" chapter to describe using a
+NETCONF NED.
+
+examples.ncs/getting-started/using-ncs/4-netconf-device
+A README showcasing how to use the built-in NETCONF network element driver
+(NED) to manage NETCONF-enabled devices using only the devices YANG models to
+create a NETCONF NED representing the device.
+
+examples.ncs/snmp-ned/basic
+An example showcasing how to manage SNMP-enabled devices with NSO. Used by the
+NSO User Guide Guide "Network Element Drivers and Adding Devices" chapter
+to describe using an SNMP NED and by the NSO NED Development Guide for using
+MIBs as input to creating an SNMP NED.
+
+examples.ncs/generic-ned/xmlrpc-device
+An example of a NED implementation for a device that provides a proprietary
+interface where Java code is used to enable NSO to manage it. Used by the NED
+Development Guide chapter "Getting Started with a Generic NED".
+
+examples.ncs/web-server-farm/basic
+An example that showcases the NSO device manager using its README as a guide.
+Used by the NSO User Guide chapter "Notifications" to showcase how NSO can
+receive NETCONF notifications from devices.
+
+examples.ncs/getting-started/developing-with-ncs/3-aggregated-stats
+Implements a Java application that maps operational state data from devices
+to an aggregated high-level representation. Also used by the NSO Development
+Guide chapter "NSO Packages".
+
+examples.ncs/development-guide/ned-upgrade/update-ned
+Demonstrates a way to add a new NED package to NSO without the need to
+perform a full packages reload. The NED in the example contains backward
+incompatible changes relating to an already provisioned service. This
+requires a change to the service, specifically applying different
+configuration through an XML template for each version of a NED.
+
+examples.ncs/development-guide/ned-upgrade/ned-migration
+A step-by-step guide to migrating devices between different NED versions
+with the /devices/device/migrate and /devices/migrate actions. As the NED
+may contain backward-incompatible changes, the example shows how you can
+enumerate the ones that relate to existing configurations in the NSO.
+
+examples.ncs/development-guide/ned-upgrade/yang-revision
+A scripted NED upgrade example showcasing a backward and non-backward
+compatible YANG model upgrade. In the former case using the NSO revision merge
+feature, and in the latter, creating a new NED relying on the NSO CDM feature
+to separate the old and new NED and migrate the configuration as in the
+common-tasks/ned-migration example. Demonstrates how to use the revision
+merge functionality, described in the NSO NED Guide chapter "Revision Merge
+Functionality".
+
+examples.ncs/getting-started/using-ncs/8-ssh-keys
+A README showcasing the options for managing and using SSH host keys and how to
+set up authentication for CLI and NETCONF NEDs using a private SSH key instead
+of a password ("publickey" authentication in SSH terminology). Used by the "SSH
+Key Management" chapter under "NSO as SSH Client" in the NSO User Guide.
+
+examples.ncs/snmp-notification-receiver
+Showcase the NSO SNMP notification receiver (v1,v2c,v3) that can be used with
+devices managed by NSO or external sources. The example Java handler that
+raises an alarm whenever it receives an SNMP notification. Used by the NSO
+Development Guide chapter "SNMP Notification Receiver".
+
+examples.ncs/getting-started/developing-with-ncs/12-templates
+Showcase setting device config using static templates, templates with
+variables, templates with expressions, and templates combined.
+
+Service Management Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/4-rfs-service
+Illustrates how to write a user-defined Resource Facing Service (RFS) using
+variants of Java service callbacks to implement service-to-device mappings of
+data, shared data between service instances and FASTMAP. The example is used by
+the NSO Development Guide chapter "Advanced Mapping Techniques" "Create
+Methods", and under "Service Discovery".
+
+examples.ncs/getting-started/developing-with-ncs/18-simple-service-erlang
+Subset Erlang variant of the above Java-based 4-rfs-service example.
+
+examples.ncs/getting-started/developing-with-ncs/14-upgrade-service
+Based on the 4-rfs-service example's vlan service package. Performs a package
+upgrade where instance data in the NSO CDB is changed and migrated with the
+help of Java code that connects to NSO, reads old config data using the CDB API
+and writes the adapted config data using MAAPI. Used by the NSO Development
+Guide chapter "Using CDB" under "Writing an Upgrade Package Component".
+
+examples.ncs/service-provider/mpls-vpn
+An example that illustrates how services are created and used in NSO by
+managing Layer3 VPNs in a service provider MPLS network. Used by the NSO
+User Guide Guide to describe NSO service management features, by the NSO
+User Guide "The NSO Device Manager", "Managing Network Services", "The Alarm
+Manager", and "Compliance Reporting" chapters, and the NSO Development Guide
+"Using CDB", "Java API Overview" "Service and Action Callbacks", "Developing
+NSO Services" "Service Mapping: Putting Things Together", and "Template"
+"Templates Applied from an API" chapters.
+
+examples.ncs/getting-started/developing-with-ncs/17-mpls-vpn-python
+Python variant of the above Java-based mpls-vpn example.
+
+examples.ncs/service-provider/mpls-vpn-new-template
+Illustrates template-centric implementation where a service template drives the
+main logic while the Java code performs auxiliary computations.
+Functionality-wise it is the same as the mpls-vpn example.
+
+examples.ncs/service-provider/simple-mpls-vpn
+Implements a template-based L3VPN service. Used by the NSO Development Guide
+chapter "Templates" under "Service Templates" and "Debugging Templates", and by
+the NSO User Guide chapter "The Alarm Manager" under "Alarm Handling".
+
+examples.ncs/development-guide/nano-services/mpls-vpn-vrouter
+An extension to the mpls-vpn example describing how virtual routers are
+launched using ESC (Elastic Services Controller) using reactive fastmap.
+Used by the NSO Development Guide chapter "Developing NSO Services" under
+"Nano Services Using Reactive FASTMAP Techniques".
+
+examples.ncs/service-provider/virtual-mpls-vpn
+An extension to the mpls-vpn example describing how virtual routers are
+launched using ESC (Elastic Services Controller) using reactive fastmap.
+See the mpls-vpn-vrouter example for a nano service reactive fastmap variant
+evolution of this example.
+
+examples.ncs/development-guide/nano-services/netsim-vrouter
+A scripted implementation of the NSO Development Guide chapter "Nano Services
+for Staged Provisioning" "Netsim Router Provisioning Example". The example
+extends the "basic-vrouter" example to show how to implement a nano service
+vrouter where the "virtual machine", vrouter instance, components are
+represented by netsim network elements.
+
+examples.ncs/getting-started/developing-with-ncs/20-nano-services
+Illustrates how to design a reactive FASTMAP service using Nano Services.
+Showcased by the NSO Development Guide "Graceful Link Migration Example"
+chapter.
+
+examples.ncs/getting-started/using-ncs/6-access-lists
+Illustrates how to create a simple service with NSO. Implements a basic
+firewall service that configures a Cisco IOS router and a Juniper router.
+Mapping between the service and devices is done with Java code.
+
+examples.ncs/datacenter/datacenter
+Implements a service to create connectivity between several access switches in
+the same or different data centers. The services configure multiple different
+devices. Mapping between the service and devices is done with Java code.
+
+examples.ncs/datacenter/qinq
+Illustrates how to create q-in-q tunnel in a data center using NSO managing
+different devices using a Java and template-based service.
+
+examples.ncs/getting-started/developing-with-ncs/15-pre-modification
+Illustrates how to write and use a pre-modification callback to alter device
+data outside of the FASTMAP algorithm so that, for example, the configuration
+data set by the pre-modification callback application is not removed when the
+service is removed. Used by the NSO Development Guide chapter "Developing NSO
+Services" "Advanced Mapping Techniques" "Pre and Post Hooks".
+
+examples.ncs/getting-started/developing-with-ncs/21-kicker
+Illustrates how to write a reactive FastMap application using a help construct
+called a kicker. Used by the NSO Development Guide "Kicker" "Reactive FastMap
+with Kicker" chapter.
+
+examples.ncs/web-server-farm/web-site-service
+Showcase the service manager functionality within NSO. Used by the NSO
+Development Guide chapter Kicker under "Data Kicker Concepts" "A Simple Data
+Kicker Example".
+
+examples.ncs/getting-started/developing-with-ncs/25-service-progress-monitoring
+Illustrates how Service Progress Monitoring (SPM) interacts with plans and
+services and how Python user code invokes SPM actions depending on plan
+progression. Used by the NSO Development Guide chapter "Developing NSO
+Services" "Service Progress Monitoring".
+
+examples.ncs/implement-a-service/dns-* and
+examples.ncs/implement-a-service/iface-*
+Demonstrate the process of building a new service from scratch, incrementally
+evolving the service to cover more complex use cases. The dns-* set of
+examples deals with device DNS configuration, while the iface-* set performs
+interface configuration. These examples complement the worked, step-by-step
+walk-through in the "Implementing Services" chapter of the NSO Development
+Guide.
+
+Layered Services Architecture Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/22-lsa-single-version
+-deployment
+Deployment of an LSA cluster where all the nodes have the same major version of
+NSO running is called a single version deployment. This example implements a
+slight variation on the examples.ncs/getting-started/developing-with-ncs/4-rfs
+-service example where the YANG code has been split into an upper-layer and a
+lower-layer implementation. Used by the NSO Layered Service Architecture Guide
+chapter "LSA Examples" under "Greenfield LSA Application".
+
+examples.ncs/service-provider/mpls-vpn-layered-service-architecture
+Implementation of the /example.ncs/service-provider/mpls-vpn example as a
+"Layered Service Architecture". Used by the NSO Layered Service Architecture
+Guide chapter "Rearchitecting an Existing VPN Application for LSA".
+
+examples.ncs/getting-started/developing-with-ncs/24-layered-service
+-architecture-scaling
+Illustrates how to write a user-defined RFS "Resource Facing Service" in an
+LSA cluster such that the device can be easily moved between lower NSO nodes.
+It also illustrates how a package can be used for replicating device
+configuration to some external store. This allows the lower LSA nodes to be run
+in non-HA mode. Used by the NSO Layered Service Architecture Guide chapter "LSA
+Examples" under "Greenfield LSA Application Designed for Easy Scaling".
+
+examples.ncs/getting-started/developing-with-ncs/28-lsa-multi-version
+-deployment
+If the LSA cluster node versions are different, it is called a multi-version
+deployment since the packages on the CFS node must be managed differently. Used
+by the NSO Layered Service Architecture Guide chapter "Deploying LSA" under
+"CFS Node Setup" "Example Walkthrough".
+
+examples.ncs/development-guide/lsa/22-upper-nso-single-upgrade
+Extends the developing-with-ncs/22-lsa-single-version-deployment example and
+implements a simple shell script to show how an NSO version upgrade of the
+upper NSO instance can be performed. This example upgrades NSO for an LSA
+single-version deployment.
+
+examples.ncs/development-guide/lsa/22-upper-nso-multi-upgrade
+Extends the developing-with-ncs/22-lsa-single-version-deployment example and
+implements a simple shell script to show how an NSO version upgrade of the
+upper NSO instance can be performed while at the same time switching from a
+single version to a multi-version deployment.
+
+examples.ncs/development-guide/lsa/28-multi-nso-upgrade
+extends the developing-with-ncs/28-lsa-multi-version-deployment example and
+implements a simple shell script to show how an NSO version upgrade of the
+upper NSO instance and one of the lower NSO instances can be performed.
+
+Northbound Interfaces Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/13-restconf
+A README showcasing to work with the RESTCONF API using the examples.ncs/
+web-server-farm/web-site-service as an example.
+
+examples.ncs/getting-started/developing-with-ncs/27-netconf-call-home/
+Demonstrates the NSO built-in support for the NETCONF SSH Call Home client
+protocol operations over SSH as defined in RFC 8071 (section 3.1) to enable
+NSO to communicate with the device after it calls home.
+
+examples.ncs/web-ui/custom-login-page
+Showcase a custom WebUI login page implementation.
+
+examples.ncs/getting-started/developing-with-ncs/7-snmp-mib
+Show how a simple proprietary SNMP MIB is used for accessing data from a YANG
+module called simple.yang.
+
+examples.ncs/getting-started/using-ncs/5-snmp-alarm-northbound
+A README showcasing how to integrate the NCS northbound SNMP alarm agent into
+an SNMP-based alarm management system. It also introduces how to use net-snmp
+tools to inspect the alarm interface.
+
+High-Availability Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/development-guide/high-availability/basic
+A scripted example that uses the NSO built-in high availability manager to set
+up and manage two NSO nodes, one primary and one secondary node, that
+implements a single dummy service package. The high-availability configuration
+enables automatic start-up and failover. In addition to a shell script using
+the NSO CLI, a Python script variant using the NSO RESTCONF interface is also
+available.
+
+examples.ncs/development-guide/high-availability/cluster
+A scripted example that uses the NSO built-in high availability manager to set
+up and manage three NSO nodes, one primary and two secondary nodes, that
+implement a single dummy service package. The high-availability configuration
+enables automatic start-up and failover. In addition to a shell script using
+the NSO CLI, a Python script variant using the NSO RESTCONF interface is also
+available.
+
+examples.ncs/high-availability/raft-cluster
+The example shows the steps to initially set up an HA Raft cluster.
+It includes securing the cluster by provisioning node certificates
+and the way the cluster behaves when nodes go down and come up again.
+
+examples.ncs/development-guide/high-availability/hcc
+A README that provides a link to three examples for the Tail-f HCC package:
+- basic-l2
+A scripted example implementation for the example setup described by the NSO
+Administration Guide chapter "Tail-f HCC Package" under "Usage" "Layer-2
+Deployment". In addition to a shell script using the NSO CLI, a Python script
+variant using the NSO RESTCONF interface is also available.
+- basic-l3bgp
+A scripted example implementation for the example setup described by the NSO
+Administration Guide chapter "Tail-f HCC Package" under "Usage" "Enabling
+Layer-3 BGP". In addition to a shell script using the NSO CLI, a Python script
+variant using the NSO RESTCONF interface is also available.
+- upgrade-l2
+A scripted example implementation of the setup described by the NSO
+Administration Guide chapter NSO Deployment showcasing installation of NSO, the
+initial configuration of NSO, upgrade of NSO, and upgrade of NSO packages on
+the two NSO-enabled nodes. In addition to a shell script using the NSO CLI, a
+Python script variant using the NSO RESTCONF interface is also available.
+
+examples.ncs/development-guide/high-availability/load-balancer
+A load balancer example that listens on the VIP address and routes connections
+to the primary HA node. Used by the NSO Administration Guide chapter "High
+Availability" under "Setup with an External Load Balancer".
+
+examples.ncs/development-guide/high-availability/upgrade-basic
+A scripted example that uses the NSO built-in high availability manager to set
+up and manage two NSO nodes, one primary and one secondary node. The NSO and
+the example package versions are upgraded on both nodes. In addition to a shell
+script using the NSO CLI, a Python script variant using the NSO RESTCONF
+interface is also available.
+
+examples.ncs/development-guide/high-availability/upgrade-cluster
+A scripted example that uses the NSO built-in high availability manager to set
+up and manage three NSO nodes, one primary and two secondary nodes. The NSO and
+the example package versions are upgraded on all three nodes. In addition to a
+shell script using the NSO CLI, a Python script variant using the NSO RESTCONF
+interface is also available.
+
+examples.ncs/web-server-farm/ha
+Showcase how to implement an external high availability framework (HAFW) where
+NSO nodes only replicate the CDB data and must be told by the HAFW its roles
+and what to do when nodes fail.
+
+Extension APIs Examples
+~~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/9-alarms
+Illustrates how to submit alarms to NSO using the Java AlarmSinkCentral.
+
+examples.ncs/getting-started/using-ncs/7-scripting
+Illustrates how to use plug-and-play scripts to add CLI commands, policy
+scripts, and post-commit callbacks.
+
+examples.ncs/getting-started/developing-with-ncs/11-scripting
+Illustrates how to use plug-and-play scripts to add CLI commands, policy
+scripts, and post-commit callbacks.
+
+examples.ncs/getting-started/developing-with-ncs/8-maapi
+A collection of Java examples that use the MAAPI and NAVU API.
+
+examples.ncs/getting-started/developing-with-ncs/16-py-maapi
+A trivial example that showcases the benefit of the high-level Python API. Uses
+standalone Python applications to read data from CDB using low-level and high
+-level MAAPI.
+
+examples.ncs/development-guide/commit-parameters
+Showcase how to detect and apply different commit parameters, such as dry-run
+and commit with trace ID, directly from either Python or Java packages or code.
+
+examples.ncs/getting-started/developing-with-ncs/2-actions
+Illustrates how to define a YANG action, attach Java code behind the action,
+and write Java code that invokes actions.
+
+examples.ncs/getting-started/developing-with-ncs/2-actions-py
+Illustrates how to define a YANG action, attach Python code behind the action,
+and write Python code that invokes actions.
+
+examples.ncs/getting-started/developing-with-ncs/1-cdb
+Showcase a few different ways to subscribe to changes in the CDB configuration
+and operational data stores from a Java application. Used by the NSO
+Development Guide chapter "Using CDB" under "Example".
+
+examples.ncs/getting-started/developing-with-ncs/1-cdb-py
+The 1-cdb example implemented by a Python application.
+
+examples.ncs/getting-started/developing-with-ncs/6-extern-db
+Showcase how to incorporate data with NSO where the data is stored outside of
+NSO in another database. Used by the NSO Development Guide chapter "Java API
+Overview" under "DP API" "Transactions and Data Callbacks".
+
+examples.ncs/misc/extern_logging
+A Python script, intended as a development feature, demonstrates how to use an
+external application to filter NED trace log data, here CLI trace data.
+However, the feature works with any external trace output by reading the log
+data from standard input and then doing the required processing.
+
+examples.ncs/crypto
+Demonstrates how to use an external Python application to configure the built
+-in NSO crypto types' encryption keys as an option to configure the keys in
+ncs.conf. Used by the NSO Development Guide chapter "Encryption Keys" under
+"Reading Encryption Keys Using an External Command".
+
+Miscellaneous Examples
+~~~~~~~~~~~~~~~~~~~~~~
+
+examples.ncs/getting-started/developing-with-ncs/19-locks-and-timeouts
+Showcase various timeouts and locks we can encounter and how to address the
+issue while running an NSO instance. Use cases include DP API data provider,
+Fastmap service create() callback, NEDs, locked devices, locking NSOs
+northbound interfaces, commit-retry-timeout for northbound interfaces, service
+transaction timeout, and blocking CDB subscriber.

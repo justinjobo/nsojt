@@ -1,0 +1,296 @@
+#!/bin/sh
+
+prog=ncs-collect-tech-report
+
+usage()
+{
+    cat <<EOF
+
+Usage: ${prog} [options]
+
+Collect information about the NCS system locally, collect logs
+and additional information that is suitable to send to Cisco
+support for analysis.
+
+This program assumes that NCS has been installed with
+the '--system-install' option. If not, it will assume that the
+installation is a "local installation", and that there is an 'ncs.conf'
+file at the given '--install-dir' path. If no such 'ncs.conf' file
+is found, the default 'ncs.conf' from the NCS installation will be used.
+
+Options:
+
+--install-dir InstallDir  Specifies the directory for installation of NCS
+                          static files, like the --install-dir option to
+                          the installer. Default: /opt/ncs.
+
+--full                    Collects an ncs-backup of the system,
+                          making it easier for Cisco support to
+                          reproduce any errors.
+
+--num-debug-dumps         Default 1, if we are tracking resource leaks, such
+                          as memory/file descriptor leaks, set this to e.g
+                          3 and the command 'ncs --debug-dump' will be run
+                          several times in a row, with a sleep inbetween.
+
+EOF
+    exit 0
+}
+
+error()
+{
+    echo "ERROR ** $1"
+    exit 1
+}
+
+usage_error()
+{
+    echo "ERROR ** $1"
+    echo "Try $0 --help to get usage text"
+    exit 1
+}
+
+abspath()
+{
+    case "$1" in
+        /*) echo "$1" ;;
+        *) echo "$(pwd)/$1" ;;
+    esac
+}
+
+# test -e is not portable
+exists() # file/dir/symlink
+{
+    test -f "$1" -o -d "$1" -o -L "$1"
+}
+
+enter_description ()
+{
+    echo "Enter text describing the steps up until the problem occurred."
+    echo "Describe the symptoms."
+    echo "In short, what did you do, and what did you see?"
+    echo "End by Ctrl-D"
+
+    while read -r line
+    do
+        echo "$line" >> description.txt
+    done
+}
+
+collect_from_system_install ()
+{
+    PATH="$system_instdir"/current/bin:"$PATH"
+    export PATH
+
+    ts=$(date "+%Y-%m-%d-%H-%M")
+    hostname=$(hostname)
+    dir="ncs-tech-report-$ts-$hostname"
+    mkdir "$dir"
+    cd "$dir" || exit
+
+    enter_description
+
+    echo "Copying log files ..."
+    mkdir log
+    cp -aL "$NCS_LOG_DIR" log
+
+    mkdir etc
+    # Only copy the ncs.conf file and specifically not any crypto keys!
+    cp -a "$NCS_CONFIG_DIR/ncs.conf" etc
+    ls -latR "$NCS_RUN_DIR" > rundir.ls
+
+    if [ "$full" = true ]; then
+        echo "Taking backup .."
+        x=$(ncs-backup --install-dir "$system_instdir")
+        if [ ! $? = 0 ]; then
+            error "Cannot do backup"
+        fi
+        file=$(echo "$x" | awk '{print $3}')
+        cp "$file" .
+    fi
+
+    while [ "$num_dumps" -gt 0 ]; do
+        echo "Generating debug dump ..."
+        ncs --debug-dump debug-dump
+        num_dumps=$(($num_dumps - 1))
+    done
+
+    echo "Show package info .."
+ncs_cli --noaaa <<EOF > packages.status
+show status packages | nomore
+exit
+EOF
+
+    echo "tar result ..."
+    cd ..
+    tar czf "${dir}.tar.gz" "$dir"
+    rm -rf "$dir"
+    echo "Report resides in  $dir.tar.gz"
+}
+
+# Some logs are stored in specified directories, such as
+# webui-access-log and progress-trace
+local_copy_log_dir ()
+{
+    cmd="ncs_conf_tool -r ncs-config logs "
+    cmd2="$cmd$1"
+    result=$(eval "$cmd2" < "$local_conf_file")
+    if [ ! -z "$result" ]; then
+        files=$(ls "$local_instdir/${result}/" | grep -v -e '^logs$')
+        for file in $files; do
+            cp -L "${local_instdir}/${result}/${file}" log/ 2>>/dev/null
+        done
+    fi
+}
+
+local_copy_log_file ()
+{
+    cmd="ncs_conf_tool -r ncs-config logs "
+    cmd2="$cmd$1"
+    result=$(eval "$cmd2" < "$local_conf_file")
+    if [ -n "$result" ]; then
+        cp -L "$local_instdir/$result" log/ 2>>/dev/null
+    fi
+}
+
+local_copy_logs ()
+{
+    local_copy_log_file "ncs-log file name"
+    local_copy_log_file "developer-log file name"
+    local_copy_log_file "audit-log file name"
+    local_copy_log_file "audit-network-log file name"
+    local_copy_log_file "netconf-log file name"
+    local_copy_log_file "jsonrpc-log file name"
+    local_copy_log_file "snmp-log file name"
+    local_copy_log_dir "webui-access-log dir"
+    local_copy_log_file "netconf-trace-log filename"
+    local_copy_log_file "xpath-trace-log filename"
+    local_copy_log_file "ext-log filename"
+    local_copy_log_file "error-log filename"
+    local_copy_log_dir "progress-trace dir"
+    local_copy_log_dir "raft-log file name"
+}
+
+collect_from_local_install ()
+{
+    ts=$(date "+%Y-%m-%d-%H-%M")
+    hostname=$(hostname)
+    dir="ncs-tech-report-$ts-$hostname"
+    mkdir "$dir"
+    cd "$dir" || exit
+
+    enter_description
+
+    # should stay in sync with lib/ncs/src/tailf-ncs-config.yang:
+    mkdir -p log
+
+    echo "Copying log files ..."
+    local_copy_logs
+
+    mkdir etc
+    # Only copy the ncs.conf file and specifically not any crypto keys!
+    cp -a "$local_instdir/ncs.conf" etc
+    ls -latR "$local_instdir" > rundir.ls
+
+    if [ "$full" = true ]; then
+        echo "Taking backup .."
+        x=$(ncs-backup --install-dir "$local_instdir")
+        if [ ! $? = 0 ]; then
+            error "Cannot do backup"
+        fi
+        file=$(echo "$x" | awk '{print $3}')
+        cp "$file" .
+    fi
+
+    while [ "$num_dumps" -gt 0 ]; do
+        echo "Generating debug dump ..."
+        ncs --debug-dump debug-dump
+        num_dumps=$(($num_dumps - 1))
+    done
+
+    echo "Show package info .."
+ncs_cli --noaaa <<EOF > packages.status
+show status packages | nomore
+exit
+EOF
+
+    echo "tar result ..."
+    cd ..
+    tar czf "${dir}.tar.gz" "$dir"
+    rm -rf "$dir"
+    echo "Report resides in  ${dir}.tar.gz"
+}
+
+system_instdir=""
+local_instdir=""
+full=false
+num_dumps=1
+local_conf_file=""
+err_not_ncs=" does not appear to be an NCS installation directory"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|-help|--help)
+            usage
+            ;;
+        --install-dir)
+            case "$2" in
+                -*) error "Missing argument to --install-dir" ;;
+                *) system_instdir="$2" ;;
+            esac
+            shift
+            ;;
+        --num-debug-dumps)
+            num_dumps=$2
+            shift;;
+        --full)
+            full=true;;
+        *)
+            usage_error "Unknown argument $1"
+            ;;
+    esac
+    shift
+done
+
+case "$system_instdir" in
+    '') system_instdir="/opt/ncs" ;;
+    *) system_instdir=$(abspath "$system_instdir") ;;
+esac
+
+# first, test if the install pointed to is a system installation
+if [ -f "$system_instdir/installdirs" ]; then
+    . "$system_instdir/installdirs"
+    for f in "$NCS_CONFIG_DIR" "$NCS_RUN_DIR" "$NCS_LOG_DIR"; do
+        case "$f" in
+            /?*) # absolute path and not '/'
+            ;;
+            *)
+                error "$system_instdir/installdirs content is corrupt"
+                ;;
+        esac
+    done
+# if not, test if the install pointed to is a local installation
+else
+    local_instdir=$system_instdir
+
+    if [ ! -d "$local_instdir" ]; then
+        error "Directory ${local_instdir} does not exist"
+        exit 1
+    fi
+
+    if [ -f "$local_instdir/ncs.conf" ]; then
+        local_conf_file="$local_instdir/ncs.conf"
+    else
+        local_conf_file="$NCS_DIR/etc/ncs/ncs.conf"
+    fi
+fi
+
+if [ -z "$local_instdir" ]; then
+    if [ -L "$system_instdir"/current ]; then
+        collect_from_system_install
+    else
+        error "${system_instdir}${err_not_ncs}"
+    fi
+else
+    collect_from_local_install
+fi

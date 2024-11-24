@@ -1,0 +1,59 @@
+module tailf-ncs-rollback {
+  yang-version 1.1;
+  namespace "http://tail-f.com/ns/ncs-rollback";
+  prefix ncs-rollback;
+
+  import tailf-rollback {
+    prefix rollback;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This module augments rollback-files for NCS.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-12-19 {
+    description
+      "Released as part of NCS-6.2.1.
+
+       Added container 'dry-run' to
+       the /rollback:rollback-files/apply-rollback-file action input parameters.
+
+       Added grouping 'ncs:action-output-formats' to the
+       /rollback:rollback-files/apply-rollback-files action output parameters.
+      ";
+  }
+
+  revision 2023-04-13 {
+    description
+      "Released as part of NCS-6.1.";
+  }
+
+  augment
+    "/rollback:rollback-files/rollback:apply-rollback-file/rollback:input" {
+    container dry-run {
+      tailf:hidden programmatic-interface;
+      leaf outformat {
+        type ncs:outformat3;
+      }
+    }
+    uses ncs:ncs-hidden-commit-params;
+  }
+
+  augment
+    "/rollback:rollback-files/rollback:apply-rollback-file/rollback:output" {
+    uses ncs:action-output-outformats;
+    uses ncs:ncs-commit-result;
+  }
+}

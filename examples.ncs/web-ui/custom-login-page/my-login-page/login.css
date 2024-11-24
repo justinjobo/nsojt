@@ -1,0 +1,23 @@
+body {
+    background-color: lightgray;
+}
+
+h1 {
+    font-size: 15;
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statement {
+    position: absolute;
+    bottom: 10px;
+}

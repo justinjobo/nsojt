@@ -1,0 +1,42 @@
+module tailf-restconf-ncs {
+  namespace "http://tail-f.com/ns/restconf/ncs";
+  prefix ncsrc;
+
+  import tailf-restconf {
+    prefix tfrcr;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "This module defines extensions to RESTCONF for NCS.
+
+     Copyright 2020-2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Released as part of NCS-6.1.
+
+       Non-backwards-compatible changes have been introduced.
+
+       The path for the tailf-restconf augment has changed.";
+  }
+
+  revision 2020-06-25 {
+    description
+      "Initial revision, released as part of NCS-5.4.";
+  }
+
+  augment "/tfrcr:rcresult/tfrcr:result" {
+    uses ncs:ncs-commit-result;
+  }
+}

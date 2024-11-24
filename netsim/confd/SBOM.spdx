@@ -1,0 +1,79 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: cisco-confd-8.2.5
+DocumentNamespace: https://tail-f.com/spdx/cisco-confd-8.2.5-b91ea689-13a5-4103-806a-b75d78f5a265
+Creator: Organization: Cisco Systems, Inc.
+Created: 2024-05-14T20:56:26Z
+
+SPDXID: SPDXRef-asmjit
+PackageName: AsmJit
+PackageVersion: 1.9.0
+PackageHomePage: https://github.com/asmjit/asmjit/
+PackageLicenseDeclared: Zlib
+
+SPDXID: SPDXRef-base64-java
+PackageName: Base64.java
+PackageVersion: 2.2.2
+PackageHomePage: http://iharder.net/base64/
+LicenseID: LicenseRef-Base64.java
+ExtractedText: <text>
+I am placing this code in the Public Domain. Do with it as you will. This
+software comes with no guarantees or warranties but with plenty of
+well-wishing instead! Please visit http://iharder.net/base64 periodically
+to check for updates or to contribute improvements.
+</text>
+
+SPDXID: SPDXRef-getopt_long
+PackageName: getopt_long
+PackageVersion: 1.17
+PackageHomePage: Available at various locations (e.g. FreeBSD, NetBSD)
+PackageLicenseDeclared: ISC AND BSD-4-Clause
+
+SPDXID: SPDXRef-hashtable
+PackageName: hashtable
+PackageVersion: -
+PackageHomePage: http://www.cl.cam.ac.uk/~cwc22/hashtable/
+PackageLicenseDeclared: BSD-3-Clause
+
+SPDXID: SPDXRef-libsmi
+PackageName: libsmi
+PackageVersion: 0.4.8
+PackageHomePage: http://www.ibr.cs.tu-bs.de/projects/libsmi/
+PackageLicenseDeclared: TCL
+
+SPDXID: SPDXRef-libxml2
+PackageName: libxml2
+PackageVersion: 2.9.12
+PackageHomePage: https://xmlsoft.org/
+PackageLicenseDeclared: MIT
+
+SPDXID: SPDXRef-mimeparse-erl
+PackageName: mimeparse.erl
+PackageVersion: -
+PackageHomePage: http://code.google.com/p/mimeparse/
+PackageLicenseDeclared: MIT
+
+SPDXID: SPDXRef-otp
+PackageName: OTP
+PackageVersion: 25.3.2.10
+PackageHomePage: https://github.com/erlang/otp/
+PackageLicenseDeclared: Apache-2.0
+
+SPDXID: SPDXRef-pcre
+PackageName: PCRE
+PackageVersion: 8.44
+PackageHomePage: https://pcre.org/
+PackageLicenseDeclared: BSD-3-Clause
+
+SPDXID: SPDXRef-snprintf
+PackageName: snprintf
+PackageVersion: -
+PackageHomePage: Kungliga Tekniska Högskolan
+PackageLicenseDeclared: BSD-3-Clause
+
+SPDXID: SPDXRef-yaws
+PackageName: Yaws
+PackageVersion: 2.1.1
+PackageHomePage: https://github.com/erlyaws/yaws/
+PackageLicenseDeclared: BSD-3-Clause

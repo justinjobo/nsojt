@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NSO-login</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="./login.css">
+  </head>
+  <body>
+    <div class="controls">
+      <h1>NSO login</h1>
+      <div id="login-group">
+        <div>username</div>
+        <input type="text" name="username" id="username" data-handle="login-userInput">
+        <div>password</div>
+        <input type="password" name="password" id="password" data-handle="login-pwdInput">
+        <button id="login-button">Login</button>
+        <div id="login-error-message"></div>
+      </div>
+      <div id="challange-group" class="hidden">
+        <p id="challange-message" data-handle="challenge-prompt"></p>
+        <input type="text" name="challange" id="challange" data-handle="login-challenge">
+        <button id="challange-button">Verify</button>
+      </div>
+      <div class="statement">
+        Note that by using an alternative login page it is upon
+        yourself to make sure it does not contain any security liabilities.
+      </div>
+      <script type="module" src="login.js"></script>
+    </div>
+  </body>
+</html>

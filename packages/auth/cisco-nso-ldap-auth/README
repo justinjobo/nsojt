@@ -1,0 +1,207 @@
+cisco-nso-ldap-auth
+====================
+
+This authentication package provides LDAP functionality.
+
+
+Table of contents
+
+    1. Configuration
+    1.1. Installation
+    1.2. NSO Configuration
+    1.3. Package Configuration
+    2. Usage
+    3. Requirements
+    4. Example configuration
+
+
+1. Configuration
+
+1.1. Installation
+
+   In order to use this package, NSO must be run with access to the
+   required Python packages found in requirements.txt.
+
+
+1.2. NSO Configuration
+
+   This authentication package needs NSO Package Authentication
+   to be enabled.
+
+   Enable Package Authentication by setting
+   /ncs-config/aaa/package-authentication/enabled = true.
+
+   Add the LDAP package (cisco-nso-ldap-auth) to the list of available
+   authentication packages by setting
+   /ncs-config/aaa/package-authentication/packages.
+
+
+1.3. Package Configuration
+
+   Conceptually an LDAP server holds a tree of nodes, where each
+   node is identified by concatenating each node name that forms
+   the path from the root to the node itself. This path is called
+   a Distinguished Name or DN for short. Each node has a name
+   formed by one or several attribute-value pairs also called
+   a Relative Distinguished Name (RDN).
+   Examples:
+
+     RDN:  uid=sbrown
+     RDN:  ou=engineering
+     DN:   uid=sbrown,ou=engineering,dc=acme,dc=com
+
+   Each node holds a number of attributes and their values.
+   Example:
+
+     dn: uid=sbrown,ou=engineering,dc=acme,dc=com
+     uid: sbrown
+     memberOf: ou=engineering,dc=acme,dc=com
+     uidNumber: 1001
+     homeDirectory: /home/sbrown
+
+   In order to configure LDAP access, the cisco-nso-LDAP-auth.yang model
+   needs to be populated. A number of LDAP servers can be configured and
+   they will be tried in order until the user authentication either
+   succeeds or the list of servers is exhausted (thus failing the
+   user authentication attempt).
+
+   The location of a server is defined by configuring the host/IP and
+   port-number of the server, which also functions as the key of the
+   the server list entry:
+
+     /ldap-auth/server/host
+     /ldap-auth/server/port
+
+   If the connection should run over TLS/SSL then set the following
+   to 'true' (default):
+
+     /ldap-auth/server/{<host>,<port>}/secure-connection
+
+   Various LDAP attribute names used can be configured as well as a
+   default group name to be used in case no user group information
+   can be obtained. One of the following methods of obtaining a user
+   information can be configured:
+
+    1. If 'search-base-dn' is set, then that node (DN) in the LDAP
+       directory will be used as a starting point for searching
+       after the users DN, which then will be used for the
+       authentication and authorization. This will result in the
+       following LDAP operations:
+
+         - Bind to the admin DN
+         - Search for the user DN
+         - Bind to the user DN
+         - Retrieve the authorization info for the user
+
+    2. If 'user-base-dn' is set, then that node, prepended
+       with the users RDN, will form the DN used for the
+       authentication and authorization. This will result in the
+       following LDAP operations:
+
+         - Bind to the user DN
+         - Retrieve the authorization info for the user
+
+   The second method above requires less communication with the
+   LDAP server but also requires that all users can be found under
+   the same node in the LDAP directory.
+   The first method is to be used when user entries are located
+   in various subtrees of the LDAP directory and hence we need to
+   search for the particular user entry to find its DN.
+
+   The LDAP "admin dn" is typically an LDAP user that is used
+   for searching the LDAP directory for information; in our case
+   we want to search for the user's DN (entry).
+
+     /ldap-auth/server/{<host>,<port>}/bind-admin-dn
+     /ldap-auth/server/{<host>,<port>}/bind-admin-password
+
+   To choose between the two methods described above, either
+   of the following choices need to be set:
+
+     /ldap-auth/server/{<host>,<port>}/search-base-dn
+     /ldap-auth/server/{<host>,<port>}/user-base-dn
+
+   The LDAP attribute to be used for holding the UserId value
+   can be configured (default is "uid"):
+
+     /ldap-auth/server/{<host>,<port>}/user-id-attribute
+
+   The following configures the name of the unique identifier
+   attribute of the LDAP groups NSO should use. This is the name
+   that NSO matches a group name against. For example, if set to
+   'ou', the user 'sbrown' in the example above would be associated
+   with the 'engineering' group (default is "cn").
+
+     /ldap-auth/server/{<host>,<port>}/group-id-attribute
+
+   The name of the LDAP attribute containing the group membership
+   of a user can be configured (default is "memberOf"):
+
+     /ldap-auth/server/{<host>,<port>}/member-of-attribute
+
+   If no group info can be obtained from the LDAP server for a
+   user, the authorization will fail unless a 'default-group'
+   is configured. The use of this configurable should probably
+   only be used as a fallback in favor of a proper LDAP server setup.
+
+     /ldap-auth/default-group
+
+   The cisco-nso-ldap-auth package will try to retrieve a Users
+   group(s), 'uidNumber', 'gidNumber' and 'homeDirectory' where
+   the group(s) is obtained from the configured <group-id-attribute>
+   and the other attributes from the LDAP server reply. In case none
+   of those attributes could be found they will be assigned the
+   following default values:
+
+     uidNumber = gidNumber = 65534
+     homeDirectory = "/nonexistent"
+
+
+2. Usage
+
+   When configured properly this package will be used when
+   a user tries to login to NSO, e.g via RESTCONF.
+
+   Any login attempt can be studied in the audit log file.
+
+
+3. Requirements
+
+   Since the Python package 'python-ldap' is used, it is
+   important to install any required packages according to:
+
+     https://www.python-ldap.org/en/python-ldap-3.4.3/installing.html
+
+
+4. Example configuration
+
+     <ldap-auth xmlns="http://tail-f.com/ns/cisco-nso-ldap-auth">
+       <server>
+         <!-- Change the IP address to suit your setup. -->
+         <host>192.168.1.170</host>
+         <!-- Change the Port number to suit your setup. -->
+         <port>1389</port>
+         <!--
+             In a production scenario you always want to
+             run LDAP over TLS/SSL, hence set this to 'true'.
+         -->
+         <secure-connection>false</secure-connection>
+         <bind-admin-dn>cn=admin,dc=example,dc=com</bind-admin-dn>
+         <!-- NOTE: Don't use clear text passwords like this... -->
+         <bind-admin-password>$0$admin</bind-admin-password>
+         <!--
+             Use 'search-base-dn' when Users may be located under
+             different LDAP nodes, hence we need to search to find
+             the user entry we want to use.
+         -->
+         <!-- search-base-dn>dc=example,dc=com</search-base-dn -->
+         <!--
+             Use 'user-base-dn' when all Users are located under
+             the same LDAP node.
+         -->
+         <user-base-dn>ou=users,dc=example,dc=com</user-base-dn>
+         <user-id-attribute>cn</user-id-attribute>
+         <group-id-attribute>cn</group-id-attribute>
+         <member-of-attribute>memberOf</member-of-attribute>
+       </server>
+     </ldap-auth>

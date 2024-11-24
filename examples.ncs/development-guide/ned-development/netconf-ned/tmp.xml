@@ -1,0 +1,14 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <netconf-ned-builder xmlns="http://tail-f.com/ns/ncs/netconf-ned-builder">
+    <project>
+      <family-name>hardware</family-name>
+      <major-version>1.0</major-version>
+      <module>
+        <name>dummy</name>
+        <revision>2023-11-10</revision>
+        <location>NETCONF</location>
+        <status>selected downloaded</status>
+      </module>
+    </project>
+  </netconf-ned-builder>
+</config>

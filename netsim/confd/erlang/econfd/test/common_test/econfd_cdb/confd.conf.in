@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<confdConfig xmlns="http://tail-f.com/ns/confd_cfg/1.0">
+
+  <loadPath>
+    <dir>$PWD</dir>
+    <dir>$CONFD_DIR/etc/confd</dir>
+  </loadPath>
+  <stateDir>$PWD</stateDir>
+
+  <cdb>
+    <enabled>true</enabled>
+    <dbDir>$PWD/confd-cdb</dbDir>
+    <operational><enabled>true</enabled></operational>
+  </cdb>
+
+  <logs>
+    <confdLog>
+      <enabled>true</enabled>
+      <file><enabled>true</enabled><name>$PWD/logs/confd.log</name></file>
+    </confdLog>
+    <developerLog>
+      <enabled>true</enabled>
+      <file><enabled>true</enabled><name>$PWD/logs/devel.log</name></file>
+    </developerLog>
+    <developerLogLevel>trace</developerLogLevel>
+    <errorLog>
+      <enabled>true</enabled>
+      <filename>$PWD/logs/error.log</filename>
+    </errorLog>
+  </logs>
+
+  <datastores>
+    <startup><enabled>false</enabled></startup>
+    <candidate>
+      <enabled>true</enabled>
+      <filename>$PWD/confd-cdb/candidate.db</filename>
+    </candidate>
+    <running><access>read-write</access></running>
+  </datastores>
+
+  <aaa>
+    <pam><enabled>false</enabled></pam>
+    <aaaBridge><enabled>false</enabled></aaaBridge>
+    <localAuthentication><enabled>true</enabled></localAuthentication>
+  </aaa>
+
+  <cli><ssh><enabled>false</enabled></ssh></cli>
+  <netconf><enabled>false</enabled></netconf>
+</confdConfig>

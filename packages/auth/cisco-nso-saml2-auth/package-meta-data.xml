@@ -1,0 +1,7 @@
+<ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
+  <name>cisco-nso-saml2-auth</name>
+  <package-version>1.0</package-version>
+  <description>SAMLv2 authentication package for NSO</description>
+  <single-sign-on-url>/saml/login/</single-sign-on-url>
+  <ncs-min-version>6.1</ncs-min-version>
+</ncs-package>

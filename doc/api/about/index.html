@@ -1,0 +1,189 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta charset="UTF-8" />
+      <title>API Reference</title>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+      <meta name="generator" content="DocBook XSL Stylesheets V1.78.1" />
+   </head>
+   <body>
+      <header></header>
+      <section class="article">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h1 class="title"><a id="doc_api"></a>API Reference
+                  </h1>
+               </div>
+            </div>
+            <hr />
+         </div>
+         <p>
+            Welcome to Cisco Network Services Orchestrator (NSO) SDK API
+            reference.
+            The APIs described here are designed for extending the functionality of the
+            product, such as adding custom service code or exposing data through data
+            provider mechanism. You might think of them as a kind of a plugin API.
+              
+         </p>
+         <p>
+            If you are just trying to read data or push configuration from another
+                system, consider using one of the so-called Northbound Interfaces (NBIs)
+                instead. NBIs were designed to let other systems interact with NSO
+                and you might find them easier to use. One of them exposes a REST-style
+                interface, for example. Please consult the northbound interface-specific
+                parts of documentation for more information.
+              
+         </p>
+         <p>
+                The SDK API reference is automatically generated from the programming
+                library source code. You can also access this same information inside your
+                Integrated Development Environment (IDE), if your IDE supports it.
+              
+         </p>
+         <p>
+                Bindings are available for multiple programming languages and provide
+                roughly the same functionality but differ in the level of abstraction on
+                top of the core API. For example, Python bindings implement additional,
+                higher-level classes and functions to make the API easier to use.
+              
+         </p>
+         <p>
+                The reference describes individual functions and classes but provides very
+                few complete examples. It is <span class="emphasis"><em>strongly</em></span> recommended to
+                read the Development guide first. It contains many examples and explains
+                the data modelling and transaction concepts required for you to efficiently
+                use the APIs described here. Development guide is available at
+                <a class="link" href="https://developer.cisco.com/docs/nso/guides/" target="_top">https://developer.cisco.com/docs/nso/guides/</a>,
+                along with other product documentation.
+              
+         </p>
+         <section class="sect1">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title"><a id="d5e11"></a>A Note on Names
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p>
+                 Cisco Network Service Orchestrator (NSO) version 6.2.5
+                 is an evolution of the Tail-f Network Control System (NCS).
+                 Tail-f was acquired by Cisco in 2014. The product has been enhanced
+                 and forms the base for Cisco NSO.
+               
+                 Note that the terms 'ncs' and 'tail-f' are used extensively in file
+                 names, command-line command names, YANG models, application
+                 programming interfaces (API), etc. Throughout this document we will
+                 use NSO to mean the product, which consists of a number of
+                 tools and executables. These executable components will be referred
+                 to by their command line name, e.g. <span class="command"><strong>ncs</strong></span>,
+                 <span class="command"><strong>ncs-netsim</strong></span>, <span class="command"><strong>ncs_cli</strong></span>, etc.
+               
+            </p>
+         </section>
+         <section class="sect1">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title"><a id="d5e17"></a>Support Contact
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p>
+                     For additional support, please refer to
+                     <a class="link" href="https://www.cisco.com/go/support" target="_top">https://www.cisco.com/go/support</a>.
+                   
+            </p>
+         </section>
+         <section class="sect1">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title"><a id="d5e21"></a>Legal Notices
+                     </h2>
+                  </div>
+                  <div>
+                     <p class="releaseinfo">Cisco NSO 6.2.5</p>
+                  </div>
+                  <div>
+                     <p class="copyright">Copyright © 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021-2024 Cisco Systems, Inc. All rights reserved.</p>
+                  </div>
+                  <div>
+                     <div class="legalnotice"><a id="d5e39"></a><p>THE SPECIFICATIONS AND INFORMATION REGARDING THE PRODUCTS IN
+                             THIS MANUAL ARE SUBJECT TO CHANGE WITHOUT NOTICE. ALL STATEMENTS,
+                             INFORMATION, AND RECOMMENDATIONS IN THIS MANUAL ARE BELIEVED TO BE
+                             ACCURATE BUT ARE PRESENTED WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                             IMPLIED. USERS MUST TAKE FULL RESPONSIBILITY FOR THEIR APPLICATION
+                             OF ANY PRODUCTS.
+                        </p>
+                        <p>THE SOFTWARE LICENSE AND LIMITED WARRANTY FOR THE ACCOMPANYING
+                             PRODUCT ARE SET FORTH IN THE INFORMATION PACKET THAT SHIPPED WITH
+                             THE PRODUCT AND ARE INCORPORATED HEREIN BY THIS REFERENCE. IF YOU
+                             ARE UNABLE TO LOCATE THE SOFTWARE LICENSE OR LIMITED WARRANTY,
+                             CONTACT YOUR CISCO REPRESENTATIVE FOR A COPY.
+                        </p>
+                        <p>The Cisco implementation of TCP header compression is an
+                             adaptation of a program developed by the University of California,
+                             Berkeley (UCB) as part of UCB's public domain version of the UNIX
+                             operating system. All rights reserved. Copyright © 1981, Regents of
+                             the University of California.
+                        </p>
+                        <p>NOTWITHSTANDING ANY OTHER WARRANTY HEREIN, ALL DOCUMENT FILES
+                             AND SOFTWARE OF THESE SUPPLIERS ARE PROVIDED “AS IS" WITH ALL
+                             FAULTS. CISCO AND THE ABOVE-NAMED SUPPLIERS DISCLAIM ALL WARRANTIES,
+                             EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, THOSE OF
+                             MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+                             NONINFRINGEMENT OR ARISING FROM A COURSE OF DEALING, USAGE, OR TRADE
+                             PRACTICE.
+                        </p>
+                        <p>IN NO EVENT SHALL CISCO OR ITS SUPPLIERS BE LIABLE FOR ANY
+                             INDIRECT, SPECIAL, CONSEQUENTIAL, OR INCIDENTAL DAMAGES, INCLUDING,
+                             WITHOUT LIMITATION, LOST PROFITS OR LOSS OR DAMAGE TO DATA ARISING
+                             OUT OF THE USE OR INABILITY TO USE THIS MANUAL, EVEN IF CISCO OR ITS
+                             SUPPLIERS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH
+                             DAMAGES.
+                        </p>
+                        <p>Any Internet Protocol (IP) addresses and phone numbers used in
+                             this document are not intended to be actual addresses and phone
+                             numbers. Any examples, command display output, network topology
+                             diagrams, and other figures included in the document are shown for
+                             illustrative purposes only. Any use of actual IP addresses or phone
+                             numbers in illustrative content is unintentional and
+                             coincidental.
+                        </p>
+                        <p>Cisco and the Cisco logo are trademarks or registered
+                             trademarks of Cisco and/or its affiliates in the U.S. and other
+                             countries. To view a list of Cisco trademarks, go to this URL: <a class="link" href="https://www.cisco.com/go/trademarks" target="_top">https://www.cisco.com/go/trademarks</a>. Third-party
+                             trademarks mentioned are the property of their respective
+                             owners. The use of the word partner does not imply a partnership
+                             relationship between Cisco and any other company. (1110R)
+                        </p>
+                        <p>This product includes software developed by the NetBSD
+                             Foundation, Inc. and its contributors.
+                        </p>
+                        <p>This product includes cryptographic software written by Eric
+                             Young (eay@cryptsoft.com).
+                        </p>
+                        <p>This product includes software developed by the OpenSSL
+                             Project for use in the OpenSSL
+                             Toolkit <a class="link" href="https://www.openssl.org/" target="_top">http://www.openssl.org/</a>.
+                        </p>
+                        <p>This product includes software written by Tim Hudson
+                             (tjh@cryptsoft.com).
+                        </p>
+                        <p>U.S. Pat. No. 8,533,303 and 8,913,519</p>
+                     </div>
+                  </div>
+                  <div>
+                     <p class="pubdate">November 11, 2020</p>
+                  </div>
+               </div>
+            </div>
+            <p></p>
+         </section>
+      </section>
+      <footer></footer>
+   </body>
+</html>

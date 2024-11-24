@@ -1,0 +1,211 @@
+module tailf-ncs-devices-cisco-smart-license {
+  yang-version 1.1;
+  namespace "http://tail-f.com/ns/ncs/devices/cisco-smart-license";
+  prefix devices-cisco-smart-license;
+
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  description
+    "This module extends tailf-ncs-devices adding smart-license status
+     for Cisco devices.
+
+     Copyright 2023 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2023-04-13 {
+    description
+      "Released as part of NCS-6.1.
+
+       Initial release.";
+  }
+
+  typedef registration-state-enum {
+    type enumeration {
+      enum reg-state-not-registered {
+        value 0;
+        description
+          "This smart licensing instance is not registered.";
+      }
+      enum reg-state-complete {
+        value 1;
+        description
+          "Registration was successful and this smart licensing
+           instance is registered.";
+      }
+      enum reg-state-in-progress {
+        value 2;
+        description
+          "Registration is in progress.";
+      }
+      enum reg-state-retry {
+        value 3;
+        description
+          "The initial registration attempt failed but
+           a retry is in progress.";
+      }
+      enum reg-state-failed {
+        value 4;
+        description
+          "Registration failed.";
+      }
+    }
+    description
+      "The smart licensing registration state.";
+  }
+
+  typedef authorization-state-enum {
+    type enumeration {
+      enum auth-state-none {
+        value 0;
+        description
+          "No licenses are in use so there is no authorization
+           state to report.";
+      }
+      enum auth-state-eval {
+        value 1;
+        description
+          "Evaluation period is in use and is counting down.";
+      }
+      enum auth-state-eval-expired {
+        value 2;
+        description
+          "Evaluation period in use but it has expired.";
+      }
+      enum auth-state-authorized {
+        value 3;
+        description
+          "All license usage is authorized and within terms
+           of the customer's contract.";
+      }
+      enum auth-state-authorized-reservation {
+        value 4;
+        description
+          "All license usage is authorized because a
+           reservation authorization code is installed.";
+      }
+      enum auth-state-out-of-compliance {
+        value 5;
+        description
+          "License usage is out of compliance with the
+           terms of the contract. Either too many licenses are in
+           use or licenses that were not purchased are in use.";
+      }
+      enum auth-state-authorization-expired {
+        value 6;
+        description
+          "The authorization period has expired because this
+           product instance has not communicated with the
+           SSM or satellite in over 90 days.";
+      }
+    }
+    description
+      "The smart licensing authorization state.";
+  }
+
+  typedef transport-type-enum {
+    type enumeration {
+      enum transport-type-callhome {
+        value 0;
+        description
+          "Smart Licensing is using callhome for communications.";
+      }
+      enum transport-type-smart {
+        value 1;
+        description
+          "Smart licensing is using the smart transport for
+           communications.";
+      }
+    }
+    description
+      "The type of transport in use by smart licensing.";
+  }
+
+  augment /ncs:devices/ncs:device/ncs:platform {
+    container smart-license {
+      description
+        "Smart licensing state information.";
+      config false;
+      tailf:cdb-oper {
+        tailf:persistent true;
+      }
+      leaf enabled {
+        type boolean;
+        description
+          "Is smart licensing enabled.";
+      }
+      container registration {
+        description
+          "State of license registration.";
+        when "../enabled = 'true'";
+        leaf registration-state {
+          type union {
+            type registration-state-enum;
+            type string;
+          }
+          description
+            "The current registration state.";
+        }
+        leaf smart-account {
+          type string {
+            length "1..255";
+          }
+          description
+            "The smart account name for this registration.";
+        }
+        leaf virtual-account {
+          type string {
+            length "1..255";
+          }
+          description
+            "The virtual account name for this registration.";
+        }
+      }
+      container utility {
+        description
+          "State of utility reporting.";
+        when "../enabled = 'true'";
+        leaf enabled {
+          type boolean;
+          description
+            "Utility reporting is enabled.";
+        }
+      }
+      container transport {
+        description
+          "State of the transport.";
+        when "../enabled = 'true'";
+        leaf transport-type {
+          type union {
+            type transport-type-enum;
+            type string;
+          }
+          description
+            "Type of communications transport used for licensing.";
+        }
+      }
+      container authorization {
+        description
+          "State of license authorization.";
+        when "../enabled = 'true'";
+        leaf authorization-state {
+          type union {
+            type authorization-state-enum;
+            type string;
+          }
+          description
+            "The current authorization state.";
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+module econfd_cdb {
+  namespace "http://tail-f.com/ns/econfd_cdb";
+  prefix econfd_cdb;
+
+  container econfd_cdb {
+    presence true;
+    leaf econfd_leaf {
+      type boolean;
+    }
+  }
+}

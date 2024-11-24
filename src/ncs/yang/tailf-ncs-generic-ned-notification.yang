@@ -1,0 +1,59 @@
+module tailf-ncs-generic-ned-notification {
+  namespace "http://tail-f.com/ns/ncs-ned/notification/1.0";
+  prefix gnn;
+  tailf:id "";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization "Tail-f Systems";
+
+  description
+    "Copyright 2012 Cisco Systems, Inc.
+     All rights reserved.
+     Permission is hereby granted to redistribute this file without
+     modification.";
+
+  revision 2022-09-29 {
+    description
+      "Released as part of ConfD-8.0 / NCS-6.0.
+
+       Added copyright stanza.
+
+       Initial revision was 2012-05-03.";
+  }
+
+  container internal {
+    config false;
+    tailf:callpoint ncagent {
+        tailf:internal;
+    }
+    container streams {
+      list stream {
+        key name;
+        leaf name {
+          type string;
+        }
+        leaf description {
+          type string;
+          mandatory true;
+        }
+        leaf replaySupport {
+          type boolean;
+          mandatory true;
+        }
+        leaf replayLogCreationTime {
+          type yang:date-and-time;
+          mandatory true;
+        }
+        leaf replayLogAgedTime {
+          type yang:date-and-time;
+        }
+      }
+    }
+  }
+}
